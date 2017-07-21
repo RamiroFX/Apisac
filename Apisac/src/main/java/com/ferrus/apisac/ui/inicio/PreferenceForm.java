@@ -5,6 +5,9 @@
  */
 package com.ferrus.apisac.ui.inicio;
 
+import com.ferrus.apisac.model.Preferencia;
+import com.ferrus.apisac.model.service.PreferenciaService;
+import com.ferrus.apisac.model.serviceImp.PreferenciaServImpl;
 import com.ferrus.apisac.util.AppUIConstants;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -16,8 +19,6 @@ import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,6 +47,7 @@ public class PreferenceForm extends JDialog implements ActionListener {
     private JButton cancelButton;
     private JLabel studentName;
     private JComboBox lookAndFellComboBox;
+    private PreferenciaService prefServ;
 
     public PreferenceForm(JFrame parent) {
         super(parent, AppUIConstants.PREFERENCE_FORM_TITLE, false);
@@ -56,13 +58,17 @@ public class PreferenceForm extends JDialog implements ActionListener {
     }
 
     private void loadData() {
-
+        /*
         this.lookAndFellComboBox.removeAllItems();
         List<UIManager.LookAndFeelInfo> lafList = new ArrayList<>();
-
         UIManager.LookAndFeelInfo[] lafInfo = UIManager.getInstalledLookAndFeels();
         lafList.addAll(Arrays.asList(lafInfo));
         for (UIManager.LookAndFeelInfo lookAndFeelInfo : lafInfo) {
+            lookAndFellComboBox.addItem(lookAndFeelInfo);
+        }*/
+        this.lookAndFellComboBox.removeAllItems();
+        List<Preferencia> allPreferences = this.prefServ.getAllPreferences();
+        for (Preferencia lookAndFeelInfo : allPreferences) {
             lookAndFellComboBox.addItem(lookAndFeelInfo);
         }
     }
@@ -73,9 +79,9 @@ public class PreferenceForm extends JDialog implements ActionListener {
     }
 
     private void initializeVariables() {
-        /*this.removeStudentFormService = new RemoveStudentFormServiceImpl();*/
+        this.prefServ = new PreferenciaServImpl();
         this.lookAndFellComboBox = new JComboBox<>();
-        this.lookAndFellComboBox.setRenderer(new ColorCellRenderer());
+        //this.lookAndFellComboBox.setRenderer(new ColorCellRenderer());
         this.selectButton = new JButton(AppUIConstants.PREFERENCE_SELECT_BTN);
         this.cancelButton = new JButton(AppUIConstants.PREFERENCE_CANCEL_BTN);
         this.studentName = new JLabel(AppUIConstants.PREFERENCE_LNF);
@@ -130,9 +136,10 @@ public class PreferenceForm extends JDialog implements ActionListener {
     }
 
     private void selectLNF() {
-        UIManager.LookAndFeelInfo info = (UIManager.LookAndFeelInfo) lookAndFellComboBox.getSelectedItem();
+        Preferencia pref = (Preferencia) lookAndFellComboBox.getSelectedItem();
+        this.prefServ.setPreference(pref.getNombre());
         try {
-            UIManager.setLookAndFeel(info.getClassName());
+            UIManager.setLookAndFeel(pref.getDescripcion());
             for (Window window : JFrame.getWindows()) {
                 SwingUtilities.updateComponentTreeUI(window);
             }

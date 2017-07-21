@@ -33,13 +33,19 @@ import javax.validation.constraints.Size;
     ,
     @NamedQuery(name = "preferencia.getPreferenciaByDescripcion", query = "SELECT p FROM Preferencia p WHERE p.descripcion = :descripcion")
     ,
-    @NamedQuery(name = "preferencia.getPreferenciaBySeleccionado", query = "SELECT p FROM Preferencia p WHERE p.seleccionado = :seleccionado")
+    @NamedQuery(name = "preferencia.getPreferenciaBySeleccionado", query = "SELECT p FROM Preferencia p WHERE p.seleccionado = 'S'")
 })
 public class Preferencia implements Serializable {
 
     @Id
     @GeneratedValue
     int id;
+    //
+    @Column(name = "nombre", unique = true, nullable = false, length = 30)
+    @NotNull(message = ParamValidationConstants.NOT_NULL)
+    @Size(max = 30, message = ParamValidationConstants.SIZE)
+    String nombre;
+    //
     @Column(name = "descripcion", unique = true, nullable = false, length = 100)
     @NotNull(message = ParamValidationConstants.NOT_NULL)
     @Size(max = 100, message = ParamValidationConstants.SIZE)
@@ -53,7 +59,8 @@ public class Preferencia implements Serializable {
     public Preferencia() {
     }
 
-    public Preferencia(String descripcion) {
+    public Preferencia(String nombre, String descripcion) {
+        this.nombre = nombre;
         this.descripcion = descripcion;
     }
 
@@ -65,6 +72,14 @@ public class Preferencia implements Serializable {
         this.id = id;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
     public String getDescripcion() {
         return descripcion;
     }
@@ -73,8 +88,16 @@ public class Preferencia implements Serializable {
         this.descripcion = descripcion;
     }
 
+    public void setSeleccionado(String seleccionado) {
+        this.seleccionado = seleccionado;
+    }
+
+    public String getSeleccionado() {
+        return seleccionado;
+    }
+
     @Override
     public String toString() {
-        return getDescripcion();
+        return getNombre();
     }
 }

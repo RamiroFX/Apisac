@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.ferrus.apisac.ui.inicio;
 
 import com.ferrus.apisac.util.AppUIConstants;
@@ -17,7 +13,6 @@ import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
 import javax.swing.JToolBar;
 
 public class App extends JFrame implements ActionListener {
@@ -30,10 +25,6 @@ public class App extends JFrame implements ActionListener {
     private JLabel timeLabel;
     private Timer timer;
 
-    /**
-     * Constructor que se encarga de inicializar la aplicación definiendo los
-     * parametros iniciales
-     */
     public App() {
         super(AppUIConstants.APP_TITLE);
         setName(AppUIConstants.APP_NAME);
