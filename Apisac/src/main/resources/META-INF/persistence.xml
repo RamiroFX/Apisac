@@ -10,6 +10,9 @@
             <property name="javax.persistence.jdbc.password" value=""/>
             
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+            <!--FOR PRODUCTION USE VALIDATE-->
+            <!--<property name="hibernate.hbm2ddl.auto" value="validate"/>-->
+            <!--FOR DEVELOPTMENT USE CREATE-DROP>-->
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
         </properties>
     </persistence-unit>
