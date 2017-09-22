@@ -5,21 +5,15 @@
  */
 package com.ferrus.apisac;
 
-import com.ferrus.apisac.model.MateriaPrima;
-import com.ferrus.apisac.model.Preferencia;
-import com.ferrus.apisac.model.UnidadMedida;
 import com.ferrus.apisac.model.service.PreferenciaService;
 import com.ferrus.apisac.model.serviceImp.PreferenciaServImpl;
 import com.ferrus.apisac.ui.inicio.App;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -28,13 +22,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class Main {
 
     public static void main(String[] args) {
-        /*PreferenciaService prefServ = new PreferenciaServImpl();
-        UIManager.LookAndFeelInfo[] lafInfo = UIManager.getInstalledLookAndFeels();
-        Preferencia preference = new Preferencia();
-        preference.setNombre(lafInfo[0].getName());
-        preference.setDescripcion(lafInfo[0].getClassName());
-        preference.setSeleccionado("N");
-        prefServ.setPreference(preference);*/
         loadPreferences();
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -52,7 +39,6 @@ public class Main {
         la app.
          */
         if (prefServ.getAllPreferences().isEmpty()) {
-            System.out.println("com.ferrus.apisac.Main.loadPreferences()> no hay preferencia");
             List<UIManager.LookAndFeelInfo> lafList = new ArrayList<>();
             UIManager.LookAndFeelInfo[] lafInfo = UIManager.getInstalledLookAndFeels();
             lafList.addAll(Arrays.asList(lafInfo));
@@ -75,15 +61,5 @@ public class Main {
             }
         }
     }
-    
-    private static void test(){
-        UnidadMedida um1 = new UnidadMedida();
-        um1.setNombre("Kilogramo");
-        um1.setSimbolo("Kg");
-        um1.setValor(1000.0);
-        MateriaPrima mp1 = new MateriaPrima();
-        mp1.setNombre("Harina 000");
-        mp1.setPrecio(3100.0);
-        mp1.setUnidadMedida(um1);
-    }
+
 }
