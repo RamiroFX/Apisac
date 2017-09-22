@@ -5,7 +5,9 @@
  */
 package com.ferrus.apisac;
 
+import com.ferrus.apisac.model.MateriaPrima;
 import com.ferrus.apisac.model.Preferencia;
+import com.ferrus.apisac.model.UnidadMedida;
 import com.ferrus.apisac.model.service.PreferenciaService;
 import com.ferrus.apisac.model.serviceImp.PreferenciaServImpl;
 import com.ferrus.apisac.ui.inicio.App;
@@ -72,5 +74,16 @@ public class Main {
             } catch (Exception e) {
             }
         }
+    }
+    
+    private static void test(){
+        UnidadMedida um1 = new UnidadMedida();
+        um1.setNombre("Kilogramo");
+        um1.setSimbolo("Kg");
+        um1.setValor(1000.0);
+        MateriaPrima mp1 = new MateriaPrima();
+        mp1.setNombre("Harina 000");
+        mp1.setPrecio(3100.0);
+        mp1.setUnidadMedida(um1);
     }
 }

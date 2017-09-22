@@ -23,4 +23,12 @@ public class AppUIConstants {
     public static String PREFERENCE_SELECT_BTN = "Seleccionar";
     public static final int PREFERENCE_WINDOWS_SIZE_WIDTH = 400;
     public static final int PREFERENCE_WINDOWS_SIZE_HEIGHT = 200;
+
+    //PANEL PRINCIPAL
+    public static final String CREATE_BUTTON_NAME = "Crear producto";
+    public static final String MODIFY_BUTTON_NAME = "Modificar producto";
+    public static final String DELETE_BUTTON_NAME = "Eliminar producto";
+    public static final String EXPORT_BUTTON_NAME = "Exportar producto";
+    public static final String PARAM_BUTTON_NAME = "Parametros";
+    public static final String SEARCH_BUTTON_NAME = "Buscar";
 }

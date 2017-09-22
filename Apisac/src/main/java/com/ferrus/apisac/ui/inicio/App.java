@@ -2,14 +2,11 @@ package com.ferrus.apisac.ui.inicio;
 
 import com.ferrus.apisac.util.AppUIConstants;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyVetoException;
 import javax.swing.ImageIcon;
-import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
@@ -17,8 +14,9 @@ import javax.swing.JToolBar;
 
 public class App extends JFrame implements ActionListener {
 
-    private JDesktopPane desktop = null;
-    private JInternalFrame currentJIF = null;
+    /*private JDesktopPane desktop = null;
+    private JInternalFrame currentJIF = null;*/
+    private PanelPrincipal jpPrincipal;
     private JToolBar jtbBarraHerramientas = null;
     private ImageIcon icono;
     private BarraMenu barraMenu;
@@ -29,6 +27,7 @@ public class App extends JFrame implements ActionListener {
         super(AppUIConstants.APP_TITLE);
         setName(AppUIConstants.APP_NAME);
         initializeVariables();
+        addListeners();
         setJMenuBar(barraMenu);
         constructLayout();
         setIconImage(icono.getImage());
@@ -42,8 +41,9 @@ public class App extends JFrame implements ActionListener {
         } catch (Exception e) {
             icono = new ImageIcon();
         }
+        this.jpPrincipal = new PanelPrincipal();
         this.barraMenu = new BarraMenu(this);
-        this.desktop = new JDesktopPane();
+        //this.desktop = new JDesktopPane();
 
         this.timeLabel = new JLabel();
         this.timer = new Timer(timeLabel);
@@ -54,6 +54,15 @@ public class App extends JFrame implements ActionListener {
         jtbBarraHerramientas.add(timeLabel);
     }
 
+    private void addListeners() {
+        this.jpPrincipal.jbCrear.addActionListener(this);
+        this.jpPrincipal.jbModificar.addActionListener(this);
+        this.jpPrincipal.jbBorrar.addActionListener(this);
+        this.jpPrincipal.jbExportar.addActionListener(this);
+        this.jpPrincipal.jbParametros.addActionListener(this);
+        this.jpPrincipal.jbBuscar.addActionListener(this);
+    }
+
     private void constructAppWindow() {
         setLocation(0, 0);
         setExtendedState(MAXIMIZED_BOTH);
@@ -62,35 +71,9 @@ public class App extends JFrame implements ActionListener {
     }
 
     private void constructLayout() {
-        this.desktop.setLayout(null);
-        this.desktop.setBackground(Color.WHITE);
         getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(this.desktop, BorderLayout.CENTER);
+        getContentPane().add(this.jpPrincipal, BorderLayout.CENTER);
         getContentPane().add(this.jtbBarraHerramientas, BorderLayout.SOUTH);
-        setLayout(new BorderLayout());
-        add(this.desktop, BorderLayout.CENTER);
-        add(this.jtbBarraHerramientas, BorderLayout.SOUTH);
-    }
-
-    public JInternalFrame getCurrentJIF() {
-        return currentJIF;
-    }
-
-    public void setCurrentJIF(JInternalFrame currentJIF) {
-        this.currentJIF = currentJIF;
-    }
-
-    public void agregarVentana(JInternalFrame mdi) {
-        desktop.add(mdi);
-        setCurrentJIF(mdi);
-        mdi.setVisible(true);
-        mdi.moveToFront();
-        mdi.setLocation(centrarPantalla(mdi));
-        try {
-            mdi.setSelected(true);
-        } catch (PropertyVetoException ex) {
-            ex.printStackTrace();
-        }
     }
 
     public Point centrarPantalla(JInternalFrame i) {
@@ -110,6 +93,10 @@ public class App extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object src = e.getSource();
+        if(src.equals(this.jpPrincipal.jbParametros)){
+            Parametros param = new Parametros(this);
+            param.setVisible(true);
+        }
     }
 }
