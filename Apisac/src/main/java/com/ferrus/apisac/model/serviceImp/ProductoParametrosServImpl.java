@@ -52,6 +52,11 @@ public class ProductoParametrosServImpl implements ProductoParametrosService {
     }
 
     @Override
+    public List<Producto> obtenerProductosPorSubCategoria(String subCategoria) {
+        return this.queryHandler.obtenerProductosPorSubCategoria(subCategoria);
+    }
+
+    @Override
     public List<Producto> obtenerProductosPorImpuesto(Double valor) {
         return this.queryHandler.obtenerProductosPorImpuesto(valor);
     }
@@ -102,18 +107,18 @@ public class ProductoParametrosServImpl implements ProductoParametrosService {
     }
 
     @Override
-    public List<ProductoSubCategoria> obtenerProductosSubCategorias(String descripcion) {
-        return this.queryHandler.obtenerProductosSubCategorias(descripcion);
+    public List<ProductoSubCategoria> obtenerProductosSubCategorias(String descripcion, boolean inclusivo) {
+        return this.queryHandler.obtenerProductosSubCategorias(descripcion, inclusivo);
     }
 
     @Override
-    public void modificarProductoSubCategoria(ProductoSubCategoria productoSubCategoria) {
-        this.queryHandler.modificarProductoSubCategoria(productoSubCategoria);
+    public void modificarProductoSubCategoria(ProductoSubCategoria productoSubCategoria, ProductoCategoria productoCategoria) {
+        this.queryHandler.modificarProductoSubCategoria(productoSubCategoria, productoCategoria);
     }
 
     @Override
-    public void eliminarProductoSubCategoria(ProductoSubCategoria productoSubCategoria) {
-        this.queryHandler.eliminarProductoSubCategoria(productoSubCategoria);
+    public void eliminarProductoSubCategoria(Long idProductoSubCategoria) {
+        this.queryHandler.eliminarProductoSubCategoria(idProductoSubCategoria);
     }
 
     @Override

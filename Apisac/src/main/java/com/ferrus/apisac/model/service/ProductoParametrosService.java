@@ -31,6 +31,8 @@ public interface ProductoParametrosService {
 
     public List<Producto> obtenerProductosPorCategoria(String categoria);
 
+    public List<Producto> obtenerProductosPorSubCategoria(String nombreSubCategoria);
+
     public List<Producto> obtenerProductosPorImpuesto(Double valor);
 
     public void modificarProducto(Producto producto);
@@ -57,11 +59,11 @@ public interface ProductoParametrosService {
 
     public ProductoSubCategoria obtenerProductoSubCategoria(Long id);
 
-    public List<ProductoSubCategoria> obtenerProductosSubCategorias(String descripcion);
+    public List<ProductoSubCategoria> obtenerProductosSubCategorias(String descripcion, boolean inclusivo);
 
-    public void modificarProductoSubCategoria(ProductoSubCategoria productoSubCategoria);
+    public void modificarProductoSubCategoria(ProductoSubCategoria productoSubCategoria, ProductoCategoria productoCategoria);
 
-    public void eliminarProductoSubCategoria(ProductoSubCategoria productoSubCategoria);
+    public void eliminarProductoSubCategoria(Long idProductoSubCategoria);
 
     /*
     IMPUESTO
@@ -90,4 +92,5 @@ public interface ProductoParametrosService {
     public void modificarMarca(Marca marca);
 
     public void eliminarMarca(Long idMarca);
+
 }

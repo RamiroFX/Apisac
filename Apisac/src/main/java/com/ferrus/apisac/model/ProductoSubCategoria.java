@@ -23,7 +23,7 @@ import javax.persistence.Table;
 @Entity(name = "ProductoSubCategoria")
 @Table(name = "productoSubCategoria")
 @NamedQueries({
-    @NamedQuery(name = "productoSubCategoria.obtenerProductoSubCategoriaNombre",query = "SELECT psc FROM ProductoSubCategoria psc WHERE psc.descripcion = :descripcion")
+    @NamedQuery(name = "productoSubCategoria.obtenerProductoSubCategoriaNombre",query = "SELECT psc FROM ProductoSubCategoria psc WHERE psc.descripcion LIKE :descripcion")
 })
 public class ProductoSubCategoria implements Serializable {
 

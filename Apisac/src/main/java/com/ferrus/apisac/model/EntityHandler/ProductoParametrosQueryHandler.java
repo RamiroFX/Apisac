@@ -52,6 +52,12 @@ public class ProductoParametrosQueryHandler extends AbstractQuery {
         return typedQuery.getResultList();
     }
 
+    public List<Producto> obtenerProductosPorSubCategoria(String subCategoria) {
+        TypedQuery<Producto> typedQuery = EntityManagerHandler.INSTANCE.getEntityManager().createNamedQuery("producto.obtenerProductosSubCategoria", Producto.class);
+        typedQuery.setParameter("subcategoria", subCategoria.trim());
+        return typedQuery.getResultList();
+    }
+
     public List<Producto> obtenerProductosPorImpuesto(Double valor) {
         TypedQuery<Producto> typedQuery = EntityManagerHandler.INSTANCE.getEntityManager().createNamedQuery("producto.obtenerProductosImpuesto", Producto.class);
         typedQuery.setParameter("valor", valor);
@@ -130,22 +136,29 @@ public class ProductoParametrosQueryHandler extends AbstractQuery {
         return productoSubCategoria;
     }
 
-    public List<ProductoSubCategoria> obtenerProductosSubCategorias(String descripcion) {
+    public List<ProductoSubCategoria> obtenerProductosSubCategorias(String descripcion, boolean inclusivo) {
         TypedQuery<ProductoSubCategoria> typedQuery = EntityManagerHandler.INSTANCE.getEntityManager().createNamedQuery("productoSubCategoria.obtenerProductoSubCategoriaNombre", ProductoSubCategoria.class);
-        typedQuery.setParameter("descripcion", descripcion);
+        if (inclusivo) {
+            typedQuery.setParameter("descripcion", "%" + descripcion + "%");
+        } else {
+            typedQuery.setParameter("descripcion", descripcion);
+        }
         return typedQuery.getResultList();
     }
 
-    public void modificarProductoSubCategoria(ProductoSubCategoria productoSubCategoria) {
+    public void modificarProductoSubCategoria(ProductoSubCategoria productoSubCategoria, ProductoCategoria productoCategoria) {
         open();
         ProductoSubCategoria psc = EntityManagerHandler.INSTANCE.getEntityManager().find(ProductoSubCategoria.class, productoSubCategoria.getId());
+        psc.setProductoCategoria(productoCategoria);
         psc.setDescripcion(productoSubCategoria.getDescripcion());
         EntityManagerHandler.INSTANCE.getEntityTransaction().commit();
     }
 
-    public void eliminarProductoSubCategoria(ProductoSubCategoria productoSubCategoria) {
+    public void eliminarProductoSubCategoria(Long idProductoSubCategoria) {
         open();
-        EntityManagerHandler.INSTANCE.getEntityManager().remove(productoSubCategoria);
+        ProductoSubCategoria psc = EntityManagerHandler.INSTANCE.getEntityManager().find(ProductoSubCategoria.class, idProductoSubCategoria);
+        psc.setProductoCategoria(null);
+        EntityManagerHandler.INSTANCE.getEntityManager().remove(psc);
         EntityManagerHandler.INSTANCE.getEntityTransaction().commit();
     }
 

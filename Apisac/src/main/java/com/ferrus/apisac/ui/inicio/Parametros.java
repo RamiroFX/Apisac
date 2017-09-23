@@ -9,11 +9,14 @@ import com.ferrus.apisac.model.Impuesto;
 import com.ferrus.apisac.model.Marca;
 import com.ferrus.apisac.model.Producto;
 import com.ferrus.apisac.model.ProductoCategoria;
+import com.ferrus.apisac.model.ProductoSubCategoria;
 import com.ferrus.apisac.model.service.ProductoParametrosService;
 import com.ferrus.apisac.model.serviceImp.ProductoParametrosServImpl;
 import com.ferrus.apisac.tablemodel.ImpuestoTableModel;
 import com.ferrus.apisac.tablemodel.MarcaTableModel;
 import com.ferrus.apisac.tablemodel.ProductoCategoriaTableModel;
+import com.ferrus.apisac.tablemodel.ProductoSubCategoriaTableModel;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -22,11 +25,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
 import java.util.Objects;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -38,11 +43,12 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
     private javax.swing.JButton jbCrear, jbModificar, jbEliminar;
     private JTabbedPane jtpCenter;
     private JPanel jpSouth;
-    private JScrollPane jspMarcas, jspCategorias, jspImpuestos;
-    private JTable jtMarcas, jtCategorias, jtImpuestos;
+    private JScrollPane jspMarcas, jspCategorias, jspSubCategorias, jspImpuestos;
+    private JTable jtMarcas, jtCategorias, jtSubCategorias, jtImpuestos;
     private ProductoParametrosService servicio;
     private MarcaTableModel marcaTableModel;
     private ProductoCategoriaTableModel productoCategoriaTableModel;
+    private ProductoSubCategoriaTableModel productoSubCategoriaTableModel;
     private ImpuestoTableModel impuestoTableModel;
 
     public Parametros(App app) {
@@ -59,6 +65,7 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
     private void loadData() {
         loadDataMarca();
         loadDataCategoria();
+        loadDataSubCategoria();
         loadDataImpuesto();
     }
 
@@ -72,6 +79,12 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
         productoCategoriaTableModel.setProductoCategoriaList(servicio.obtenerProductosCategorias("", true));
         jtCategorias.setModel(productoCategoriaTableModel);
         productoCategoriaTableModel.updateTable();
+    }
+
+    private void loadDataSubCategoria() {
+        productoSubCategoriaTableModel.setProductoCategoriaList(servicio.obtenerProductosSubCategorias("", true));
+        jtSubCategorias.setModel(productoSubCategoriaTableModel);
+        productoSubCategoriaTableModel.updateTable();
     }
 
     private void loadDataImpuesto() {
@@ -89,6 +102,7 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
         servicio = new ProductoParametrosServImpl();
         marcaTableModel = new MarcaTableModel();
         productoCategoriaTableModel = new ProductoCategoriaTableModel();
+        productoSubCategoriaTableModel = new ProductoSubCategoriaTableModel();
         impuestoTableModel = new ImpuestoTableModel();
         jtMarcas = new JTable();
         jtMarcas.getTableHeader().setReorderingAllowed(false);
@@ -96,13 +110,17 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
         jtCategorias = new JTable();
         jtCategorias.getTableHeader().setReorderingAllowed(false);
         jspCategorias = new JScrollPane(jtCategorias);
+        jtSubCategorias = new JTable();
+        jtSubCategorias.getTableHeader().setReorderingAllowed(false);
+        jspSubCategorias = new JScrollPane(jtSubCategorias);
         jtImpuestos = new JTable();
         jtImpuestos.getTableHeader().setReorderingAllowed(false);
         jspImpuestos = new JScrollPane(jtImpuestos);
 
         jtpCenter = new JTabbedPane();
         jtpCenter.add("Marcas", jspMarcas);
-        jtpCenter.add("Categorias", jspCategorias);
+        jtpCenter.add("Categorías", jspCategorias);
+        jtpCenter.add("Sub-Categorías", jspSubCategorias);
         jtpCenter.add("Impuestos", jspImpuestos);
         jpSouth = new JPanel();
         jbCrear = new javax.swing.JButton("Agregar");
@@ -119,6 +137,7 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
     private void agregarListener() {
         jtpCenter.addMouseListener(this);
         jtCategorias.addMouseListener(this);
+        jtSubCategorias.addMouseListener(this);
         jtMarcas.addMouseListener(this);
         jtImpuestos.addMouseListener(this);
         jbCrear.addActionListener(this);
@@ -129,6 +148,7 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
          */
         jtpCenter.addKeyListener(this);
         jtCategorias.addKeyListener(this);
+        jtSubCategorias.addKeyListener(this);
         jtMarcas.addKeyListener(this);
         jtImpuestos.addKeyListener(this);
         jbCrear.addKeyListener(this);
@@ -302,6 +322,92 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
         }
     }
 
+    private void agregarSubCategoria(String subCategoria, ProductoCategoria categoria) {
+        String c = subCategoria.trim();
+        if (c.length() < 1 || c.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Inserte 1 caracter por lo menos.", "Alerta", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (c.length() > 30) {
+            JOptionPane.showMessageDialog(this, "Máximo permitido 30 caracteres.", "Alerta", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        List<ProductoSubCategoria> listaSubCategoria = servicio.obtenerProductosSubCategorias(c, false);
+        if (listaSubCategoria.isEmpty()) {
+            ProductoSubCategoria psc = new ProductoSubCategoria();
+            psc.setProductoCategoria(categoria);
+            psc.setDescripcion(c);
+            servicio.insertarProductoSubCategoria(psc);
+            this.jbModificar.setEnabled(false);
+            this.jbEliminar.setEnabled(false);
+            loadDataSubCategoria();
+        } else {
+            JOptionPane.showMessageDialog(this, "Sub-Categoría existente.", "Alerta", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void modificarSubCategoria(String subCategoria, ProductoCategoria categoria) {
+        String c = subCategoria.trim();
+        if (c.length() < 1 || c.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Inserte 1 caracter por lo menos.", "Alerta", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (c.length() > 30) {
+            JOptionPane.showMessageDialog(this, "Máximo permitido 30 caracteres.", "Alerta", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        List<ProductoSubCategoria> list = servicio.obtenerProductosSubCategorias(c, false);
+        if (list.size() == 1) {
+            Long idCate = Long.valueOf(String.valueOf(this.jtSubCategorias.getValueAt(jtSubCategorias.getSelectedRow(), 0)));
+            Long idCateTemp = list.get(0).getId();
+            if (Objects.equals(idCate, idCateTemp)) {
+                ProductoSubCategoria psc = new ProductoSubCategoria();
+                psc.setProductoCategoria(categoria);
+                psc.setDescripcion(c);
+                psc.setId(idCate);
+                servicio.modificarProductoSubCategoria(psc, categoria);
+                this.jbModificar.setEnabled(false);
+                this.jbEliminar.setEnabled(false);
+                loadDataSubCategoria();
+            } else {
+                JOptionPane.showMessageDialog(this, "Sub-Categoría existente.", "Alerta", JOptionPane.ERROR_MESSAGE);
+            }
+        } else if (list.isEmpty()) {
+            Long idCate = Long.valueOf(String.valueOf(this.jtSubCategorias.getValueAt(jtSubCategorias.getSelectedRow(), 0)));
+            ProductoSubCategoria psc = new ProductoSubCategoria();
+            psc.setProductoCategoria(categoria);
+            psc.setDescripcion(c);
+            psc.setId(idCate);
+            servicio.modificarProductoSubCategoria(psc, categoria);
+            this.jbModificar.setEnabled(false);
+            this.jbEliminar.setEnabled(false);
+            loadDataSubCategoria();
+        } else {
+            JOptionPane.showMessageDialog(this, "Sub-Categoría existente.", "Alerta", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void eliminarSubCategoria() {
+        String nombreSubCategoria = String.valueOf(this.jtSubCategorias.getValueAt(jtSubCategorias.getSelectedRow(), 2));
+        List<Producto> listaProducto = servicio.obtenerProductosPorSubCategoria(nombreSubCategoria);
+        if (listaProducto.isEmpty()) {
+            int option = JOptionPane.showConfirmDialog(this, "¿Desea confirmar esta operación?", "Atención", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (option == JOptionPane.YES_OPTION) {
+                try {
+                    Long idSubCate = Long.valueOf(String.valueOf(this.jtSubCategorias.getValueAt(jtSubCategorias.getSelectedRow(), 0)));
+                    servicio.eliminarProductoSubCategoria(idSubCate);
+                    this.jbModificar.setEnabled(false);
+                    this.jbEliminar.setEnabled(false);
+                    loadDataSubCategoria();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Existe productos que se encuentran utilizando la sub-categoría seleccionada.", "Alerta", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     private void agregarImpuesto(String impuesto) {
         Double impuestoValor = -1.0;
         try {
@@ -388,6 +494,24 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
                     agregarCategoria(rubro);
                 }
             }
+        } else if (this.jtpCenter.getSelectedComponent().equals(this.jspSubCategorias)) {
+            JComboBox<ProductoCategoria> jcb = new JComboBox();
+            List<ProductoCategoria> listaCategorias = servicio.obtenerProductosCategorias("", true);
+            if (listaCategorias.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No exiten categorías. Ingrese una categoría primero", "Alerta", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            for (ProductoCategoria listaCategoria : listaCategorias) {
+                jcb.addItem(listaCategoria);
+            }
+            JTextField jtfSubCategoria = new JTextField();
+            JPanel jp = new JPanel(new GridLayout(2, 1));
+            jp.add(jcb);
+            jp.add(jtfSubCategoria);
+            JOptionPane.showMessageDialog(null, jp, "Ingresar sub-categoría", JOptionPane.QUESTION_MESSAGE);
+            String subCategoria = jtfSubCategoria.getText();
+            ProductoCategoria pc = (ProductoCategoria) jcb.getSelectedItem();
+            agregarSubCategoria(subCategoria, pc);
         } else if (this.jtpCenter.getSelectedComponent().equals(this.jspImpuestos)) {
             String impuesto = JOptionPane.showInputDialog(this, "Inserte el valor del Impuesto", "Insertar impuesto", JOptionPane.PLAIN_MESSAGE);
             if (impuesto != null) {
@@ -413,6 +537,24 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
                     modificarCategoria(categoria);
                 }
             }
+        } else if (this.jtpCenter.getSelectedComponent().equals(this.jspSubCategorias)) {
+            JComboBox<ProductoCategoria> jcb = new JComboBox();
+            List<ProductoCategoria> listaCategorias = servicio.obtenerProductosCategorias("", true);
+            if (listaCategorias.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No exiten categorías. Ingrese una categoría primero", "Alerta", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            for (ProductoCategoria listaCategoria : listaCategorias) {
+                jcb.addItem(listaCategoria);
+            }
+            JTextField jtfSubCategoria = new JTextField();
+            JPanel jp = new JPanel(new GridLayout(2, 1));
+            jp.add(jcb);
+            jp.add(jtfSubCategoria);
+            JOptionPane.showMessageDialog(null, jp, "Modificar sub-categoría", JOptionPane.QUESTION_MESSAGE);
+            String subCategoria = jtfSubCategoria.getText();
+            ProductoCategoria pc = (ProductoCategoria) jcb.getSelectedItem();
+            modificarSubCategoria(subCategoria, pc);
         } else if (this.jtpCenter.getSelectedComponent().equals(this.jspImpuestos)) {
             String impuesto = JOptionPane.showInputDialog(this, "Inserte el valor del Impuesto", "Insertar categoria", JOptionPane.PLAIN_MESSAGE);
             if (impuesto != null) {
@@ -428,6 +570,8 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
             eliminarMarca();
         } else if (this.jtpCenter.getSelectedComponent().equals(this.jspCategorias)) {
             eliminarCategoria();
+        } else if (this.jtpCenter.getSelectedComponent().equals(this.jspSubCategorias)) {
+            eliminarSubCategoria();
         } else if (this.jtpCenter.getSelectedComponent().equals(this.jspImpuestos)) {
             eliminarImpuesto();
         }
@@ -471,6 +615,17 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
         if (e.getSource().equals(this.jtCategorias)) {
             int fila = this.jtCategorias.rowAtPoint(e.getPoint());
             int columna = this.jtCategorias.columnAtPoint(e.getPoint());
+            if ((fila > -1) && (columna > -1)) {
+                this.jbModificar.setEnabled(true);
+                this.jbEliminar.setEnabled(true);
+            } else {
+                this.jbModificar.setEnabled(false);
+                this.jbEliminar.setEnabled(false);
+            }
+        }
+        if (e.getSource().equals(this.jtSubCategorias)) {
+            int fila = this.jtSubCategorias.rowAtPoint(e.getPoint());
+            int columna = this.jtSubCategorias.columnAtPoint(e.getPoint());
             if ((fila > -1) && (columna > -1)) {
                 this.jbModificar.setEnabled(true);
                 this.jbEliminar.setEnabled(true);
