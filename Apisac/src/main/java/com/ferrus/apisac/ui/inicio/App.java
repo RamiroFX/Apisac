@@ -1,5 +1,6 @@
 package com.ferrus.apisac.ui.inicio;
 
+import com.ferrus.apisac.ui.ingrediente.GestionMateriaPrima;
 import com.ferrus.apisac.util.AppUIConstants;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -60,6 +61,7 @@ public class App extends JFrame implements ActionListener {
         this.jpPrincipal.jbBorrar.addActionListener(this);
         this.jpPrincipal.jbExportar.addActionListener(this);
         this.jpPrincipal.jbParametros.addActionListener(this);
+        this.jpPrincipal.jbMateriaPrima.addActionListener(this);
         this.jpPrincipal.jbBuscar.addActionListener(this);
     }
 
@@ -94,9 +96,11 @@ public class App extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
-        if(src.equals(this.jpPrincipal.jbParametros)){
+        if (src.equals(this.jpPrincipal.jbParametros)) {
             Parametros param = new Parametros(this);
             param.setVisible(true);
+        } else if (src.equals(this.jpPrincipal.jbMateriaPrima)) {
+            GestionMateriaPrima gmp = new GestionMateriaPrima(this);
         }
     }
 }

@@ -20,7 +20,8 @@ import javax.swing.border.EtchedBorder;
 public class PanelPrincipal extends JPanel {
 
     private JPanel jpProductos, jpBotones, jpPrecio;
-    public JButton jbCrear, jbModificar, jbBorrar, jbExportar, jbParametros, jbBuscar;
+    public JButton jbCrear, jbModificar, jbBorrar, jbExportar, jbParametros, 
+            jbBuscar, jbMateriaPrima;
     public JTextField jtfBuscar;
 
     public PanelPrincipal() {
@@ -40,6 +41,7 @@ public class PanelPrincipal extends JPanel {
         this.jbBorrar = new JButton(DELETE_BUTTON_NAME);
         this.jbExportar = new JButton(EXPORT_BUTTON_NAME);
         this.jbParametros = new JButton(PARAM_BUTTON_NAME);
+        this.jbMateriaPrima = new JButton(RAW_MATERIAL_BUTTON_NAME);
         this.jbBuscar = new JButton(SEARCH_BUTTON_NAME);
         this.jtfBuscar = new JTextField(15);
     }
@@ -50,6 +52,7 @@ public class PanelPrincipal extends JPanel {
         this.jpBotones.add(jbBorrar);
         this.jpBotones.add(jbExportar);
         this.jpBotones.add(jbParametros);
+        this.jpBotones.add(jbMateriaPrima);
         JPanel jpBuscar = new JPanel();
         jpBuscar.setBorder(new BevelBorder(BevelBorder.RAISED));
         jpBuscar.add(this.jtfBuscar);

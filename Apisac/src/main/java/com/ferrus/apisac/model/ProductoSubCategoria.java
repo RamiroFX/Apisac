@@ -32,7 +32,7 @@ public class ProductoSubCategoria implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(name = "descripcion", unique = true, nullable = false, length = 50)
+    @Column(name = "descripcion", nullable = false, length = 50)
     private String descripcion;
     @ManyToOne
     @JoinColumn(name = "id_producto_categoria")

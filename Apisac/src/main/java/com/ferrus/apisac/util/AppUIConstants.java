@@ -30,5 +30,15 @@ public class AppUIConstants {
     public static final String DELETE_BUTTON_NAME = "Eliminar producto";
     public static final String EXPORT_BUTTON_NAME = "Exportar producto";
     public static final String PARAM_BUTTON_NAME = "Parametros";
+    public static final String RAW_MATERIAL_BUTTON_NAME = "Materia prima";
     public static final String SEARCH_BUTTON_NAME = "Buscar";
+    
+    //GESTION MATERIA PRIMA
+    public static final int RAW_MATERIAL_WINDOWS_SIZE_WIDTH = 500;
+    public static final int RAW_MATERIAL_WINDOWS_SIZE_HEIGHT = 600;
+    public static final String SEARCH_RAW_MATERIAL_BUTTON_NAME = "Buscar";
+    public static final String CREATE_RAW_MATERIAL_BUTTON_NAME = "Crear";
+    public static final String UPDATE_RAW_MATERIAL_BUTTON_NAME = "Modificar";
+    public static final String DELETE_RAW_MATERIAL_BUTTON_NAME = "Eliminar";
+    public static final String RAW_MATERIAL_TITLE = "Gestión de materia prima";
 }
