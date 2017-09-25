@@ -5,8 +5,14 @@
  */
 package com.ferrus.apisac;
 
+import com.ferrus.apisac.model.MateriaPrima;
+import com.ferrus.apisac.model.UnidadMedida;
+import com.ferrus.apisac.model.service.MateriaPrimaService;
 import com.ferrus.apisac.model.service.PreferenciaService;
+import com.ferrus.apisac.model.service.UnidadMedidaService;
+import com.ferrus.apisac.model.serviceImp.MateriaPrimaServImpl;
 import com.ferrus.apisac.model.serviceImp.PreferenciaServImpl;
+import com.ferrus.apisac.model.serviceImp.UnidadMedidaServImpl;
 import com.ferrus.apisac.ui.inicio.App;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,6 +29,7 @@ public class Main {
 
     public static void main(String[] args) {
         loadPreferences();
+        loadData();
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -54,7 +61,6 @@ public class Main {
             } catch (Exception e) {
             }
         } else {
-            System.out.println("com.ferrus.apisac.Main.loadPreferences()> preferencia seleccionada");
             try {
                 UIManager.setLookAndFeel(prefServ.getCurrentPreference().getDescripcion());
             } catch (Exception e) {
@@ -62,4 +68,17 @@ public class Main {
         }
     }
 
+    private static void loadData() {
+        UnidadMedida umGr = new UnidadMedida("Gramo", "Gr", 1.0);
+        UnidadMedida umKG = new UnidadMedida("Kilogramo", "Kg", 1000.0);
+        UnidadMedida umTonelada = new UnidadMedida("Tonelada", "Ton", 10000.0);
+        UnidadMedidaService medidaService = new UnidadMedidaServImpl();
+        medidaService.insertarUnidadMedida(umGr);
+        medidaService.insertarUnidadMedida(umKG);
+        medidaService.insertarUnidadMedida(umTonelada);
+
+        MateriaPrima mpHarina = new MateriaPrima("Harina 000", null, 2500.0, umKG);
+        MateriaPrimaService materiaPrimaService = new MateriaPrimaServImpl();
+        materiaPrimaService.insertarMateriaPrima(mpHarina);
+    }
 }

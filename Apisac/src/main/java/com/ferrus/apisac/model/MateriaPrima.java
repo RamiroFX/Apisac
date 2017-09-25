@@ -20,7 +20,7 @@ import javax.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = "materiaPrima.obtenerMateriasPrimas", query = "SELECT mp FROM MateriaPrima mp")
     ,
-    @NamedQuery(name = "materiaPrima.obtenerMateriasPrimasNombre", query = "SELECT mp FROM MateriaPrima mp WHERE mp.nombre LIKE :nombre")
+    @NamedQuery(name = "materiaPrima.obtenerMateriasPrimasNombre", query = "SELECT mp FROM MateriaPrima mp WHERE LOWER(mp.nombre) LIKE :nombre")
 })
 public class MateriaPrima implements Serializable {
 
@@ -32,7 +32,7 @@ public class MateriaPrima implements Serializable {
     private Long id;
     @Column(name = "nombre", unique = true, length = 50, nullable = false)
     private String nombre;
-    @Column(name = "descripcion", length = 150, nullable = false)
+    @Column(name = "descripcion", length = 150)
     private String descripcion;
     @Column(name = "precio", unique = true, length = 10, nullable = false)
     private Double precio;

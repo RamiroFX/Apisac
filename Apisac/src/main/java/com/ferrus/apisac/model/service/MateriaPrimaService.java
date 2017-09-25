@@ -18,7 +18,7 @@ public interface MateriaPrimaService {
 
     public MateriaPrima obtenerMateriaPrima(Long id);
 
-    public List<MateriaPrima> obtenerMateriasPrimas(String nombre);
+    public List<MateriaPrima> obtenerMateriasPrimas(String nombre, boolean inclusivo);
 
     public void modificarMateriasPrimas(MateriaPrima materiaPrima);
 

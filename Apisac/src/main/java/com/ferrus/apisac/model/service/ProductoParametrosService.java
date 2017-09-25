@@ -35,6 +35,8 @@ public interface ProductoParametrosService {
 
     public List<Producto> obtenerProductosPorImpuesto(Double valor);
 
+    public List<Producto> obtenerProductosPorMateriaPrimaID(Long idMateriaPrima);
+
     public void modificarProducto(Producto producto);
 
     public void eliminarProducto(Producto producto);

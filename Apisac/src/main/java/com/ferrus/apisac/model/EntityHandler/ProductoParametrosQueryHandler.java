@@ -64,6 +64,12 @@ public class ProductoParametrosQueryHandler extends AbstractQuery {
         return typedQuery.getResultList();
     }
 
+    public List<Producto> obtenerProductosPorMateriaPrimaID(Long idMateriaPrima) {
+        TypedQuery<Producto> typedQuery = EntityManagerHandler.INSTANCE.getEntityManager().createNamedQuery("producto.obtenerProductosMateriaPrima", Producto.class);
+        typedQuery.setParameter("idMateriaPrima", idMateriaPrima);
+        return typedQuery.getResultList();
+    }
+
     public void modificarProducto(Producto producto) {
         open();
         Producto p = EntityManagerHandler.INSTANCE.getEntityManager().find(Producto.class, producto.getId());

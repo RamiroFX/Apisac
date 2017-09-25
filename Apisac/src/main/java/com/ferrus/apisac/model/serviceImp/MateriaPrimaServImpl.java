@@ -33,8 +33,8 @@ public class MateriaPrimaServImpl implements MateriaPrimaService {
     }
 
     @Override
-    public List<MateriaPrima> obtenerMateriasPrimas(String nombre) {
-        return this.queryHandler.obtenerMateriasPrimas(nombre);
+    public List<MateriaPrima> obtenerMateriasPrimas(String nombre, boolean inclusivo) {
+        return this.queryHandler.obtenerMateriasPrimas(nombre, inclusivo);
     }
 
     @Override

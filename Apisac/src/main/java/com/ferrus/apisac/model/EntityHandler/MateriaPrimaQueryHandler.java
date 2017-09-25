@@ -30,10 +30,15 @@ public class MateriaPrimaQueryHandler extends AbstractQuery {
         return mp;
     }
 
-    public List<MateriaPrima> obtenerMateriasPrimas(String nombre) {
+    public List<MateriaPrima> obtenerMateriasPrimas(String nombre, boolean inclusivo) {
         open();
         TypedQuery<MateriaPrima> typedQuery = EntityManagerHandler.INSTANCE.getEntityManager().createNamedQuery("materiaPrima.obtenerMateriasPrimasNombre", MateriaPrima.class);
-        typedQuery.setParameter("nombre", nombre);
+        if (inclusivo) {
+            typedQuery.setParameter("nombre", "%" + nombre + "%");
+        } else {
+            typedQuery.setParameter("nombre", nombre);
+
+        }
         return typedQuery.getResultList();
     }
 

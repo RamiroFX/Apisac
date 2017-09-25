@@ -36,6 +36,8 @@ import javax.persistence.Table;
     @NamedQuery(name = "producto.obtenerProductosSubCategoria", query = "SELECT p FROM Producto p WHERE p.productoSubCategoria.descripcion LIKE :subcategoria")
     ,
     @NamedQuery(name = "producto.obtenerProductosImpuesto", query = "SELECT p FROM Producto p WHERE p.impuesto.valor = :valor")
+    ,
+    @NamedQuery(name = "producto.obtenerProductosMateriaPrima", query = "SELECT p FROM Producto p JOIN p.precio.materiaPrimaDetalles prm WHERE prm.materiaPrima.id = :idMateriaPrima")
 })
 public class Producto implements Serializable {
 

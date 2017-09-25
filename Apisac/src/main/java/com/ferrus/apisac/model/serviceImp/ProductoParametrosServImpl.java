@@ -62,6 +62,11 @@ public class ProductoParametrosServImpl implements ProductoParametrosService {
     }
 
     @Override
+    public List<Producto> obtenerProductosPorMateriaPrimaID(Long idMateriaPrima) {
+        return this.queryHandler.obtenerProductosPorMateriaPrimaID(idMateriaPrima);
+    }
+
+    @Override
     public void modificarProducto(Producto producto) {
         this.queryHandler.eliminarProducto(producto);
     }
