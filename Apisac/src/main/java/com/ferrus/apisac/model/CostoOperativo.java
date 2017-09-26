@@ -18,7 +18,7 @@ import javax.persistence.Table;
 @Entity(name = "CostoOperativo")
 @Table(name = "costo_operativo")
 @NamedQueries({
-    @NamedQuery(name="costoOperativo.obtenerCostosOperativos", query="SELECT co FROM CostoOperativo co WHERE co.nombre = :nombre")
+    @NamedQuery(name = "costoOperativo.obtenerCostosOperativos", query = "SELECT co FROM CostoOperativo co WHERE co.nombre LIKE :nombre")
 })
 public class CostoOperativo implements Serializable {
 
@@ -30,7 +30,7 @@ public class CostoOperativo implements Serializable {
     private Long id;
     @Column(name = "nombre", nullable = false, unique = true, length = 30)
     private String nombre;
-    @Column(name = "descripcion", nullable = false, length = 150)
+    @Column(name = "descripcion",length = 150)
     private String descripcion;
     @Column(name = "precio", nullable = false, length = 10)
     private Double precio;
@@ -42,10 +42,11 @@ public class CostoOperativo implements Serializable {
     public CostoOperativo() {
     }
 
-    public CostoOperativo(String nombre, String descripcion, Double precio, int diasLaborales) {
+    public CostoOperativo(String nombre, String descripcion, Double precio, UnidadMedida unidadMedida, int diasLaborales) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
+        this.unidadMedida = unidadMedida;
         this.diasLaborales = diasLaborales;
     }
 

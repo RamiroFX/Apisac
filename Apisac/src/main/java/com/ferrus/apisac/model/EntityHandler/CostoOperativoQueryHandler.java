@@ -30,10 +30,14 @@ public class CostoOperativoQueryHandler extends AbstractQuery {
         return co;
     }
 
-    public List<CostoOperativo> obtenerCostosOperativos(String nombre) {
+    public List<CostoOperativo> obtenerCostosOperativos(String nombre, boolean inclusivo) {
         open();
-        TypedQuery<CostoOperativo> typedQuery = EntityManagerHandler.INSTANCE.getEntityManager().createNamedQuery("materiaPrima.obtenerCostosOperativos", CostoOperativo.class);
-        typedQuery.setParameter("nombre", nombre);
+        TypedQuery<CostoOperativo> typedQuery = EntityManagerHandler.INSTANCE.getEntityManager().createNamedQuery("costoOperativo.obtenerCostosOperativos", CostoOperativo.class);
+        if (inclusivo) {
+            typedQuery.setParameter("nombre", "%" + nombre + "%");
+        } else {
+            typedQuery.setParameter("nombre", nombre);
+        }
         return typedQuery.getResultList();
     }
 

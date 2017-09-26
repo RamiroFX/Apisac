@@ -3,17 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ferrus.apisac.ui.ingrediente;
+package com.ferrus.apisac.ui.costoOperativo;
 
+import com.ferrus.apisac.callback.CostoOperativoCallback;
 import com.ferrus.apisac.callback.MateriaPrimaCallback;
-import com.ferrus.apisac.model.MateriaPrima;
+import com.ferrus.apisac.model.CostoOperativo;
 import com.ferrus.apisac.model.Producto;
-import com.ferrus.apisac.model.service.MateriaPrimaService;
+import com.ferrus.apisac.model.service.CostoOperativoService;
 import com.ferrus.apisac.model.service.ProductoParametrosService;
-import com.ferrus.apisac.model.serviceImp.MateriaPrimaServImpl;
+import com.ferrus.apisac.model.serviceImp.CostoOperativoServImpl;
 import com.ferrus.apisac.model.serviceImp.ProductoParametrosServImpl;
-import com.ferrus.apisac.tablemodel.MateriaPrimaTableModel;
-import com.ferrus.apisac.util.AppUIConstants;
+import com.ferrus.apisac.tablemodel.CostoOperativoTableModel;
+import com.ferrus.apisac.ui.materiaPrima.CrearMateriaPrima;
+import static com.ferrus.apisac.util.AppUIConstants.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -39,20 +41,20 @@ import javax.swing.border.TitledBorder;
  *
  * @author Ramiro Ferreira
  */
-public class GestionMateriaPrima extends JDialog implements ActionListener, KeyListener,
-        MouseListener, MateriaPrimaCallback {
+public class GestionCostoOperativo extends JDialog implements ActionListener, KeyListener,
+        MouseListener, CostoOperativoCallback {
 
     JTextField jtfBuscar;
     JTextArea jtaDescripcion;
     JButton jbBuscar, jbCrear, jbModificar, jbEliminar;
-    JTable jtMateriaPrima;
-    JScrollPane jspMateriaPrima, jspDescripcion;
+    JTable jtCostoOperativo;
+    JScrollPane jspCostoOperativo, jspDescripcion;
     private ProductoParametrosService productoParametrosService;
-    private MateriaPrimaService servicio;
-    private MateriaPrimaTableModel materiaPrimaTableModel;
+    private CostoOperativoService servicio;
+    private CostoOperativoTableModel costoOperativoTableModel;
 
-    public GestionMateriaPrima(JFrame jframe) {
-        super(jframe, AppUIConstants.RAW_MATERIAL_TITLE);
+    public GestionCostoOperativo(JFrame jframe) {
+        super(jframe, OPERATIVE_COST_TITLE);
         initializeVariables();
         addListeners();
         constructLayout();
@@ -61,20 +63,20 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
     }
 
     private void initializeVariables() {
-        materiaPrimaTableModel = new MateriaPrimaTableModel();
-        servicio = new MateriaPrimaServImpl();
+        costoOperativoTableModel = new CostoOperativoTableModel();
+        servicio = new CostoOperativoServImpl();
         productoParametrosService = new ProductoParametrosServImpl();
         jtfBuscar = new JTextField();
         jtaDescripcion = new JTextArea();
         jtaDescripcion.setEditable(false);
-        jbBuscar = new JButton(AppUIConstants.SEARCH_RAW_MATERIAL_BUTTON_NAME);
-        jbCrear = new JButton(AppUIConstants.CREATE_RAW_MATERIAL_BUTTON_NAME);
-        jbModificar = new JButton(AppUIConstants.UPDATE_RAW_MATERIAL_BUTTON_NAME);
-        jbEliminar = new JButton(AppUIConstants.DELETE_RAW_MATERIAL_BUTTON_NAME);
-        jtMateriaPrima = new JTable();
-        jspMateriaPrima = new JScrollPane(jtMateriaPrima);
+        jbBuscar = new JButton(SEARCH_OPERATIVE_COST_BUTTON_NAME);
+        jbCrear = new JButton(CREATE_OPERATIVE_COST_BUTTON_NAME);
+        jbModificar = new JButton(UPDATE_OPERATIVE_COST_BUTTON_NAME);
+        jbEliminar = new JButton(DELETE_OPERATIVE_COST_BUTTON_NAME);
+        jtCostoOperativo = new JTable();
+        jspCostoOperativo = new JScrollPane(jtCostoOperativo);
         jspDescripcion = new JScrollPane(jtaDescripcion);
-        jspDescripcion.setBorder(new TitledBorder("Descripción de materia prima"));
+        jspDescripcion.setBorder(new TitledBorder(DESCRIPTION_OPERATIVE_COST_PANEL_NAME));
         jbModificar.setEnabled(false);
         jbEliminar.setEnabled(false);
     }
@@ -85,9 +87,9 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
         jbCrear.addActionListener(this);
         jbModificar.addActionListener(this);
         jbEliminar.addActionListener(this);
-        jtMateriaPrima.addKeyListener(this);
+        jtCostoOperativo.addKeyListener(this);
         jtfBuscar.addKeyListener(this);
-        jtMateriaPrima.addMouseListener(this);
+        jtCostoOperativo.addMouseListener(this);
     }
 
     private void constructLayout() {
@@ -96,7 +98,7 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
         jpNorth.add(jtfBuscar, BorderLayout.CENTER);
         jpNorth.add(jbBuscar, BorderLayout.EAST);
         JPanel jpCenter = new JPanel(new BorderLayout());
-        jpCenter.add(jspMateriaPrima, BorderLayout.CENTER);
+        jpCenter.add(jspCostoOperativo, BorderLayout.CENTER);
         jpCenter.add(jspDescripcion, BorderLayout.SOUTH);
         JPanel jpSouth = new JPanel();
         jpSouth.add(jbCrear);
@@ -108,7 +110,7 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
     }
 
     private void constructAppWindow(JFrame jframe) {
-        setSize(new Dimension(AppUIConstants.RAW_MATERIAL_WINDOWS_SIZE_WIDTH, AppUIConstants.RAW_MATERIAL_WINDOWS_SIZE_HEIGHT));
+        setSize(new Dimension(OPERATIVE_COST_WINDOWS_SIZE_WIDTH, OPERATIVE_COST_WINDOWS_SIZE_HEIGHT));
         setLocationRelativeTo(jframe);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setVisible(true);
@@ -120,47 +122,47 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
     }
 
     private void loadData() {
-        materiaPrimaTableModel.setMateriaPrimaList(servicio.obtenerMateriasPrimas("", true));
-        jtMateriaPrima.setModel(materiaPrimaTableModel);
-        materiaPrimaTableModel.updateTable();
+        costoOperativoTableModel.setCostoOperativoList(servicio.obtenerCostosOperativos("", true));
+        jtCostoOperativo.setModel(costoOperativoTableModel);
+        costoOperativoTableModel.updateTable();
     }
 
     private void invokeCreateRawMaterialForm() {
-        CrearMateriaPrima cmp = new CrearMateriaPrima(this, CrearMateriaPrima.CREATE_RAW_MATERIAL);
-        cmp.setMateriaPrimaCallback(this);
+        CrearCostoOperativo cmp = new CrearCostoOperativo(this, CrearCostoOperativo.CREATE_OPERATIVE_COST);
+        cmp.setCostoOperativoCallback(this);
         this.jbModificar.setEnabled(false);
         this.jbEliminar.setEnabled(false);
     }
 
     private void invokeUpdateRawMaterialForm() {
-        int row = this.jtMateriaPrima.getSelectedRow();
-        Long idRawMaterial = null;
+        int row = this.jtCostoOperativo.getSelectedRow();
+        Long idOperativeCost = null;
         if (row > -1) {
-            idRawMaterial = (Long) jtMateriaPrima.getValueAt(row, 0);
+            idOperativeCost = (Long) jtCostoOperativo.getValueAt(row, 0);
         }
-        if (idRawMaterial == null) {
+        if (idOperativeCost == null) {
             return;
         }
-        CrearMateriaPrima cmp = new CrearMateriaPrima(this, CrearMateriaPrima.UPDATE_RAW_MATERIAL);
-        cmp.setMateriaPrimaCallback(this);
-        cmp.setIdRawMaterial(idRawMaterial);
+        CrearCostoOperativo cmp = new CrearCostoOperativo(this, CrearCostoOperativo.UPDATE_OPERATIVE_COST);
+        cmp.setCostoOperativoCallback(this);
+        cmp.setIdCostoOperativo(idOperativeCost);
         this.jbModificar.setEnabled(false);
         this.jbEliminar.setEnabled(false);
     }
 
     private void deleteRawMaterial() {
-        int option = JOptionPane.showConfirmDialog(this, "¿Desea confirmar esta operación?", "Atención", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        int option = JOptionPane.showConfirmDialog(this, CONFIRM_MESSAGE, ALERT_MESSAGE, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (option == JOptionPane.YES_OPTION) {
             try {
-                Long idMateriaPrima = Long.valueOf(String.valueOf(this.jtMateriaPrima.getValueAt(jtMateriaPrima.getSelectedRow(), 0)));
-                List<Producto> listaProducto = productoParametrosService.obtenerProductosPorMateriaPrimaID(idMateriaPrima);
+                Long idCostoOperativo = Long.valueOf(String.valueOf(this.jtCostoOperativo.getValueAt(jtCostoOperativo.getSelectedRow(), 0)));
+                List<Producto> listaProducto = productoParametrosService.obtenerProductosPorMateriaPrimaID(idCostoOperativo);
                 if (listaProducto.isEmpty()) {
-                    servicio.eliminarMateriaPrima(idMateriaPrima);
+                    servicio.eliminarCostoOperativo(idCostoOperativo);
                     this.jbModificar.setEnabled(false);
                     this.jbEliminar.setEnabled(false);
                     loadData();
                 } else {
-                    JOptionPane.showMessageDialog(this, "Existe productos que se encuentran utilizando la Materia prima.", "Alerta", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, OPERATIVE_COST_EXIST_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -175,9 +177,9 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
             @Override
             public void run() {
                 String nombre = jtfBuscar.getText().trim().toLowerCase();
-                materiaPrimaTableModel.setMateriaPrimaList(servicio.obtenerMateriasPrimas(nombre, true));
-                jtMateriaPrima.setModel(materiaPrimaTableModel);
-                materiaPrimaTableModel.updateTable();
+                costoOperativoTableModel.setCostoOperativoList(servicio.obtenerCostosOperativos(nombre, true));
+                jtCostoOperativo.setModel(costoOperativoTableModel);
+                costoOperativoTableModel.updateTable();
             }
         });
     }
@@ -221,19 +223,24 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
     }
 
     @Override
-    public void crearMateriaPrima() {
+    public void crearCostoOperativo() {
+        loadData();
+    }
+
+    @Override
+    public void modificarCostoOperativo() {
         loadData();
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.getSource().equals(this.jtMateriaPrima)) {
-            int fila = this.jtMateriaPrima.rowAtPoint(e.getPoint());
-            int columna = this.jtMateriaPrima.columnAtPoint(e.getPoint());
+        if (e.getSource().equals(this.jtCostoOperativo)) {
+            int fila = this.jtCostoOperativo.rowAtPoint(e.getPoint());
+            int columna = this.jtCostoOperativo.columnAtPoint(e.getPoint());
             if ((fila > -1) && (columna > -1)) {
-                Long idMp = (Long) this.jtMateriaPrima.getValueAt(fila, 0);
-                MateriaPrima mp = servicio.obtenerMateriaPrima(idMp);
-                this.jtaDescripcion.setText(mp.getDescripcion());
+                Long idMp = (Long) this.jtCostoOperativo.getValueAt(fila, 0);
+                CostoOperativo co = servicio.obtenerCostoOperativo(idMp);
+                this.jtaDescripcion.setText(co.getDescripcion());
                 this.jbModificar.setEnabled(true);
                 this.jbEliminar.setEnabled(true);
             } else {

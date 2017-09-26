@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ferrus.apisac.ui.ingrediente;
+package com.ferrus.apisac.ui.costoOperativo;
 
+import com.ferrus.apisac.callback.CostoOperativoCallback;
 import static com.ferrus.apisac.util.AppUIConstants.*;
-import com.ferrus.apisac.callback.MateriaPrimaCallback;
-import com.ferrus.apisac.model.MateriaPrima;
+import com.ferrus.apisac.model.CostoOperativo;
 import com.ferrus.apisac.model.UnidadMedida;
-import com.ferrus.apisac.model.service.MateriaPrimaService;
+import com.ferrus.apisac.model.service.CostoOperativoService;
 import com.ferrus.apisac.model.service.UnidadMedidaService;
-import com.ferrus.apisac.model.serviceImp.MateriaPrimaServImpl;
+import com.ferrus.apisac.model.serviceImp.CostoOperativoServImpl;
 import com.ferrus.apisac.model.serviceImp.UnidadMedidaServImpl;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -34,20 +34,20 @@ import net.miginfocom.swing.MigLayout;
  *
  * @author Ramiro Ferreira
  */
-public class CrearMateriaPrima extends JDialog implements ActionListener, KeyListener {
+public class CrearCostoOperativo extends JDialog implements ActionListener, KeyListener {
 
-    public static final int CREATE_RAW_MATERIAL = 1;
-    public static final int UPDATE_RAW_MATERIAL = 2;
+    public static final int CREATE_OPERATIVE_COST = 1;
+    public static final int UPDATE_OPERATIVE_COST = 2;
     private JTextField jtfNombre, jtDescripcion, jtPrecio;
     private JButton jbAceptar, jbCancelar;
     private JComboBox<UnidadMedida> jcbUnidadMBoxM;
-    private MateriaPrimaCallback callback;
+    private CostoOperativoCallback callback;
     private UnidadMedidaService unidadMedidaService;
-    private MateriaPrimaService materiaPrimaService;
+    private CostoOperativoService costoOperativoService;
     private int typeForm;
-    private Long idRawMaterial;
+    private Long idOperativeCost;
 
-    public CrearMateriaPrima(JDialog jDialog, int typeFrom) {
+    public CrearCostoOperativo(JDialog jDialog, int typeFrom) {
         super(jDialog);
         initializeVariables(typeFrom);
         addListeners();
@@ -59,7 +59,7 @@ public class CrearMateriaPrima extends JDialog implements ActionListener, KeyLis
     private void initializeVariables(int typeForm) {
         this.typeForm = typeForm;
         unidadMedidaService = new UnidadMedidaServImpl();
-        materiaPrimaService = new MateriaPrimaServImpl();
+        costoOperativoService = new CostoOperativoServImpl();
         jtfNombre = new JTextField();
         jtDescripcion = new JTextField();
         jtPrecio = new JTextField();
@@ -83,13 +83,13 @@ public class CrearMateriaPrima extends JDialog implements ActionListener, KeyLis
 
     private void constructLayout() {
         JPanel jpCenter = new JPanel(new MigLayout());
-        jpCenter.add(new JLabel(NAME_RAW_MATERIAL_LABEL));
+        jpCenter.add(new JLabel(NAME_OPERATIVE_COST_LABEL));
         jpCenter.add(jtfNombre, "growx, push, wrap");
-        jpCenter.add(new JLabel(DESCRIPTION_RAW_MATERIAl_BUTTON_NAME));
+        jpCenter.add(new JLabel(DESCRIPTION_OPERATIVE_COST_BUTTON_NAME));
         jpCenter.add(jtDescripcion, "growx, push, wrap");
-        jpCenter.add(new JLabel(UNIT_RAW_MATERIAl_BUTTON_NAME));
+        jpCenter.add(new JLabel(UNIT_OPERATIVE_COST_BUTTON_NAME));
         jpCenter.add(jcbUnidadMBoxM, "growx, push, wrap");
-        jpCenter.add(new JLabel(PRECIO_RAW_MATERIAl_BUTTON_NAME));
+        jpCenter.add(new JLabel(PRECIO_OPERATIVE_COST_BUTTON_NAME));
         jpCenter.add(jtPrecio, "growx, push");
         JPanel jpSouth = new JPanel();
         jpSouth.add(jbAceptar);
@@ -99,10 +99,10 @@ public class CrearMateriaPrima extends JDialog implements ActionListener, KeyLis
     }
 
     private void constructAppWindow(JDialog jDialog) {
-        if (typeForm == CREATE_RAW_MATERIAL) {
-            setTitle(CREATE_RAW_MATERIAl_FORM_TITLE);
-        } else if (typeForm == UPDATE_RAW_MATERIAL) {
-            setTitle(UPDATE_RAW_MATERIAl_FORM_TITLE);
+        if (typeForm == CREATE_OPERATIVE_COST) {
+            setTitle(CREATE_OPERATIVE_COST_FORM_TITLE);
+        } else if (typeForm == UPDATE_OPERATIVE_COST) {
+            setTitle(UPDATE_OPERATIVE_COST_FORM_TITLE);
         }
         setPreferredSize(new Dimension(400, 300));
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -119,127 +119,127 @@ public class CrearMateriaPrima extends JDialog implements ActionListener, KeyLis
         }
     }
 
-    public void setMateriaPrimaCallback(MateriaPrimaCallback callback) {
+    public void setCostoOperativoCallback(CostoOperativoCallback callback) {
         this.callback = callback;
     }
 
-    public void setIdRawMaterial(Long idRawMaterial) {
-        this.idRawMaterial = idRawMaterial;
+    public void setIdCostoOperativo(Long idRawMaterial) {
+        this.idOperativeCost = idRawMaterial;
     }
 
-    private void crearMateriaPrima() {
+    private void crearCostoOperativo() {
         String nombre = jtfNombre.getText().trim();
         String descripcion = jtDescripcion.getText().trim();
         String precioString = jtPrecio.getText().trim();
         Double precio = -1.0;
         if (nombre.length() < 1 || nombre.isEmpty()) {
-            JOptionPane.showMessageDialog(this, RAW_MATERIAL_MIN_CHAR_NAME_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, OPERATIVE_COST_MIN_CHAR_NAME_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (nombre.length() > 30) {
-            JOptionPane.showMessageDialog(this, RAW_MATERIAL_MAX_CHAR_NAME_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, OPERATIVE_COST_MAX_CHAR_NAME_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (descripcion.length() > 150) {
-            JOptionPane.showMessageDialog(this, RAW_MATERIAL_MAX_CHAR_DESC_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, OPERATIVE_COST_MAX_CHAR_DESC_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (descripcion.isEmpty()) {
             descripcion = null;
         }
         if (precioString.length() < 1 || precioString.isEmpty()) {
-            JOptionPane.showMessageDialog(this, RAW_MATERIAL_MIN_CHAR_PRICE_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, OPERATIVE_COST_MIN_CHAR_PRICE_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             return;
         } else {
             try {
                 precio = Double.valueOf(precioString);
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, RAW_MATERIAL_NUMBER_VALID_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, OPERATIVE_COST_NUMBER_VALID_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
         if (precio < 0) {
-            JOptionPane.showMessageDialog(this, RAW_MATERIAL_VALID_POSITIVE_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, OPERATIVE_COST_VALID_POSITIVE_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             return;
         }
-        List<MateriaPrima> list = materiaPrimaService.obtenerMateriasPrimas(nombre, false);
+        List<CostoOperativo> list = costoOperativoService.obtenerCostosOperativos(nombre, false);
         if (list.isEmpty()) {
-            MateriaPrima unaMateriaPrima = new MateriaPrima();
-            unaMateriaPrima.setNombre(nombre);
-            unaMateriaPrima.setDescripcion(descripcion);
-            unaMateriaPrima.setPrecio(precio);
-            unaMateriaPrima.setUnidadMedida((UnidadMedida) jcbUnidadMBoxM.getSelectedItem());
-            materiaPrimaService.insertarMateriaPrima(unaMateriaPrima);
-            this.callback.crearMateriaPrima();
+            CostoOperativo costoOperativo = new CostoOperativo();
+            costoOperativo.setNombre(nombre);
+            costoOperativo.setDescripcion(descripcion);
+            costoOperativo.setPrecio(precio);
+            costoOperativo.setUnidadMedida((UnidadMedida) jcbUnidadMBoxM.getSelectedItem());
+            costoOperativoService.insertarCostoOperativo(costoOperativo);
+            this.callback.crearCostoOperativo();
             cerrar();
         } else {
-            JOptionPane.showMessageDialog(this, RAW_MATERIAL_EXIST_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, OPERATIVE_COST_EXIST_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void modificarMateriaPrima() {
+    private void modificarCostoOperativo() {
         String nombre = jtfNombre.getText().trim();
         String descripcion = jtDescripcion.getText().trim();
         String precioString = jtPrecio.getText().trim();
         Double precio = -1.0;
         if (nombre.length() < 1 || nombre.isEmpty()) {
-            JOptionPane.showMessageDialog(this, RAW_MATERIAL_MIN_CHAR_NAME_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, OPERATIVE_COST_MIN_CHAR_NAME_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (nombre.length() > 30) {
-            JOptionPane.showMessageDialog(this, RAW_MATERIAL_MAX_CHAR_NAME_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, OPERATIVE_COST_MAX_CHAR_NAME_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (descripcion.length() > 150) {
-            JOptionPane.showMessageDialog(this, RAW_MATERIAL_MAX_CHAR_DESC_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, OPERATIVE_COST_MAX_CHAR_DESC_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (descripcion.isEmpty()) {
             descripcion = null;
         }
         if (precioString.length() < 1 || precioString.isEmpty()) {
-            JOptionPane.showMessageDialog(this, RAW_MATERIAL_MIN_CHAR_PRICE_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, OPERATIVE_COST_MIN_CHAR_PRICE_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             return;
         } else {
             try {
                 precio = Double.valueOf(precioString);
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, RAW_MATERIAL_NUMBER_VALID_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, OPERATIVE_COST_NUMBER_VALID_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
         if (precio < 0) {
-            JOptionPane.showMessageDialog(this, RAW_MATERIAL_VALID_POSITIVE_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, OPERATIVE_COST_VALID_POSITIVE_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             return;
         }
-        List<MateriaPrima> list = materiaPrimaService.obtenerMateriasPrimas(nombre, false);
+        List<CostoOperativo> list = costoOperativoService.obtenerCostosOperativos(nombre, false);
         if (list.size() == 1) {
             Long idCateTemp = list.get(0).getId();
-            if (Objects.equals(idRawMaterial, idCateTemp)) {
-                MateriaPrima unaMateriaPrima = new MateriaPrima();
-                unaMateriaPrima.setId(idRawMaterial);
-                unaMateriaPrima.setDescripcion(descripcion);
-                unaMateriaPrima.setNombre(nombre);
-                unaMateriaPrima.setPrecio(precio);
-                unaMateriaPrima.setUnidadMedida((UnidadMedida) jcbUnidadMBoxM.getSelectedItem());
-                materiaPrimaService.modificarMateriasPrimas(unaMateriaPrima);
-                callback.crearMateriaPrima();
+            if (Objects.equals(idOperativeCost, idCateTemp)) {
+                CostoOperativo unCostoOperativo = new CostoOperativo();
+                unCostoOperativo.setId(idOperativeCost);
+                unCostoOperativo.setDescripcion(descripcion);
+                unCostoOperativo.setNombre(nombre);
+                unCostoOperativo.setPrecio(precio);
+                unCostoOperativo.setUnidadMedida((UnidadMedida) jcbUnidadMBoxM.getSelectedItem());
+                costoOperativoService.modificarCostoOperativo(unCostoOperativo);
+                callback.modificarCostoOperativo();
                 cerrar();
             } else {
-                JOptionPane.showMessageDialog(this, RAW_MATERIAL_EXIST_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, OPERATIVE_COST_EXIST_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             }
         } else if (list.isEmpty()) {
-            MateriaPrima unaMateriaPrima = new MateriaPrima();
-            unaMateriaPrima.setId(idRawMaterial);
-            unaMateriaPrima.setDescripcion(descripcion);
-            unaMateriaPrima.setNombre(nombre);
-            unaMateriaPrima.setPrecio(precio);
-            unaMateriaPrima.setUnidadMedida((UnidadMedida) jcbUnidadMBoxM.getSelectedItem());
-            materiaPrimaService.modificarMateriasPrimas(unaMateriaPrima);
-            callback.crearMateriaPrima();
+            CostoOperativo unCostoOperativo = new CostoOperativo();
+            unCostoOperativo.setId(idOperativeCost);
+            unCostoOperativo.setDescripcion(descripcion);
+            unCostoOperativo.setNombre(nombre);
+            unCostoOperativo.setPrecio(precio);
+            unCostoOperativo.setUnidadMedida((UnidadMedida) jcbUnidadMBoxM.getSelectedItem());
+            costoOperativoService.modificarCostoOperativo(unCostoOperativo);
+            callback.crearCostoOperativo();
             cerrar();
         } else {
-            JOptionPane.showMessageDialog(this, RAW_MATERIAL_EXIST_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, OPERATIVE_COST_EXIST_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -249,10 +249,10 @@ public class CrearMateriaPrima extends JDialog implements ActionListener, KeyLis
     }
 
     private void aceptButtonHandler() {
-        if (typeForm == CREATE_RAW_MATERIAL) {
-            crearMateriaPrima();
-        } else if (typeForm == UPDATE_RAW_MATERIAL) {
-            modificarMateriaPrima();
+        if (typeForm == CREATE_OPERATIVE_COST) {
+            crearCostoOperativo();
+        } else if (typeForm == UPDATE_OPERATIVE_COST) {
+            modificarCostoOperativo();
         }
     }
 

@@ -25,7 +25,7 @@ public interface ProductoParametrosService {
 
     public Producto obtenerProducto(Long id);
 
-    public List<Producto> obtenerProductos(String nombre);
+    public List<Producto> obtenerProductos(String nombre, boolean inclusivo);
 
     public List<Producto> obtenerProductosPorMarca(String marca);
 

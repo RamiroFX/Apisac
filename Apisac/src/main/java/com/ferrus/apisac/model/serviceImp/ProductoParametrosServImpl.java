@@ -37,8 +37,8 @@ public class ProductoParametrosServImpl implements ProductoParametrosService {
     }
 
     @Override
-    public List<Producto> obtenerProductos(String nombre) {
-        return this.queryHandler.obtenerProductos(nombre);
+    public List<Producto> obtenerProductos(String nombre, boolean inclusivo) {
+        return this.queryHandler.obtenerProductos(nombre, inclusivo);
     }
 
     @Override

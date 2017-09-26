@@ -7,11 +7,11 @@ package com.ferrus.apisac.callback;
 
 /**
  *
- * @author Ramiro Ferreira
+ * @author Ramiro
  */
-public interface MateriaPrimaCallback {
+public interface CostoOperativoCallback {
 
-    public void crearMateriaPrima();
+    public void crearCostoOperativo();
 
-    public void modificarMateriaPrima();
+    public void modificarCostoOperativo();
 }

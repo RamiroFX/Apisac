@@ -28,13 +28,13 @@ public class CostoOperativoServImpl implements CostoOperativoService {
     }
 
     @Override
-    public CostoOperativo obtenerMateriaPrima(Long id) {
+    public CostoOperativo obtenerCostoOperativo(Long id) {
         return this.queryHandler.obtenerMateriaPrima(id);
     }
 
     @Override
-    public List<CostoOperativo> obtenerCostosOperativos(String nombre) {
-        return this.queryHandler.obtenerCostosOperativos(nombre);
+    public List<CostoOperativo> obtenerCostosOperativos(String nombre, boolean inclusivo) {
+        return this.queryHandler.obtenerCostosOperativos(nombre, inclusivo);
     }
 
     @Override

@@ -34,9 +34,13 @@ public class ProductoParametrosQueryHandler extends AbstractQuery {
         return producto;
     }
 
-    public List<Producto> obtenerProductos(String nombre) {
+    public List<Producto> obtenerProductos(String nombre, boolean inclusivo) {
         TypedQuery<Producto> typedQuery = EntityManagerHandler.INSTANCE.getEntityManager().createNamedQuery("producto.obtenerProductos", Producto.class);
-        typedQuery.setParameter("nombre", "%" + nombre.trim() + "%");
+        if (inclusivo) {
+            typedQuery.setParameter("nombre", "%" + nombre.trim() + "%");
+        } else {
+            typedQuery.setParameter("nombre", nombre.trim());
+        }
         return typedQuery.getResultList();
     }
 

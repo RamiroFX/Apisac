@@ -16,9 +16,9 @@ public interface CostoOperativoService {
 
     public void insertarCostoOperativo(CostoOperativo costoOperativo);
 
-    public CostoOperativo obtenerMateriaPrima(Long id);
+    public CostoOperativo obtenerCostoOperativo(Long id);
 
-    public List<CostoOperativo> obtenerCostosOperativos(String nombre);
+    public List<CostoOperativo> obtenerCostosOperativos(String nombre, boolean inclusivo);
 
     public void modificarCostoOperativo(CostoOperativo costoOperativo);
 

@@ -5,13 +5,22 @@
  */
 package com.ferrus.apisac;
 
+import com.ferrus.apisac.model.CostoOperativo;
+import com.ferrus.apisac.model.Impuesto;
+import com.ferrus.apisac.model.Marca;
 import com.ferrus.apisac.model.MateriaPrima;
+import com.ferrus.apisac.model.ProductoCategoria;
+import com.ferrus.apisac.model.ProductoSubCategoria;
 import com.ferrus.apisac.model.UnidadMedida;
+import com.ferrus.apisac.model.service.CostoOperativoService;
 import com.ferrus.apisac.model.service.MateriaPrimaService;
 import com.ferrus.apisac.model.service.PreferenciaService;
+import com.ferrus.apisac.model.service.ProductoParametrosService;
 import com.ferrus.apisac.model.service.UnidadMedidaService;
+import com.ferrus.apisac.model.serviceImp.CostoOperativoServImpl;
 import com.ferrus.apisac.model.serviceImp.MateriaPrimaServImpl;
 import com.ferrus.apisac.model.serviceImp.PreferenciaServImpl;
+import com.ferrus.apisac.model.serviceImp.ProductoParametrosServImpl;
 import com.ferrus.apisac.model.serviceImp.UnidadMedidaServImpl;
 import com.ferrus.apisac.ui.inicio.App;
 import java.util.ArrayList;
@@ -72,13 +81,72 @@ public class Main {
         UnidadMedida umGr = new UnidadMedida("Gramo", "Gr", 1.0);
         UnidadMedida umKG = new UnidadMedida("Kilogramo", "Kg", 1000.0);
         UnidadMedida umTonelada = new UnidadMedida("Tonelada", "Ton", 10000.0);
+        UnidadMedida umSegundo = new UnidadMedida("Segundo", "Seg", 1.0);
+        UnidadMedida umMinuto = new UnidadMedida("Minuto", "Min", 60.0);
+        UnidadMedida umHora = new UnidadMedida("Hora", "Hr", 3600.0);
         UnidadMedidaService medidaService = new UnidadMedidaServImpl();
         medidaService.insertarUnidadMedida(umGr);
         medidaService.insertarUnidadMedida(umKG);
         medidaService.insertarUnidadMedida(umTonelada);
+        medidaService.insertarUnidadMedida(umSegundo);
+        medidaService.insertarUnidadMedida(umMinuto);
+        medidaService.insertarUnidadMedida(umHora);
 
         MateriaPrima mpHarina = new MateriaPrima("Harina 000", null, 2500.0, umKG);
         MateriaPrimaService materiaPrimaService = new MateriaPrimaServImpl();
         materiaPrimaService.insertarMateriaPrima(mpHarina);
+
+        CostoOperativo co = new CostoOperativo("Mano de obra", null, 11000.0, umHora, 24);
+        CostoOperativoService costoOperativoService = new CostoOperativoServImpl();
+        costoOperativoService.insertarCostoOperativo(co);
+
+        Marca marca1 = new Marca("Reina");
+        Marca marca2 = new Marca("Ersa");
+        Marca marca3 = new Marca("Hilagro");
+        Marca marca4 = new Marca("OK");
+        ProductoCategoria categoria1 = new ProductoCategoria("Minuta");
+        ProductoCategoria categoria2 = new ProductoCategoria("Panificado");
+        ProductoCategoria categoria3 = new ProductoCategoria("Almuerzo");
+        ProductoCategoria categoria4 = new ProductoCategoria("Bebida");
+        ProductoSubCategoria productoSubCategoria1 = new ProductoSubCategoria("Jugo", categoria4);
+        ProductoSubCategoria productoSubCategoria2 = new ProductoSubCategoria("Café", categoria4);
+        ProductoSubCategoria productoSubCategoria3 = new ProductoSubCategoria("Té", categoria4);
+        ProductoSubCategoria productoSubCategoria4 = new ProductoSubCategoria("Empanada", categoria1);
+        ProductoSubCategoria productoSubCategoria5 = new ProductoSubCategoria("Tarta", categoria1);
+        ProductoSubCategoria productoSubCategoria6 = new ProductoSubCategoria("Sandwich", categoria1);
+        ProductoSubCategoria productoSubCategoria7 = new ProductoSubCategoria("Salvado", categoria2);
+        ProductoSubCategoria productoSubCategoria8 = new ProductoSubCategoria("Seco", categoria2);
+        ProductoSubCategoria productoSubCategoria9 = new ProductoSubCategoria("Sandwich", categoria2);
+        ProductoSubCategoria productoSubCategoria10 = new ProductoSubCategoria("Sopa", categoria3);
+        ProductoSubCategoria productoSubCategoria11 = new ProductoSubCategoria("Ensalada", categoria3);
+        ProductoSubCategoria productoSubCategoria12 = new ProductoSubCategoria("Carne", categoria3);
+        Impuesto impuesto1 = new Impuesto(0.0);
+        Impuesto impuesto2 = new Impuesto(5.0);
+        Impuesto impuesto3 = new Impuesto(10.0);
+        ProductoParametrosService parametrosService = new ProductoParametrosServImpl();
+        parametrosService.insertarMarca(marca1);
+        parametrosService.insertarMarca(marca2);
+        parametrosService.insertarMarca(marca3);
+        parametrosService.insertarMarca(marca4);
+        parametrosService.insertarProductoCategoria(categoria1);
+        parametrosService.insertarProductoCategoria(categoria2);
+        parametrosService.insertarProductoCategoria(categoria3);
+        parametrosService.insertarProductoCategoria(categoria4);
+        parametrosService.insertarProductoSubCategoria(productoSubCategoria1);
+        parametrosService.insertarProductoSubCategoria(productoSubCategoria2);
+        parametrosService.insertarProductoSubCategoria(productoSubCategoria3);
+        parametrosService.insertarProductoSubCategoria(productoSubCategoria4);
+        parametrosService.insertarProductoSubCategoria(productoSubCategoria5);
+        parametrosService.insertarProductoSubCategoria(productoSubCategoria6);
+        parametrosService.insertarProductoSubCategoria(productoSubCategoria7);
+        parametrosService.insertarProductoSubCategoria(productoSubCategoria8);
+        parametrosService.insertarProductoSubCategoria(productoSubCategoria9);
+        parametrosService.insertarProductoSubCategoria(productoSubCategoria10);
+        parametrosService.insertarProductoSubCategoria(productoSubCategoria11);
+        parametrosService.insertarProductoSubCategoria(productoSubCategoria12);
+        parametrosService.insertarImpuesto(impuesto1);
+        parametrosService.insertarImpuesto(impuesto2);
+        parametrosService.insertarImpuesto(impuesto3);
+
     }
 }
