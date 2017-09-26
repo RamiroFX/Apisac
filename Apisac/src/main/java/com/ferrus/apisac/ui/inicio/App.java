@@ -2,6 +2,7 @@ package com.ferrus.apisac.ui.inicio;
 
 import com.ferrus.apisac.ui.costoOperativo.GestionCostoOperativo;
 import com.ferrus.apisac.ui.materiaPrima.GestionMateriaPrima;
+import com.ferrus.apisac.ui.producto.CrearProducto;
 import com.ferrus.apisac.util.AppUIConstants;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -15,7 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JToolBar;
 
 public class App extends JFrame implements ActionListener {
-    
+
     private PanelPrincipal jpPrincipal;
     private JToolBar jtbBarraHerramientas = null;
     private ImageIcon icono;
@@ -43,7 +44,7 @@ public class App extends JFrame implements ActionListener {
         }
         this.jpPrincipal = new PanelPrincipal();
         this.barraMenu = new BarraMenu(this);
-        
+
         this.timeLabel = new JLabel();
         this.timer = new Timer(timeLabel);
         jtbBarraHerramientas = new JToolBar(AppUIConstants.TOOL_BAR_NAME, JToolBar.HORIZONTAL);
@@ -95,12 +96,14 @@ public class App extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
-        if (src.equals(this.jpPrincipal.jbParametros)) {
+        if (src.equals(this.jpPrincipal.jbCrear)) {
+            CrearProducto cp = new CrearProducto(this, CrearProducto.CREATE_PRODUCT);
+        } else if (src.equals(this.jpPrincipal.jbParametros)) {
             Parametros param = new Parametros(this);
             param.setVisible(true);
         } else if (src.equals(this.jpPrincipal.jbMateriaPrima)) {
             GestionMateriaPrima gmp = new GestionMateriaPrima(this);
-        }else if (src.equals(this.jpPrincipal.jbCostoOperativo)) {
+        } else if (src.equals(this.jpPrincipal.jbCostoOperativo)) {
             GestionCostoOperativo gco = new GestionCostoOperativo(this);
         }
     }

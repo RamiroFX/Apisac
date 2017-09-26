@@ -78,27 +78,65 @@ public class Main {
     }
 
     private static void loadData() {
+        UnidadMedida umUnidad = new UnidadMedida("Unidad", "Unid", 1.0);
         UnidadMedida umGr = new UnidadMedida("Gramo", "Gr", 1.0);
         UnidadMedida umKG = new UnidadMedida("Kilogramo", "Kg", 1000.0);
         UnidadMedida umTonelada = new UnidadMedida("Tonelada", "Ton", 10000.0);
         UnidadMedida umSegundo = new UnidadMedida("Segundo", "Seg", 1.0);
         UnidadMedida umMinuto = new UnidadMedida("Minuto", "Min", 60.0);
         UnidadMedida umHora = new UnidadMedida("Hora", "Hr", 3600.0);
+        UnidadMedida umMm = new UnidadMedida("Milímetro", "Mm", 1.0);
+        UnidadMedida umCm = new UnidadMedida("Centímetro", "Cm", 10.0);
+        UnidadMedida umMt = new UnidadMedida("Metro", "Mt", 100.0);
+        UnidadMedida umKm = new UnidadMedida("Kilómetro", "Km", 1000.0);
         UnidadMedidaService medidaService = new UnidadMedidaServImpl();
+        medidaService.insertarUnidadMedida(umUnidad);
         medidaService.insertarUnidadMedida(umGr);
         medidaService.insertarUnidadMedida(umKG);
         medidaService.insertarUnidadMedida(umTonelada);
         medidaService.insertarUnidadMedida(umSegundo);
         medidaService.insertarUnidadMedida(umMinuto);
         medidaService.insertarUnidadMedida(umHora);
+        medidaService.insertarUnidadMedida(umMm);
+        medidaService.insertarUnidadMedida(umCm);
+        medidaService.insertarUnidadMedida(umMt);
+        medidaService.insertarUnidadMedida(umKm);
 
         MateriaPrima mpHarina = new MateriaPrima("Harina 000", null, 2500.0, umKG);
         MateriaPrimaService materiaPrimaService = new MateriaPrimaServImpl();
         materiaPrimaService.insertarMateriaPrima(mpHarina);
 
-        CostoOperativo co = new CostoOperativo("Mano de obra", null, 11000.0, umHora, 24);
+        CostoOperativo co1 = new CostoOperativo("Jornales y comisiones", "Jornales y comisiones de comercialización", 11000.0, umUnidad, 24);
+        CostoOperativo co2 = new CostoOperativo("Gastos de publicidad", null, 1000.0, umUnidad, 24);
+        CostoOperativo co3 = new CostoOperativo("Panfletos", null, 1000.0, umUnidad, 24);
+        CostoOperativo co4 = new CostoOperativo("Distribución", null, 1000.0, umUnidad, 24);
+        CostoOperativo co5 = new CostoOperativo("Encuestas", null, 1000.0, umUnidad, 24);
+        CostoOperativo co6 = new CostoOperativo("Documentos comerciales", null, 1000.0, umUnidad, 24);
+        CostoOperativo co7 = new CostoOperativo("Diseño e impresión de logos", null, 1000.0, umUnidad, 24);
+        CostoOperativo co8 = new CostoOperativo("Mano de obra", null, 11000.0, umHora, 24);
+        CostoOperativo co9 = new CostoOperativo("Alquiler de local", null, 1000.0, umHora, 24);
+        CostoOperativo co10 = new CostoOperativo("Alquiler de maquinarias", null, 1000.0, umHora, 24);
+        CostoOperativo co11 = new CostoOperativo("Energía eléctrica", null, 1000.0, umHora, 24);
+        CostoOperativo co12 = new CostoOperativo("Servicio telefónico", null, 1000.0, umHora, 24);
+        CostoOperativo co13 = new CostoOperativo("Servicio de agua", null, 1000.0, umHora, 24);
+        CostoOperativo co14 = new CostoOperativo("Servicio de gas", null, 1000.0, umHora, 24);
+        CostoOperativo co15 = new CostoOperativo("Servicio de internet", null, 1000.0, umHora, 24);
         CostoOperativoService costoOperativoService = new CostoOperativoServImpl();
-        costoOperativoService.insertarCostoOperativo(co);
+        costoOperativoService.insertarCostoOperativo(co1);
+        costoOperativoService.insertarCostoOperativo(co2);
+        costoOperativoService.insertarCostoOperativo(co3);
+        costoOperativoService.insertarCostoOperativo(co4);
+        costoOperativoService.insertarCostoOperativo(co5);
+        costoOperativoService.insertarCostoOperativo(co6);
+        costoOperativoService.insertarCostoOperativo(co7);
+        costoOperativoService.insertarCostoOperativo(co8);
+        costoOperativoService.insertarCostoOperativo(co9);
+        costoOperativoService.insertarCostoOperativo(co10);
+        costoOperativoService.insertarCostoOperativo(co11);
+        costoOperativoService.insertarCostoOperativo(co12);
+        costoOperativoService.insertarCostoOperativo(co13);
+        costoOperativoService.insertarCostoOperativo(co14);
+        costoOperativoService.insertarCostoOperativo(co15);
 
         Marca marca1 = new Marca("Reina");
         Marca marca2 = new Marca("Ersa");
