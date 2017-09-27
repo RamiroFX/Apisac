@@ -18,11 +18,9 @@ import static com.ferrus.apisac.util.AppUIConstants.CANT_RAW_MATERIAl_LABEL_NAME
 import static com.ferrus.apisac.util.AppUIConstants.SELECT_RAW_MATERIAl_FORM_TITLE;
 import static com.ferrus.apisac.util.AppUIConstants.NAME_RAW_MATERIAL_LABEL;
 import static com.ferrus.apisac.util.AppUIConstants.PRECIO_RAW_MATERIAl_BUTTON_NAME;
-import static com.ferrus.apisac.util.AppUIConstants.RAW_MATERIAL_MIN_CHAR_PRICE_MESSAGE;
 import static com.ferrus.apisac.util.AppUIConstants.RAW_MATERIAL_NUMBER_VALID_CANT_MESSAGE;
 import static com.ferrus.apisac.util.AppUIConstants.RAW_MATERIAL_NUMBER_VALID_MESSAGE;
 import static com.ferrus.apisac.util.AppUIConstants.RAW_MATERIAL_VALID_POSITIVE_MESSAGE;
-import static com.ferrus.apisac.util.AppUIConstants.SELECT_MATERIAL_MIN_CHAR_CANT_MESSAGE;
 import static com.ferrus.apisac.util.AppUIConstants.SELECT_MATERIAL_VALID_POSITIVE_CANT_MESSAGE;
 import static com.ferrus.apisac.util.AppUIConstants.TOTAL_RAW_MATERIAl_LABEL_NAME;
 import static com.ferrus.apisac.util.AppUIConstants.UNIT_RAW_MATERIAl_BUTTON_NAME;
@@ -31,9 +29,12 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.List;
+import java.util.Objects;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -47,7 +48,8 @@ import net.miginfocom.swing.MigLayout;
  *
  * @author Ramiro Ferreira
  */
-public class SeleccionarCantidad extends JDialog implements ActionListener, KeyListener {
+public class SeleccionarCantidad extends JDialog implements ActionListener, KeyListener,
+        ItemListener {
 
     private JTextField jtfNombre, jtfCantidad, jtfPrecio, jtfTotal;
     private JButton jbAceptar, jbCancelar;
@@ -57,22 +59,22 @@ public class SeleccionarCantidad extends JDialog implements ActionListener, KeyL
     private MateriaPrima mp;
 
     public SeleccionarCantidad(JDialog jDialog, MateriaPrima mp) {
-        super(jDialog);
+        super(jDialog, true);
         initializeVariables();
+        loadData(mp);
         addListeners();
         constructLayout();
         constructAppWindow(jDialog);
-        loadData(mp);
     }
 
     private void initializeVariables() {
         unidadMedidaService = new UnidadMedidaServImpl();
         jtfNombre = new JTextField();
         jtfNombre.setEditable(false);
-        jtfCantidad = new JTextField();
-        jtfTotal = new JTextField();
+        jtfCantidad = new JTextField("0");
+        jtfTotal = new JTextField("0");
         jtfTotal.setEditable(false);
-        jtfPrecio = new JTextField();
+        jtfPrecio = new JTextField("0");
         jbAceptar = new JButton(ACEPT_RAW_MATERIAl_BUTTON_NAME);
         jbCancelar = new JButton(CANCEL_RAW_MATERIAl_BUTTON_NAME);
         jcbUnidadMBoxM = new JComboBox();
@@ -81,6 +83,7 @@ public class SeleccionarCantidad extends JDialog implements ActionListener, KeyL
     private void addListeners() {
         jbAceptar.addActionListener(this);
         jbCancelar.addActionListener(this);
+        jcbUnidadMBoxM.addItemListener(this);
         /*
         KEYLISTENERS
          */
@@ -114,11 +117,9 @@ public class SeleccionarCantidad extends JDialog implements ActionListener, KeyL
 
     private void constructAppWindow(JDialog jDialog) {
         setTitle(SELECT_RAW_MATERIAl_FORM_TITLE);
-        setPreferredSize(new Dimension(400, 300));
+        setSize(new Dimension(400, 300));
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        pack();
         setLocationRelativeTo(jDialog);
-        setVisible(true);
     }
 
     private void loadData(MateriaPrima mp) {
@@ -130,6 +131,8 @@ public class SeleccionarCantidad extends JDialog implements ActionListener, KeyL
         for (UnidadMedida unidadMedida : unidadMedidas) {
             jcbUnidadMBoxM.addItem(unidadMedida);
         }
+        jcbUnidadMBoxM.setSelectedItem(mp.getUnidadMedida());
+
     }
 
     public void setCrearProductoCallback(CrearProductoCallback crearProductoCallback) {
@@ -145,9 +148,15 @@ public class SeleccionarCantidad extends JDialog implements ActionListener, KeyL
         }
         Double cantidad = Double.valueOf(jtfCantidad.getText().trim());
         Double precio = Double.valueOf(jtfPrecio.getText().trim());
+        MateriaPrima unaMatPrima = new MateriaPrima();
+        unaMatPrima.setDescripcion(mp.getDescripcion());
+        unaMatPrima.setId(mp.getId());
+        unaMatPrima.setNombre(mp.getNombre());
+        unaMatPrima.setPrecio(mp.getPrecio());
+        unaMatPrima.setUnidadMedida((UnidadMedida) jcbUnidadMBoxM.getSelectedItem());
         MateriaPrimaDetalle mpd = new MateriaPrimaDetalle();
         mpd.setCantidad(cantidad);
-        mpd.setMateriaPrima(this.mp);
+        mpd.setMateriaPrima(unaMatPrima);
         mpd.setPrecioMateriaPrima(precio);
         this.crearProductoCallback.recibirMateriaPrimaDetalle(mpd);
         cerrar();
@@ -212,6 +221,23 @@ public class SeleccionarCantidad extends JDialog implements ActionListener, KeyL
         });
     }
 
+    private void itemStateHandler() {
+        Double precio = mp.getPrecio();
+        Double precioNuevo = null;
+        Double valorActual = mp.getUnidadMedida().getValor();
+        UnidadMedida unidadMedidaNueva = (UnidadMedida) jcbUnidadMBoxM.getSelectedItem();
+        Double valorNuevo = unidadMedidaNueva.getValor();
+        if (valorActual < valorNuevo) {
+            precioNuevo = precio * valorActual;
+        } else if (valorActual > valorNuevo) {
+            precioNuevo = precio / valorActual;
+        } else if (Objects.equals(valorActual, valorNuevo)) {
+            precioNuevo = precio;
+        }
+        this.jtfPrecio.setText("" + precioNuevo);
+        cantidadKeyTypedHandler();
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
@@ -241,6 +267,11 @@ public class SeleccionarCantidad extends JDialog implements ActionListener, KeyL
 
     @Override
     public void keyReleased(KeyEvent e) {
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        itemStateHandler();
     }
 
 }

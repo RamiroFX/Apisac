@@ -59,21 +59,21 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
     private CrearProductoCallback crearProductoCallback;
 
     public GestionMateriaPrima(JFrame jframe, int formType) {
-        super(jframe, AppUIConstants.RAW_MATERIAL_TITLE);
+        super(jframe, true);
         initializeVariables(formType);
+        loadData();
         addListeners();
         constructLayout();
         constructAppWindow(jframe);
-        loadData();
     }
 
     public GestionMateriaPrima(JDialog jdialog, int formType) {
-        super(jdialog, AppUIConstants.RAW_MATERIAL_TITLE);
+        super(jdialog, true);
         initializeVariables(formType);
+        loadData();
         addListeners();
         constructLayout();
         constructAppWindow(jdialog);
-        loadData();
     }
 
     private void initializeVariables(int formType) {
@@ -89,9 +89,10 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
         jbModificar = new JButton(AppUIConstants.UPDATE_RAW_MATERIAL_BUTTON_NAME);
         jbEliminar = new JButton(AppUIConstants.DELETE_RAW_MATERIAL_BUTTON_NAME);
         jtMateriaPrima = new JTable();
+        jtMateriaPrima.getTableHeader().setReorderingAllowed(false);
         jspMateriaPrima = new JScrollPane(jtMateriaPrima);
         jspDescripcion = new JScrollPane(jtaDescripcion);
-        jspDescripcion.setBorder(new TitledBorder("Descripción de materia prima"));
+        jspDescripcion.setBorder(new TitledBorder(AppUIConstants.DESCRIPTION_RAW_MATERIAL_PANEL_NAME));
         jbModificar.setEnabled(false);
         jbEliminar.setEnabled(false);
         if (formType == SELECCIONAR) {
@@ -140,9 +141,9 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
         } else {
             setSize(new Dimension(AppUIConstants.RAW_MATERIAL_WINDOWS_SIZE_WIDTH, AppUIConstants.RAW_MATERIAL_WINDOWS_SIZE_HEIGHT));
         }
+        setTitle(AppUIConstants.RAW_MATERIAL_TITLE);
         setLocationRelativeTo(jframe);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setVisible(true);
     }
 
     private void constructAppWindow(JDialog jdialog) {
@@ -151,9 +152,9 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
         } else {
             setSize(new Dimension(AppUIConstants.RAW_MATERIAL_WINDOWS_SIZE_WIDTH, AppUIConstants.RAW_MATERIAL_WINDOWS_SIZE_HEIGHT));
         }
+        setTitle(AppUIConstants.RAW_MATERIAL_TITLE);
         setLocationRelativeTo(jdialog);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setVisible(true);
     }
 
     private void cerrar() {
@@ -231,9 +232,12 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
             MateriaPrima mp = materiaPrimaService.obtenerMateriaPrima(idMp);
             SeleccionarCantidad sc = new SeleccionarCantidad(this, mp);
             sc.setCrearProductoCallback(crearProductoCallback);
+            sc.setVisible(true);
             this.jbModificar.setEnabled(false);
             this.jbEliminar.setEnabled(false);
-            this.jbSeleccionar.setEnabled(false);
+            if (formType == SELECCIONAR) {
+                this.jbSeleccionar.setEnabled(false);
+            }
         }
 
     }
@@ -296,8 +300,8 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
             case KeyEvent.VK_ENTER: {
                 if (jtfBuscar.hasFocus()) {
                     buscar();
+                    break;
                 }
-                break;
             }
         }
     }
@@ -317,12 +321,22 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
                 this.jtaDescripcion.setText(mp.getDescripcion());
                 this.jbModificar.setEnabled(true);
                 this.jbEliminar.setEnabled(true);
+                if (formType == SELECCIONAR) {
+                    this.jbSeleccionar.setEnabled(true);
+                }
                 if (e.getClickCount() == 2) {
-                    invokeSelectRawMaterialForm();
+                    if (formType == SELECCIONAR) {
+                        invokeSelectRawMaterialForm();
+                    } else if (formType == GESTIONAR) {
+                        invokeUpdateRawMaterialForm();
+                    }
                 }
             } else {
                 this.jbModificar.setEnabled(false);
                 this.jbEliminar.setEnabled(false);
+                if (formType == SELECCIONAR) {
+                    this.jbSeleccionar.setEnabled(false);
+                }
             }
         }
     }

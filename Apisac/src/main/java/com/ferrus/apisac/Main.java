@@ -89,7 +89,7 @@ public class Main {
         //MASA
         UnidadMedida umGr = new UnidadMedida("Gramo", "Gr", 1.0, umcMasa);
         UnidadMedida umKG = new UnidadMedida("Kilogramo", "Kg", 1000.0, umcMasa);
-        UnidadMedida umTonelada = new UnidadMedida("Tonelada", "Ton", 10000.0, umcMasa);
+        UnidadMedida umTonelada = new UnidadMedida("Tonelada", "Ton", 1000000.0, umcMasa);
         //VOLUMEN
         UnidadMedida umMl = new UnidadMedida("Mililitro", "ml", 1.0, umcVolumen);
         UnidadMedida umL = new UnidadMedida("Litro", "L", 1000.0, umcVolumen);
@@ -103,6 +103,7 @@ public class Main {
         UnidadMedida umMt = new UnidadMedida("Metro", "Mt", 100.0, umcLongitud);
         UnidadMedida umKm = new UnidadMedida("Kilómetro", "Km", 1000.0, umcLongitud);
         UnidadMedidaService medidaService = new UnidadMedidaServImpl();
+        medidaService.insertarUnidadMedidaCategoria(umcUnidad);
         medidaService.insertarUnidadMedidaCategoria(umcLongitud);
         medidaService.insertarUnidadMedidaCategoria(umcMasa);
         medidaService.insertarUnidadMedidaCategoria(umcTiempo);

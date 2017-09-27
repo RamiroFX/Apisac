@@ -45,6 +45,7 @@ public class AppUIConstants {
     public static final String DELETE_RAW_MATERIAL_BUTTON_NAME = "Eliminar";
     public static final String SELECT_RAW_MATERIAL_BUTTON_NAME = "Seleccionar";
     public static final String RAW_MATERIAL_TITLE = "Gestión de materia prima";
+    public static final String DESCRIPTION_RAW_MATERIAL_PANEL_NAME = "Descripción de materia prima";
 
     //CREAR /MODIFICAR MATERIA PRIMA
     public static final String RAW_MATERIAL_EXIST_MESSAGE = "Materia prima existente.";
