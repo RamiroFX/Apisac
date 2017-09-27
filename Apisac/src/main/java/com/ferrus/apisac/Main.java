@@ -12,6 +12,7 @@ import com.ferrus.apisac.model.MateriaPrima;
 import com.ferrus.apisac.model.ProductoCategoria;
 import com.ferrus.apisac.model.ProductoSubCategoria;
 import com.ferrus.apisac.model.UnidadMedida;
+import com.ferrus.apisac.model.UnidadMedidaCategoria;
 import com.ferrus.apisac.model.service.CostoOperativoService;
 import com.ferrus.apisac.model.service.MateriaPrimaService;
 import com.ferrus.apisac.model.service.PreferenciaService;
@@ -78,18 +79,34 @@ public class Main {
     }
 
     private static void loadData() {
-        UnidadMedida umUnidad = new UnidadMedida("Unidad", "Unid", 1.0);
-        UnidadMedida umGr = new UnidadMedida("Gramo", "Gr", 1.0);
-        UnidadMedida umKG = new UnidadMedida("Kilogramo", "Kg", 1000.0);
-        UnidadMedida umTonelada = new UnidadMedida("Tonelada", "Ton", 10000.0);
-        UnidadMedida umSegundo = new UnidadMedida("Segundo", "Seg", 1.0);
-        UnidadMedida umMinuto = new UnidadMedida("Minuto", "Min", 60.0);
-        UnidadMedida umHora = new UnidadMedida("Hora", "Hr", 3600.0);
-        UnidadMedida umMm = new UnidadMedida("Milímetro", "Mm", 1.0);
-        UnidadMedida umCm = new UnidadMedida("Centímetro", "Cm", 10.0);
-        UnidadMedida umMt = new UnidadMedida("Metro", "Mt", 100.0);
-        UnidadMedida umKm = new UnidadMedida("Kilómetro", "Km", 1000.0);
+        UnidadMedidaCategoria umcUnidad = new UnidadMedidaCategoria("Unidad");
+        UnidadMedidaCategoria umcTiempo = new UnidadMedidaCategoria("Tiempo");
+        UnidadMedidaCategoria umcLongitud = new UnidadMedidaCategoria("Longitud");
+        UnidadMedidaCategoria umcMasa = new UnidadMedidaCategoria("Masa");
+        UnidadMedidaCategoria umcVolumen = new UnidadMedidaCategoria("Volumen");
+        //UNIDAD
+        UnidadMedida umUnidad = new UnidadMedida("Unidad", "Unid", 1.0, umcUnidad);
+        //MASA
+        UnidadMedida umGr = new UnidadMedida("Gramo", "Gr", 1.0, umcMasa);
+        UnidadMedida umKG = new UnidadMedida("Kilogramo", "Kg", 1000.0, umcMasa);
+        UnidadMedida umTonelada = new UnidadMedida("Tonelada", "Ton", 10000.0, umcMasa);
+        //VOLUMEN
+        UnidadMedida umMl = new UnidadMedida("Mililitro", "ml", 1.0, umcVolumen);
+        UnidadMedida umL = new UnidadMedida("Litro", "L", 1000.0, umcVolumen);
+        //TIEMPO
+        UnidadMedida umSegundo = new UnidadMedida("Segundo", "Seg", 1.0, umcTiempo);
+        UnidadMedida umMinuto = new UnidadMedida("Minuto", "Min", 60.0, umcTiempo);
+        UnidadMedida umHora = new UnidadMedida("Hora", "Hr", 3600.0, umcTiempo);
+        //LONGITUD
+        UnidadMedida umMm = new UnidadMedida("Milímetro", "Mm", 1.0, umcLongitud);
+        UnidadMedida umCm = new UnidadMedida("Centímetro", "Cm", 10.0, umcLongitud);
+        UnidadMedida umMt = new UnidadMedida("Metro", "Mt", 100.0, umcLongitud);
+        UnidadMedida umKm = new UnidadMedida("Kilómetro", "Km", 1000.0, umcLongitud);
         UnidadMedidaService medidaService = new UnidadMedidaServImpl();
+        medidaService.insertarUnidadMedidaCategoria(umcLongitud);
+        medidaService.insertarUnidadMedidaCategoria(umcMasa);
+        medidaService.insertarUnidadMedidaCategoria(umcTiempo);
+        medidaService.insertarUnidadMedidaCategoria(umcVolumen);
         medidaService.insertarUnidadMedida(umUnidad);
         medidaService.insertarUnidadMedida(umGr);
         medidaService.insertarUnidadMedida(umKG);
@@ -101,6 +118,8 @@ public class Main {
         medidaService.insertarUnidadMedida(umCm);
         medidaService.insertarUnidadMedida(umMt);
         medidaService.insertarUnidadMedida(umKm);
+        medidaService.insertarUnidadMedida(umMl);
+        medidaService.insertarUnidadMedida(umL);
 
         MateriaPrima mpHarina = new MateriaPrima("Harina 000", null, 2500.0, umKG);
         MateriaPrimaService materiaPrimaService = new MateriaPrimaServImpl();

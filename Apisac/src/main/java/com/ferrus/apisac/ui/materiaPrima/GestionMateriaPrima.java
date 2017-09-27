@@ -5,6 +5,7 @@
  */
 package com.ferrus.apisac.ui.materiaPrima;
 
+import com.ferrus.apisac.callback.CrearProductoCallback;
 import com.ferrus.apisac.callback.MateriaPrimaCallback;
 import com.ferrus.apisac.model.MateriaPrima;
 import com.ferrus.apisac.model.Producto;
@@ -13,6 +14,7 @@ import com.ferrus.apisac.model.service.ProductoParametrosService;
 import com.ferrus.apisac.model.serviceImp.MateriaPrimaServImpl;
 import com.ferrus.apisac.model.serviceImp.ProductoParametrosServImpl;
 import com.ferrus.apisac.tablemodel.MateriaPrimaTableModel;
+import com.ferrus.apisac.ui.producto.SeleccionarCantidad;
 import com.ferrus.apisac.util.AppUIConstants;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -42,27 +44,42 @@ import javax.swing.border.TitledBorder;
 public class GestionMateriaPrima extends JDialog implements ActionListener, KeyListener,
         MouseListener, MateriaPrimaCallback {
 
+    public static final int GESTIONAR = 1;
+    public static final int SELECCIONAR = 2;
+
     JTextField jtfBuscar;
     JTextArea jtaDescripcion;
-    JButton jbBuscar, jbCrear, jbModificar, jbEliminar;
+    JButton jbBuscar, jbCrear, jbModificar, jbEliminar, jbSeleccionar;
     JTable jtMateriaPrima;
     JScrollPane jspMateriaPrima, jspDescripcion;
     private ProductoParametrosService productoParametrosService;
-    private MateriaPrimaService servicio;
+    private MateriaPrimaService materiaPrimaService;
     private MateriaPrimaTableModel materiaPrimaTableModel;
+    private int formType;
+    private CrearProductoCallback crearProductoCallback;
 
-    public GestionMateriaPrima(JFrame jframe) {
+    public GestionMateriaPrima(JFrame jframe, int formType) {
         super(jframe, AppUIConstants.RAW_MATERIAL_TITLE);
-        initializeVariables();
+        initializeVariables(formType);
         addListeners();
         constructLayout();
         constructAppWindow(jframe);
         loadData();
     }
 
-    private void initializeVariables() {
+    public GestionMateriaPrima(JDialog jdialog, int formType) {
+        super(jdialog, AppUIConstants.RAW_MATERIAL_TITLE);
+        initializeVariables(formType);
+        addListeners();
+        constructLayout();
+        constructAppWindow(jdialog);
+        loadData();
+    }
+
+    private void initializeVariables(int formType) {
+        this.formType = formType;
         materiaPrimaTableModel = new MateriaPrimaTableModel();
-        servicio = new MateriaPrimaServImpl();
+        materiaPrimaService = new MateriaPrimaServImpl();
         productoParametrosService = new ProductoParametrosServImpl();
         jtfBuscar = new JTextField();
         jtaDescripcion = new JTextArea();
@@ -77,6 +94,10 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
         jspDescripcion.setBorder(new TitledBorder("Descripción de materia prima"));
         jbModificar.setEnabled(false);
         jbEliminar.setEnabled(false);
+        if (formType == SELECCIONAR) {
+            this.jbSeleccionar = new JButton(AppUIConstants.SELECT_RAW_MATERIAL_BUTTON_NAME);
+            this.jbSeleccionar.setEnabled(false);
+        }
     }
 
     private void addListeners() {
@@ -88,6 +109,9 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
         jtMateriaPrima.addKeyListener(this);
         jtfBuscar.addKeyListener(this);
         jtMateriaPrima.addMouseListener(this);
+        if (formType == SELECCIONAR) {
+            this.jbSeleccionar.addActionListener(this);
+        }
     }
 
     private void constructLayout() {
@@ -99,6 +123,9 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
         jpCenter.add(jspMateriaPrima, BorderLayout.CENTER);
         jpCenter.add(jspDescripcion, BorderLayout.SOUTH);
         JPanel jpSouth = new JPanel();
+        if (formType == SELECCIONAR) {
+            jpSouth.add(jbSeleccionar);
+        }
         jpSouth.add(jbCrear);
         jpSouth.add(jbModificar);
         jpSouth.add(jbEliminar);
@@ -108,8 +135,23 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
     }
 
     private void constructAppWindow(JFrame jframe) {
-        setSize(new Dimension(AppUIConstants.RAW_MATERIAL_WINDOWS_SIZE_WIDTH, AppUIConstants.RAW_MATERIAL_WINDOWS_SIZE_HEIGHT));
+        if (this.formType == SELECCIONAR) {
+            setSize(new Dimension(AppUIConstants.SELECT_RAW_MATERIAL_WINDOWS_SIZE_WIDTH, AppUIConstants.SELECT_RAW_MATERIAL_WINDOWS_SIZE_HEIGHT));
+        } else {
+            setSize(new Dimension(AppUIConstants.RAW_MATERIAL_WINDOWS_SIZE_WIDTH, AppUIConstants.RAW_MATERIAL_WINDOWS_SIZE_HEIGHT));
+        }
         setLocationRelativeTo(jframe);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setVisible(true);
+    }
+
+    private void constructAppWindow(JDialog jdialog) {
+        if (this.formType == SELECCIONAR) {
+            setSize(new Dimension(AppUIConstants.SELECT_RAW_MATERIAL_WINDOWS_SIZE_WIDTH, AppUIConstants.SELECT_RAW_MATERIAL_WINDOWS_SIZE_HEIGHT));
+        } else {
+            setSize(new Dimension(AppUIConstants.RAW_MATERIAL_WINDOWS_SIZE_WIDTH, AppUIConstants.RAW_MATERIAL_WINDOWS_SIZE_HEIGHT));
+        }
+        setLocationRelativeTo(jdialog);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setVisible(true);
     }
@@ -120,7 +162,7 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
     }
 
     private void loadData() {
-        materiaPrimaTableModel.setMateriaPrimaList(servicio.obtenerMateriasPrimas("", true));
+        materiaPrimaTableModel.setMateriaPrimaList(materiaPrimaService.obtenerMateriasPrimas("", true));
         jtMateriaPrima.setModel(materiaPrimaTableModel);
         materiaPrimaTableModel.updateTable();
     }
@@ -130,6 +172,9 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
         cmp.setMateriaPrimaCallback(this);
         this.jbModificar.setEnabled(false);
         this.jbEliminar.setEnabled(false);
+        if (formType == SELECCIONAR) {
+            this.jbSeleccionar.setEnabled(false);
+        }
     }
 
     private void invokeUpdateRawMaterialForm() {
@@ -146,6 +191,9 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
         cmp.setIdRawMaterial(idRawMaterial);
         this.jbModificar.setEnabled(false);
         this.jbEliminar.setEnabled(false);
+        if (formType == SELECCIONAR) {
+            this.jbSeleccionar.setEnabled(false);
+        }
     }
 
     private void deleteRawMaterial() {
@@ -155,9 +203,12 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
                 Long idMateriaPrima = Long.valueOf(String.valueOf(this.jtMateriaPrima.getValueAt(jtMateriaPrima.getSelectedRow(), 0)));
                 List<Producto> listaProducto = productoParametrosService.obtenerProductosPorMateriaPrimaID(idMateriaPrima);
                 if (listaProducto.isEmpty()) {
-                    servicio.eliminarMateriaPrima(idMateriaPrima);
+                    materiaPrimaService.eliminarMateriaPrima(idMateriaPrima);
                     this.jbModificar.setEnabled(false);
                     this.jbEliminar.setEnabled(false);
+                    if (formType == SELECCIONAR) {
+                        this.jbSeleccionar.setEnabled(false);
+                    }
                     loadData();
                 } else {
                     JOptionPane.showMessageDialog(this, "Existe productos que se encuentran utilizando la Materia prima.", "Alerta", JOptionPane.ERROR_MESSAGE);
@@ -168,6 +219,23 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
         }
         this.jbModificar.setEnabled(false);
         this.jbEliminar.setEnabled(false);
+        if (formType == SELECCIONAR) {
+            this.jbSeleccionar.setEnabled(false);
+        }
+    }
+
+    private void invokeSelectRawMaterialForm() {
+        int row = jtMateriaPrima.getSelectedRow();
+        if (row > -1) {
+            Long idMp = (Long) this.jtMateriaPrima.getValueAt(row, 0);
+            MateriaPrima mp = materiaPrimaService.obtenerMateriaPrima(idMp);
+            SeleccionarCantidad sc = new SeleccionarCantidad(this, mp);
+            sc.setCrearProductoCallback(crearProductoCallback);
+            this.jbModificar.setEnabled(false);
+            this.jbEliminar.setEnabled(false);
+            this.jbSeleccionar.setEnabled(false);
+        }
+
     }
 
     private void buscar() {
@@ -175,11 +243,25 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
             @Override
             public void run() {
                 String nombre = jtfBuscar.getText().trim().toLowerCase();
-                materiaPrimaTableModel.setMateriaPrimaList(servicio.obtenerMateriasPrimas(nombre, true));
+                materiaPrimaTableModel.setMateriaPrimaList(materiaPrimaService.obtenerMateriasPrimas(nombre, true));
                 jtMateriaPrima.setModel(materiaPrimaTableModel);
                 materiaPrimaTableModel.updateTable();
             }
         });
+    }
+
+    public void setCrearProductoCallback(CrearProductoCallback crearProductoCallback) {
+        this.crearProductoCallback = crearProductoCallback;
+    }
+
+    @Override
+    public void crearMateriaPrima() {
+        loadData();
+    }
+
+    @Override
+    public void modificarMateriaPrima() {
+        loadData();
     }
 
     @Override
@@ -193,6 +275,10 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
             invokeUpdateRawMaterialForm();
         } else if (src.equals(jbEliminar)) {
             deleteRawMaterial();
+        } else if (formType == SELECCIONAR) {
+            if (src.equals(jbSeleccionar)) {
+                invokeSelectRawMaterialForm();
+            }
         }
     }
 
@@ -221,26 +307,19 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
     }
 
     @Override
-    public void crearMateriaPrima() {
-        loadData();
-    }
-
-    @Override
-    public void modificarMateriaPrima() {
-        loadData();
-    }
-
-    @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource().equals(this.jtMateriaPrima)) {
             int fila = this.jtMateriaPrima.rowAtPoint(e.getPoint());
             int columna = this.jtMateriaPrima.columnAtPoint(e.getPoint());
             if ((fila > -1) && (columna > -1)) {
                 Long idMp = (Long) this.jtMateriaPrima.getValueAt(fila, 0);
-                MateriaPrima mp = servicio.obtenerMateriaPrima(idMp);
+                MateriaPrima mp = materiaPrimaService.obtenerMateriaPrima(idMp);
                 this.jtaDescripcion.setText(mp.getDescripcion());
                 this.jbModificar.setEnabled(true);
                 this.jbEliminar.setEnabled(true);
+                if (e.getClickCount() == 2) {
+                    invokeSelectRawMaterialForm();
+                }
             } else {
                 this.jbModificar.setEnabled(false);
                 this.jbEliminar.setEnabled(false);

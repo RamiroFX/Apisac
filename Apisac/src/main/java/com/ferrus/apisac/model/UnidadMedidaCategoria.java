@@ -19,12 +19,12 @@ import javax.persistence.Table;
  *
  * @author Ramiro Ferreira
  */
-@Entity(name = "Marca")
-@Table(name = "marca")
+@Entity(name = "UnidadMedidaCategoria")
+@Table(name = "unidad_medida_categoria")
 @NamedQueries({
-    @NamedQuery(name = "marca.obtenerMarcas", query = "SELECT m FROM Marca m WHERE LOWER(m.descripcion) LIKE LOWER(:descripcion)")
+    @NamedQuery(name = "UnidadMedidaCategoria.obtenerCategorias", query = "SELECT m FROM UnidadMedidaCategoria m WHERE LOWER(m.descripcion) LIKE LOWER(:descripcion)")
 })
-public class Marca implements Serializable {
+public class UnidadMedidaCategoria implements Serializable {
 
     private static long SerialVersionUID = 1L;
     @Id
@@ -33,10 +33,10 @@ public class Marca implements Serializable {
     @Column(name = "descripcion", unique = true, nullable = false, length = 50)
     private String descripcion;
 
-    public Marca() {
+    public UnidadMedidaCategoria() {
     }
 
-    public Marca(String descripcion) {
+    public UnidadMedidaCategoria(String descripcion) {
         this.descripcion = descripcion;
     }
 

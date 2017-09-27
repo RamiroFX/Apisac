@@ -6,6 +6,7 @@
 package com.ferrus.apisac.model.service;
 
 import com.ferrus.apisac.model.UnidadMedida;
+import com.ferrus.apisac.model.UnidadMedidaCategoria;
 import java.util.List;
 
 /**
@@ -19,5 +20,14 @@ public interface UnidadMedidaService {
     public UnidadMedida obtenerUnidadMedida(Long id);
 
     public List<UnidadMedida> obtenerUnidadMedidas();
+
+    public List<UnidadMedida> obtenerUnidadMedidasPorCategoria(UnidadMedidaCategoria umc);
+
+    //CATEGORIAS
+    public void insertarUnidadMedidaCategoria(UnidadMedidaCategoria unidadMedidaCategoria);
+
+    public UnidadMedidaCategoria obtenerUnidadMedidaCategoria(Long id);
+
+    public List<UnidadMedidaCategoria> obtenerUnidadMedidaCategorias();
 
 }

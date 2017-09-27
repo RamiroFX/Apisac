@@ -43,6 +43,7 @@ public class AppUIConstants {
     public static final String CREATE_RAW_MATERIAL_BUTTON_NAME = "Crear";
     public static final String UPDATE_RAW_MATERIAL_BUTTON_NAME = "Modificar";
     public static final String DELETE_RAW_MATERIAL_BUTTON_NAME = "Eliminar";
+    public static final String SELECT_RAW_MATERIAL_BUTTON_NAME = "Seleccionar";
     public static final String RAW_MATERIAL_TITLE = "Gestión de materia prima";
 
     //CREAR /MODIFICAR MATERIA PRIMA
@@ -73,7 +74,7 @@ public class AppUIConstants {
     public static final String OPERATIVE_COST_TITLE = "Gestión de costos operativos";
     public static final String DESCRIPTION_OPERATIVE_COST_PANEL_NAME = "Descripción de costos operativos";
     public static final String OPERATIVE_COST_EXIST_MESSAGE = "Existe productos que se encuentran utilizando el costo operativo.";
-    
+
     //CREAR /MODIFICAR COSTO OPERATIVO
     public static final String OPERATIVE_COST_VALID_POSITIVE_MESSAGE = "Inserte un número válido y positivo en el campo Precio";
     public static final String OPERATIVE_COST_NUMBER_VALID_MESSAGE = "Inserte un número válido en el campo Precio";
@@ -90,4 +91,14 @@ public class AppUIConstants {
     public static final String DESCRIPTION_OPERATIVE_COST_BUTTON_NAME = "Descripción";
     public static final String PRECIO_OPERATIVE_COST_BUTTON_NAME = "Precio";
     public static final String UNIT_OPERATIVE_COST_BUTTON_NAME = "Unidad de medida";
+
+    //SELECIONAR CANTIDAD MATERIA PRIMA
+    public static final int SELECT_RAW_MATERIAL_WINDOWS_SIZE_WIDTH = 500;
+    public static final int SELECT_RAW_MATERIAL_WINDOWS_SIZE_HEIGHT = 300;
+    public static final String SELECT_RAW_MATERIAl_FORM_TITLE = "Seleccionar cantidad de materia prima";
+    public static final String CANT_RAW_MATERIAl_LABEL_NAME = "Cantidad";
+    public static final String TOTAL_RAW_MATERIAl_LABEL_NAME = "Total";
+    public static final String RAW_MATERIAL_NUMBER_VALID_CANT_MESSAGE = "Inserte un número válido en el campo Cantidad";
+    public static final String SELECT_MATERIAL_VALID_POSITIVE_CANT_MESSAGE = "Inserte un número válido y positivo en el campo Cantidad";
+    public static final String SELECT_MATERIAL_MIN_CHAR_CANT_MESSAGE = "Inserte 1 caracter por lo menos en el campo Cantidad";
 }

@@ -6,12 +6,12 @@
 package com.ferrus.apisac.ui.producto;
 
 import com.ferrus.apisac.callback.CrearProductoCallback;
-import com.ferrus.apisac.model.MateriaPrima;
 import com.ferrus.apisac.model.MateriaPrimaDetalle;
 import com.ferrus.apisac.model.ProductoCategoria;
 import com.ferrus.apisac.model.ProductoSubCategoria;
 import com.ferrus.apisac.model.UnidadMedida;
 import com.ferrus.apisac.tablemodel.MateriaPrimaDetalleTableModel;
+import com.ferrus.apisac.ui.materiaPrima.GestionMateriaPrima;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -177,13 +177,25 @@ public class CrearProducto extends JDialog implements ActionListener, CrearProdu
 
     private void recibirMateriaPrima(MateriaPrimaDetalle mpd) {
         this.materiaPrimaDetalleTableModel.agregarMateriaPrima(mpd);
+        calcularSubTotales();
+    }
+
+    private void calcularSubTotales() {
+        Double costoVariableTotal = 0.0;
+        for (MateriaPrimaDetalle materiaPrimaDetalle : this.materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList()) {
+            Double cant = materiaPrimaDetalle.getCantidad();
+            Double precio = materiaPrimaDetalle.getPrecioMateriaPrima();
+            costoVariableTotal = costoVariableTotal + (cant * precio);
+        }
+        this.jftCostoVariableTotal.setText("" + costoVariableTotal);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         Object src = e.getSource();
         if (src.equals(jbAgregarMat)) {
-
+            GestionMateriaPrima gmp = new GestionMateriaPrima(this, GestionMateriaPrima.SELECCIONAR);
+            gmp.setCrearProductoCallback(this);
         }
     }
 

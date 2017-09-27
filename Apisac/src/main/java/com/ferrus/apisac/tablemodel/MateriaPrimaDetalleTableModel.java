@@ -5,7 +5,6 @@
  */
 package com.ferrus.apisac.tablemodel;
 
-import com.ferrus.apisac.model.MateriaPrima;
 import com.ferrus.apisac.model.MateriaPrimaDetalle;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +43,7 @@ public class MateriaPrimaDetalleTableModel extends AbstractTableModel {
         MateriaPrimaDetalle materiaPrima = this.materiaPrimaDetalleList.get(rowIndex);
         switch (colIndex) {
             case 0: {
-                return materiaPrima.getId();
+                return materiaPrima.getMateriaPrima().getId();
             }
             case 1: {
                 return materiaPrima.getMateriaPrima().getNombre();
@@ -69,6 +68,10 @@ public class MateriaPrimaDetalleTableModel extends AbstractTableModel {
 
     public void setMateriaPrimaDetalleList(List<MateriaPrimaDetalle> materiaPrimaDetalleList) {
         this.materiaPrimaDetalleList = materiaPrimaDetalleList;
+    }
+
+    public List<MateriaPrimaDetalle> getMateriaPrimaDetalleList() {
+        return materiaPrimaDetalleList;
     }
 
     public void agregarMateriaPrima(MateriaPrimaDetalle mpd) {

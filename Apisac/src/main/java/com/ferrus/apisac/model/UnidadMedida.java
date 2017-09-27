@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -21,9 +23,11 @@ import javax.persistence.Table;
  */
 @Entity(name = "UnidadMedida")
 @Table(name = "unidad_medida")
-@NamedQueries(
-        @NamedQuery(name = "unidadMedida.getUnidadesMedida", query = "SELECT um FROM UnidadMedida um")
-)
+@NamedQueries({
+    @NamedQuery(name = "unidadMedida.getUnidadesMedida", query = "SELECT um FROM UnidadMedida um")
+    ,
+    @NamedQuery(name = "unidadMedida.getUnidadesMedidaPorCategoria", query = "SELECT um FROM UnidadMedida um WHERE um.medidaCategoria.descripcion LIKE :descripcion")
+})
 public class UnidadMedida implements Serializable {
 
     private static long SerialVersionUID = 1L;
@@ -38,14 +42,18 @@ public class UnidadMedida implements Serializable {
     private String simbolo;
     @Column(name = "valor", nullable = false, length = 10)
     private Double valor;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_um_categoria", nullable = false)
+    private UnidadMedidaCategoria medidaCategoria;
 
     public UnidadMedida() {
     }
 
-    public UnidadMedida(String nombre, String simbolo, Double valor) {
+    public UnidadMedida(String nombre, String simbolo, Double valor, UnidadMedidaCategoria medidaCategoria) {
         this.nombre = nombre;
         this.simbolo = simbolo;
         this.valor = valor;
+        this.medidaCategoria = medidaCategoria;
     }
 
     public Long getId() {
@@ -78,6 +86,14 @@ public class UnidadMedida implements Serializable {
 
     public void setSimbolo(String simbolo) {
         this.simbolo = simbolo;
+    }
+
+    public UnidadMedidaCategoria getMedidaCategoria() {
+        return medidaCategoria;
+    }
+
+    public void setMedidaCategoria(UnidadMedidaCategoria medidaCategoria) {
+        this.medidaCategoria = medidaCategoria;
     }
 
     @Override

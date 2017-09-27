@@ -7,6 +7,7 @@ package com.ferrus.apisac.model.serviceImp;
 
 import com.ferrus.apisac.model.EntityHandler.UnidadMedidaQueryHandler;
 import com.ferrus.apisac.model.UnidadMedida;
+import com.ferrus.apisac.model.UnidadMedidaCategoria;
 import com.ferrus.apisac.model.service.UnidadMedidaService;
 import java.util.List;
 
@@ -35,6 +36,26 @@ public class UnidadMedidaServImpl implements UnidadMedidaService {
     @Override
     public List<UnidadMedida> obtenerUnidadMedidas() {
         return queryHandler.obtenerUnidadMedidas();
+    }
+
+    @Override
+    public List<UnidadMedida> obtenerUnidadMedidasPorCategoria(UnidadMedidaCategoria umc) {
+        return queryHandler.obtenerUnidadMedidasPorCategoria(umc);
+    }
+
+    @Override
+    public void insertarUnidadMedidaCategoria(UnidadMedidaCategoria unidadMedidaCategoria) {
+        queryHandler.insertarUnidadMedidaCategoria(unidadMedidaCategoria);
+    }
+
+    @Override
+    public UnidadMedidaCategoria obtenerUnidadMedidaCategoria(Long id) {
+        return queryHandler.obtenerUnidadMedidaCategoria(id);
+    }
+
+    @Override
+    public List<UnidadMedidaCategoria> obtenerUnidadMedidaCategorias() {
+        return queryHandler.obtenerUnidadMedidaCategorias();
     }
 
 }

@@ -102,7 +102,7 @@ public class App extends JFrame implements ActionListener {
             Parametros param = new Parametros(this);
             param.setVisible(true);
         } else if (src.equals(this.jpPrincipal.jbMateriaPrima)) {
-            GestionMateriaPrima gmp = new GestionMateriaPrima(this);
+            GestionMateriaPrima gmp = new GestionMateriaPrima(this, GestionMateriaPrima.GESTIONAR);
         } else if (src.equals(this.jpPrincipal.jbCostoOperativo)) {
             GestionCostoOperativo gco = new GestionCostoOperativo(this);
         }
