@@ -14,7 +14,7 @@ import com.ferrus.apisac.model.service.ProductoParametrosService;
 import com.ferrus.apisac.model.serviceImp.MateriaPrimaServImpl;
 import com.ferrus.apisac.model.serviceImp.ProductoParametrosServImpl;
 import com.ferrus.apisac.tablemodel.MateriaPrimaTableModel;
-import com.ferrus.apisac.ui.producto.SeleccionarCantidad;
+import com.ferrus.apisac.ui.producto.SeleccionarCantidadMateriaPrima;
 import com.ferrus.apisac.util.AppUIConstants;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -230,7 +230,7 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
         if (row > -1) {
             Long idMp = (Long) this.jtMateriaPrima.getValueAt(row, 0);
             MateriaPrima mp = materiaPrimaService.obtenerMateriaPrima(idMp);
-            SeleccionarCantidad sc = new SeleccionarCantidad(this, mp);
+            SeleccionarCantidadMateriaPrima sc = new SeleccionarCantidadMateriaPrima(this, mp, SeleccionarCantidadMateriaPrima.SELECCIONAR);
             sc.setCrearProductoCallback(crearProductoCallback);
             sc.setVisible(true);
             this.jbModificar.setEnabled(false);
@@ -239,7 +239,6 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
                 this.jbSeleccionar.setEnabled(false);
             }
         }
-
     }
 
     private void buscar() {

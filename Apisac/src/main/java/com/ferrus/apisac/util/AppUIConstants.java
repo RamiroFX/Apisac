@@ -96,7 +96,8 @@ public class AppUIConstants {
     //SELECIONAR CANTIDAD MATERIA PRIMA
     public static final int SELECT_RAW_MATERIAL_WINDOWS_SIZE_WIDTH = 500;
     public static final int SELECT_RAW_MATERIAL_WINDOWS_SIZE_HEIGHT = 300;
-    public static final String SELECT_RAW_MATERIAl_FORM_TITLE = "Seleccionar cantidad de materia prima";
+    public static final String SELECT_RAW_MATERIAl_SELECT_FORM_TITLE = "Seleccionar cantidad de materia prima";
+    public static final String SELECT_RAW_MATERIAl_UPDATE_FORM_TITLE = "Modificar cantidad de materia prima";
     public static final String CANT_RAW_MATERIAl_LABEL_NAME = "Cantidad";
     public static final String TOTAL_RAW_MATERIAl_LABEL_NAME = "Total";
     public static final String RAW_MATERIAL_NUMBER_VALID_CANT_MESSAGE = "Inserte un número válido en el campo Cantidad";

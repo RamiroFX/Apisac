@@ -5,8 +5,9 @@
  */
 package com.ferrus.apisac.ui.costoOperativo;
 
+import com.ferrus.apisac.ui.producto.SeleccionarCantidadCostoOperativo;
 import com.ferrus.apisac.callback.CostoOperativoCallback;
-import com.ferrus.apisac.callback.MateriaPrimaCallback;
+import com.ferrus.apisac.callback.CrearProductoCallback;
 import com.ferrus.apisac.model.CostoOperativo;
 import com.ferrus.apisac.model.Producto;
 import com.ferrus.apisac.model.service.CostoOperativoService;
@@ -14,7 +15,8 @@ import com.ferrus.apisac.model.service.ProductoParametrosService;
 import com.ferrus.apisac.model.serviceImp.CostoOperativoServImpl;
 import com.ferrus.apisac.model.serviceImp.ProductoParametrosServImpl;
 import com.ferrus.apisac.tablemodel.CostoOperativoTableModel;
-import com.ferrus.apisac.ui.materiaPrima.CrearMateriaPrima;
+import com.ferrus.apisac.ui.producto.CrearProducto;
+import com.ferrus.apisac.util.AppUIConstants;
 import static com.ferrus.apisac.util.AppUIConstants.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -44,25 +46,43 @@ import javax.swing.border.TitledBorder;
 public class GestionCostoOperativo extends JDialog implements ActionListener, KeyListener,
         MouseListener, CostoOperativoCallback {
 
+    public static final int GESTIONAR = 1;
+    public static final int SELECCIONAR = 2;
     JTextField jtfBuscar;
     JTextArea jtaDescripcion;
-    JButton jbBuscar, jbCrear, jbModificar, jbEliminar;
+    JButton jbBuscar, jbCrear, jbModificar, jbEliminar, jbSeleccionar;
     JTable jtCostoOperativo;
     JScrollPane jspCostoOperativo, jspDescripcion;
     private ProductoParametrosService productoParametrosService;
     private CostoOperativoService servicio;
     private CostoOperativoTableModel costoOperativoTableModel;
+    private CrearProductoCallback crearProductoCallback;
+    private int formType;
 
-    public GestionCostoOperativo(JFrame jframe) {
-        super(jframe, OPERATIVE_COST_TITLE);
-        initializeVariables();
+    public GestionCostoOperativo(JFrame jframe, int formType) {
+        super(jframe, true);
+        initializeVariables(formType);
         addListeners();
         constructLayout();
         constructAppWindow(jframe);
         loadData();
     }
 
-    private void initializeVariables() {
+    public GestionCostoOperativo(JDialog jdialog, int formType) {
+        super(jdialog, true);
+        initializeVariables(formType);
+        addListeners();
+        constructLayout();
+        constructAppWindow(jdialog);
+        loadData();
+    }
+
+    public GestionCostoOperativo(CrearProducto aThis, int SELECCIONAR) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void initializeVariables(int formType) {
+        this.formType = formType;
         costoOperativoTableModel = new CostoOperativoTableModel();
         servicio = new CostoOperativoServImpl();
         productoParametrosService = new ProductoParametrosServImpl();
@@ -79,6 +99,10 @@ public class GestionCostoOperativo extends JDialog implements ActionListener, Ke
         jspDescripcion.setBorder(new TitledBorder(DESCRIPTION_OPERATIVE_COST_PANEL_NAME));
         jbModificar.setEnabled(false);
         jbEliminar.setEnabled(false);
+        if (formType == SELECCIONAR) {
+            this.jbSeleccionar = new JButton(AppUIConstants.SELECT_RAW_MATERIAL_BUTTON_NAME);
+            this.jbSeleccionar.setEnabled(false);
+        }
     }
 
     private void addListeners() {
@@ -90,6 +114,9 @@ public class GestionCostoOperativo extends JDialog implements ActionListener, Ke
         jtCostoOperativo.addKeyListener(this);
         jtfBuscar.addKeyListener(this);
         jtCostoOperativo.addMouseListener(this);
+        if (formType == SELECCIONAR) {
+            this.jbSeleccionar.addActionListener(this);
+        }
     }
 
     private void constructLayout() {
@@ -101,6 +128,9 @@ public class GestionCostoOperativo extends JDialog implements ActionListener, Ke
         jpCenter.add(jspCostoOperativo, BorderLayout.CENTER);
         jpCenter.add(jspDescripcion, BorderLayout.SOUTH);
         JPanel jpSouth = new JPanel();
+        if (formType == SELECCIONAR) {
+            jpSouth.add(jbSeleccionar);
+        }
         jpSouth.add(jbCrear);
         jpSouth.add(jbModificar);
         jpSouth.add(jbEliminar);
@@ -110,10 +140,25 @@ public class GestionCostoOperativo extends JDialog implements ActionListener, Ke
     }
 
     private void constructAppWindow(JFrame jframe) {
-        setSize(new Dimension(OPERATIVE_COST_WINDOWS_SIZE_WIDTH, OPERATIVE_COST_WINDOWS_SIZE_HEIGHT));
+        if (this.formType == SELECCIONAR) {
+            setSize(new Dimension(AppUIConstants.SELECT_RAW_MATERIAL_WINDOWS_SIZE_WIDTH, AppUIConstants.SELECT_RAW_MATERIAL_WINDOWS_SIZE_HEIGHT));
+        } else {
+            setSize(new Dimension(AppUIConstants.RAW_MATERIAL_WINDOWS_SIZE_WIDTH, AppUIConstants.RAW_MATERIAL_WINDOWS_SIZE_HEIGHT));
+        }
+        setTitle(OPERATIVE_COST_TITLE);
         setLocationRelativeTo(jframe);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setVisible(true);
+    }
+
+    private void constructAppWindow(JDialog jdialog) {
+        if (this.formType == SELECCIONAR) {
+            setSize(new Dimension(AppUIConstants.SELECT_RAW_MATERIAL_WINDOWS_SIZE_WIDTH, AppUIConstants.SELECT_RAW_MATERIAL_WINDOWS_SIZE_HEIGHT));
+        } else {
+            setSize(new Dimension(AppUIConstants.RAW_MATERIAL_WINDOWS_SIZE_WIDTH, AppUIConstants.RAW_MATERIAL_WINDOWS_SIZE_HEIGHT));
+        }
+        setTitle(OPERATIVE_COST_TITLE);
+        setLocationRelativeTo(jdialog);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     }
 
     private void cerrar() {
@@ -127,14 +172,21 @@ public class GestionCostoOperativo extends JDialog implements ActionListener, Ke
         costoOperativoTableModel.updateTable();
     }
 
-    private void invokeCreateRawMaterialForm() {
+    public void setCrearProductoCallback(CrearProductoCallback crearProductoCallback) {
+        this.crearProductoCallback = crearProductoCallback;
+    }
+
+    private void invokeCreateOperativeCostForm() {
         CrearCostoOperativo cmp = new CrearCostoOperativo(this, CrearCostoOperativo.CREATE_OPERATIVE_COST);
         cmp.setCostoOperativoCallback(this);
         this.jbModificar.setEnabled(false);
         this.jbEliminar.setEnabled(false);
+        if (formType == SELECCIONAR) {
+            this.jbSeleccionar.setEnabled(false);
+        }
     }
 
-    private void invokeUpdateRawMaterialForm() {
+    private void invokeUpdateOperativeCostForm() {
         int row = this.jtCostoOperativo.getSelectedRow();
         Long idOperativeCost = null;
         if (row > -1) {
@@ -148,9 +200,12 @@ public class GestionCostoOperativo extends JDialog implements ActionListener, Ke
         cmp.setIdCostoOperativo(idOperativeCost);
         this.jbModificar.setEnabled(false);
         this.jbEliminar.setEnabled(false);
+        if (formType == SELECCIONAR) {
+            this.jbSeleccionar.setEnabled(false);
+        }
     }
 
-    private void deleteRawMaterial() {
+    private void deleteOperativeCost() {
         int option = JOptionPane.showConfirmDialog(this, CONFIRM_MESSAGE, ALERT_MESSAGE, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (option == JOptionPane.YES_OPTION) {
             try {
@@ -160,6 +215,9 @@ public class GestionCostoOperativo extends JDialog implements ActionListener, Ke
                     servicio.eliminarCostoOperativo(idCostoOperativo);
                     this.jbModificar.setEnabled(false);
                     this.jbEliminar.setEnabled(false);
+                    if (formType == SELECCIONAR) {
+                        this.jbSeleccionar.setEnabled(false);
+                    }
                     loadData();
                 } else {
                     JOptionPane.showMessageDialog(this, OPERATIVE_COST_EXIST_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
@@ -170,6 +228,22 @@ public class GestionCostoOperativo extends JDialog implements ActionListener, Ke
         }
         this.jbModificar.setEnabled(false);
         this.jbEliminar.setEnabled(false);
+    }
+
+    private void invokeSelectOperativeCostForm() {
+        int row = jtCostoOperativo.getSelectedRow();
+        if (row > -1) {
+            Long idCO = (Long) this.jtCostoOperativo.getValueAt(row, 0);
+            CostoOperativo mp = servicio.obtenerCostoOperativo(idCO);
+            SeleccionarCantidadCostoOperativo sc = new SeleccionarCantidadCostoOperativo(this, mp, SeleccionarCantidadCostoOperativo.SELECCIONAR);
+            sc.setCrearProductoCallback(crearProductoCallback);
+            sc.setVisible(true);
+            this.jbModificar.setEnabled(false);
+            this.jbEliminar.setEnabled(false);
+            if (formType == SELECCIONAR) {
+                this.jbSeleccionar.setEnabled(false);
+            }
+        }
     }
 
     private void buscar() {
@@ -190,11 +264,15 @@ public class GestionCostoOperativo extends JDialog implements ActionListener, Ke
         if (src.equals(jbBuscar)) {
             buscar();
         } else if (src.equals(jbCrear)) {
-            invokeCreateRawMaterialForm();
+            invokeCreateOperativeCostForm();
         } else if (src.equals(jbModificar)) {
-            invokeUpdateRawMaterialForm();
+            invokeUpdateOperativeCostForm();
         } else if (src.equals(jbEliminar)) {
-            deleteRawMaterial();
+            deleteOperativeCost();
+        } else if (formType == SELECCIONAR) {
+            if (src.equals(jbSeleccionar)) {
+                invokeSelectOperativeCostForm();
+            }
         }
     }
 
@@ -243,9 +321,22 @@ public class GestionCostoOperativo extends JDialog implements ActionListener, Ke
                 this.jtaDescripcion.setText(co.getDescripcion());
                 this.jbModificar.setEnabled(true);
                 this.jbEliminar.setEnabled(true);
+                if (formType == SELECCIONAR) {
+                    this.jbSeleccionar.setEnabled(true);
+                }
+                if (e.getClickCount() == 2) {
+                    if (formType == SELECCIONAR) {
+                        invokeSelectOperativeCostForm();
+                    } else if (formType == GESTIONAR) {
+                        invokeUpdateOperativeCostForm();
+                    }
+                }
             } else {
                 this.jbModificar.setEnabled(false);
                 this.jbEliminar.setEnabled(false);
+                if (formType == SELECCIONAR) {
+                    this.jbSeleccionar.setEnabled(false);
+                }
             }
         }
     }

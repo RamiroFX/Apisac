@@ -15,13 +15,14 @@ import static com.ferrus.apisac.util.AppUIConstants.ACEPT_RAW_MATERIAl_BUTTON_NA
 import static com.ferrus.apisac.util.AppUIConstants.ALERT_MESSAGE;
 import static com.ferrus.apisac.util.AppUIConstants.CANCEL_RAW_MATERIAl_BUTTON_NAME;
 import static com.ferrus.apisac.util.AppUIConstants.CANT_RAW_MATERIAl_LABEL_NAME;
-import static com.ferrus.apisac.util.AppUIConstants.SELECT_RAW_MATERIAl_FORM_TITLE;
 import static com.ferrus.apisac.util.AppUIConstants.NAME_RAW_MATERIAL_LABEL;
 import static com.ferrus.apisac.util.AppUIConstants.PRECIO_RAW_MATERIAl_BUTTON_NAME;
 import static com.ferrus.apisac.util.AppUIConstants.RAW_MATERIAL_NUMBER_VALID_CANT_MESSAGE;
 import static com.ferrus.apisac.util.AppUIConstants.RAW_MATERIAL_NUMBER_VALID_MESSAGE;
 import static com.ferrus.apisac.util.AppUIConstants.RAW_MATERIAL_VALID_POSITIVE_MESSAGE;
 import static com.ferrus.apisac.util.AppUIConstants.SELECT_MATERIAL_VALID_POSITIVE_CANT_MESSAGE;
+import static com.ferrus.apisac.util.AppUIConstants.SELECT_RAW_MATERIAl_SELECT_FORM_TITLE;
+import static com.ferrus.apisac.util.AppUIConstants.SELECT_RAW_MATERIAl_UPDATE_FORM_TITLE;
 import static com.ferrus.apisac.util.AppUIConstants.TOTAL_RAW_MATERIAl_LABEL_NAME;
 import static com.ferrus.apisac.util.AppUIConstants.UNIT_RAW_MATERIAl_BUTTON_NAME;
 import java.awt.BorderLayout;
@@ -48,26 +49,40 @@ import net.miginfocom.swing.MigLayout;
  *
  * @author Ramiro Ferreira
  */
-public class SeleccionarCantidad extends JDialog implements ActionListener, KeyListener,
+public class SeleccionarCantidadMateriaPrima extends JDialog implements ActionListener, KeyListener,
         ItemListener {
 
+    public static final int SELECCIONAR = 1;
+    public static final int MODIFICAR = 2;
     private JTextField jtfNombre, jtfCantidad, jtfPrecio, jtfTotal;
     private JButton jbAceptar, jbCancelar;
     private JComboBox<UnidadMedida> jcbUnidadMBoxM;
     private CrearProductoCallback crearProductoCallback;
     private UnidadMedidaService unidadMedidaService;
     private MateriaPrima mp;
+    private MateriaPrimaDetalle mpd;
+    private int formType;
 
-    public SeleccionarCantidad(JDialog jDialog, MateriaPrima mp) {
+    public SeleccionarCantidadMateriaPrima(JDialog jDialog, MateriaPrima mp, int formType) {
         super(jDialog, true);
-        initializeVariables();
+        initializeVariables(formType);
         loadData(mp);
         addListeners();
         constructLayout();
         constructAppWindow(jDialog);
     }
 
-    private void initializeVariables() {
+    public SeleccionarCantidadMateriaPrima(JDialog jDialog, MateriaPrimaDetalle mpd, int formType) {
+        super(jDialog, true);
+        initializeVariables(formType);
+        loadData(mpd);
+        addListeners();
+        constructLayout();
+        constructAppWindow(jDialog);
+    }
+
+    private void initializeVariables(int formType) {
+        this.formType = formType;
         unidadMedidaService = new UnidadMedidaServImpl();
         jtfNombre = new JTextField();
         jtfNombre.setEditable(false);
@@ -116,7 +131,16 @@ public class SeleccionarCantidad extends JDialog implements ActionListener, KeyL
     }
 
     private void constructAppWindow(JDialog jDialog) {
-        setTitle(SELECT_RAW_MATERIAl_FORM_TITLE);
+        switch (formType) {
+            case SELECCIONAR: {
+                setTitle(SELECT_RAW_MATERIAl_SELECT_FORM_TITLE);
+                break;
+            }
+            case MODIFICAR: {
+                setTitle(SELECT_RAW_MATERIAl_UPDATE_FORM_TITLE);
+                break;
+            }
+        }
         setSize(new Dimension(400, 300));
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(jDialog);
@@ -132,7 +156,21 @@ public class SeleccionarCantidad extends JDialog implements ActionListener, KeyL
             jcbUnidadMBoxM.addItem(unidadMedida);
         }
         jcbUnidadMBoxM.setSelectedItem(mp.getUnidadMedida());
+    }
 
+    private void loadData(MateriaPrimaDetalle mpd) {
+        this.mpd = mpd;
+        this.jtfNombre.setText(this.mpd.getMateriaPrima().getNombre());
+        this.jtfPrecio.setText(this.mpd.getMateriaPrima().getPrecio() + "");
+        List<UnidadMedida> unidadMedidas = unidadMedidaService.obtenerUnidadMedidasPorCategoria(this.mpd.getMateriaPrima().getUnidadMedida().getMedidaCategoria());
+        jcbUnidadMBoxM.removeAllItems();
+        for (UnidadMedida unidadMedida : unidadMedidas) {
+            jcbUnidadMBoxM.addItem(unidadMedida);
+        }
+        jcbUnidadMBoxM.setSelectedItem(mpd.getMateriaPrima().getUnidadMedida());
+        jtfCantidad.setText("" + this.mpd.getCantidad());
+        jtfPrecio.setText("" + this.mpd.getPrecioMateriaPrima());
+        jtfTotal.setText("" + (this.mpd.getCantidad() * this.mpd.getPrecioMateriaPrima()));
     }
 
     public void setCrearProductoCallback(CrearProductoCallback crearProductoCallback) {
@@ -146,19 +184,47 @@ public class SeleccionarCantidad extends JDialog implements ActionListener, KeyL
         if (!controlarPrecioIngresado()) {
             return;
         }
-        Double cantidad = Double.valueOf(jtfCantidad.getText().trim());
-        Double precio = Double.valueOf(jtfPrecio.getText().trim());
-        MateriaPrima unaMatPrima = new MateriaPrima();
-        unaMatPrima.setDescripcion(mp.getDescripcion());
-        unaMatPrima.setId(mp.getId());
-        unaMatPrima.setNombre(mp.getNombre());
-        unaMatPrima.setPrecio(mp.getPrecio());
-        unaMatPrima.setUnidadMedida((UnidadMedida) jcbUnidadMBoxM.getSelectedItem());
-        MateriaPrimaDetalle mpd = new MateriaPrimaDetalle();
-        mpd.setCantidad(cantidad);
-        mpd.setMateriaPrima(unaMatPrima);
-        mpd.setPrecioMateriaPrima(precio);
-        this.crearProductoCallback.recibirMateriaPrimaDetalle(mpd);
+        Double cantidad = Double.valueOf(jtfCantidad.getText().trim().replace(",", "."));
+        if (cantidad <= 0) {
+            JOptionPane.showMessageDialog(this, SELECT_MATERIAL_VALID_POSITIVE_CANT_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            jtfCantidad.setText("0");
+            return;
+        }
+        Double precio = Double.valueOf(jtfPrecio.getText().trim().replace(",", "."));
+        if (precio <= 0) {
+            JOptionPane.showMessageDialog(this, RAW_MATERIAL_VALID_POSITIVE_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            jtfPrecio.setText("0");
+            return;
+        }
+        switch (formType) {
+            case SELECCIONAR: {
+                MateriaPrima unaMatPrima = new MateriaPrima();
+                unaMatPrima.setDescripcion(mp.getDescripcion());
+                unaMatPrima.setId(mp.getId());
+                unaMatPrima.setNombre(mp.getNombre());
+                unaMatPrima.setPrecio(mp.getPrecio());
+                unaMatPrima.setUnidadMedida((UnidadMedida) jcbUnidadMBoxM.getSelectedItem());
+                MateriaPrimaDetalle mpd = new MateriaPrimaDetalle();
+                mpd.setCantidad(cantidad);
+                mpd.setMateriaPrima(unaMatPrima);
+                mpd.setPrecioMateriaPrima(precio);
+                this.crearProductoCallback.recibirMateriaPrimaDetalle(mpd);
+                break;
+            }
+            case MODIFICAR: {
+                MateriaPrima unaMatPrima = new MateriaPrima();
+                unaMatPrima.setId(mpd.getMateriaPrima().getId());
+                unaMatPrima.setNombre(mpd.getMateriaPrima().getNombre());
+                unaMatPrima.setPrecio(mpd.getMateriaPrima().getPrecio());
+                unaMatPrima.setUnidadMedida((UnidadMedida) jcbUnidadMBoxM.getSelectedItem());
+                MateriaPrimaDetalle unaMpd = new MateriaPrimaDetalle();
+                unaMpd.setCantidad(cantidad);
+                unaMpd.setMateriaPrima(unaMatPrima);
+                unaMpd.setPrecioMateriaPrima(precio);
+                this.crearProductoCallback.modificarMateriaPrimaDetalle(unaMpd);
+                break;
+            }
+        }
         cerrar();
     }
 
@@ -181,29 +247,19 @@ public class SeleccionarCantidad extends JDialog implements ActionListener, KeyL
             jtfPrecio.setText("0");
             return false;
         }
-        if (precio < 0) {
-            JOptionPane.showMessageDialog(this, RAW_MATERIAL_VALID_POSITIVE_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
-            jtfPrecio.setText("0");
-            return false;
-        }
         return true;
     }
 
     private boolean controlarCantidadIngresada() {
-        Double cantidad = -1.0;
         String cantidadString = jtfCantidad.getText().trim().replace(",", ".");
         try {
-            cantidad = Double.valueOf(cantidadString);
+            Double cantidad = Double.valueOf(cantidadString);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, RAW_MATERIAL_NUMBER_VALID_CANT_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             jtfCantidad.setText("0");
             return false;
         }
-        if (cantidad < 0) {
-            JOptionPane.showMessageDialog(this, SELECT_MATERIAL_VALID_POSITIVE_CANT_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
-            jtfCantidad.setText("0");
-            return false;
-        }
+
         return true;
     }
 
@@ -212,30 +268,47 @@ public class SeleccionarCantidad extends JDialog implements ActionListener, KeyL
             @Override
             public void run() {
                 if (controlarCantidadIngresada() && controlarPrecioIngresado()) {
-                    Double cantidad = Double.valueOf(jtfCantidad.getText().trim());
-                    Double precio = Double.valueOf(jtfPrecio.getText().trim());
+                    Double cantidad = Double.valueOf(jtfCantidad.getText().trim().replace(",", "."));
+                    Double precio = Double.valueOf(jtfPrecio.getText().trim().replace(",", "."));
                     Double total = cantidad * precio;
-                    jtfTotal.setText(total.toString());
+                    jtfTotal.setText("" + total);
                 }
             }
         });
     }
 
     private void itemStateHandler() {
-        Double precio = mp.getPrecio();
-        Double precioNuevo = null;
-        Double valorActual = mp.getUnidadMedida().getValor();
-        UnidadMedida unidadMedidaNueva = (UnidadMedida) jcbUnidadMBoxM.getSelectedItem();
-        Double valorNuevo = unidadMedidaNueva.getValor();
-        if (valorActual < valorNuevo) {
-            precioNuevo = precio * valorActual;
-        } else if (valorActual > valorNuevo) {
-            precioNuevo = precio / valorActual;
-        } else if (Objects.equals(valorActual, valorNuevo)) {
-            precioNuevo = precio;
-        }
-        this.jtfPrecio.setText("" + precioNuevo);
-        cantidadKeyTypedHandler();
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                Double precioNuevo = null;
+                Double precio = null;
+                Double valorActual = null;
+                switch (formType) {
+                    case SELECCIONAR: {
+                        precio = mp.getPrecio();
+                        valorActual = mp.getUnidadMedida().getValor();
+                        break;
+                    }
+                    case MODIFICAR: {
+                        precio = mpd.getMateriaPrima().getPrecio();
+                        valorActual = mpd.getMateriaPrima().getUnidadMedida().getValor();
+                        break;
+                    }
+                }
+                UnidadMedida unidadMedidaNueva = (UnidadMedida) jcbUnidadMBoxM.getSelectedItem();
+                Double valorNuevo = unidadMedidaNueva.getValor();
+                if (valorActual < valorNuevo) {
+                    precioNuevo = precio * valorActual;
+                } else if (valorActual > valorNuevo) {
+                    precioNuevo = precio / valorActual;
+                } else if (Objects.equals(valorActual, valorNuevo)) {
+                    precioNuevo = precio;
+                }
+                jtfPrecio.setText("" + precioNuevo);
+                cantidadKeyTypedHandler();
+            }
+        });
     }
 
     @Override
@@ -250,16 +323,24 @@ public class SeleccionarCantidad extends JDialog implements ActionListener, KeyL
 
     @Override
     public void keyTyped(KeyEvent e) {
-        if (e.getSource().equals(jtfCantidad)) {
-            cantidadKeyTypedHandler();
-        }
+
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
+            case KeyEvent.VK_ENTER: {
+                aceptButtonHandler();
+                break;
+            }
             case KeyEvent.VK_ESCAPE: {
                 cerrar();
+                break;
+            }
+            default: {
+                if (e.getSource().equals(jtfCantidad)) {
+                    cantidadKeyTypedHandler();
+                }
                 break;
             }
         }

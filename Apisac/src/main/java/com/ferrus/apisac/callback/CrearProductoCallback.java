@@ -5,6 +5,7 @@
  */
 package com.ferrus.apisac.callback;
 
+import com.ferrus.apisac.model.CostoOperativoDetalle;
 import com.ferrus.apisac.model.MateriaPrimaDetalle;
 
 /**
@@ -16,4 +17,8 @@ public interface CrearProductoCallback {
     public void recibirMateriaPrimaDetalle(MateriaPrimaDetalle mpd);
 
     public void modificarMateriaPrimaDetalle(MateriaPrimaDetalle mpd);
+
+    public void recibirCostoOperativoDetalle(CostoOperativoDetalle cod);
+
+    public void modificarCostoOperativoDetalle(CostoOperativoDetalle cod);
 }
