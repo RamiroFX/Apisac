@@ -117,6 +117,11 @@ public class ProductoParametrosServImpl implements ProductoParametrosService {
     }
 
     @Override
+    public List<ProductoSubCategoria> obtenerProductosSubCategorias(ProductoCategoria productoCategoria) {
+        return this.queryHandler.obtenerProductosSubCategorias(productoCategoria);
+    }
+
+    @Override
     public void modificarProductoSubCategoria(ProductoSubCategoria productoSubCategoria, ProductoCategoria productoCategoria) {
         this.queryHandler.modificarProductoSubCategoria(productoSubCategoria, productoCategoria);
     }

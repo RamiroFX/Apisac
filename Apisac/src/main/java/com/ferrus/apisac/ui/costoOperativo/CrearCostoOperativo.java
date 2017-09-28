@@ -63,8 +63,8 @@ public class CrearCostoOperativo extends JDialog implements ActionListener, KeyL
         jtfNombre = new JTextField();
         jtDescripcion = new JTextField();
         jtPrecio = new JTextField();
-        jbAceptar = new JButton(ACEPT_RAW_MATERIAl_BUTTON_NAME);
-        jbCancelar = new JButton(CANCEL_RAW_MATERIAl_BUTTON_NAME);
+        jbAceptar = new JButton(ACEPT_BUTTON_NAME);
+        jbCancelar = new JButton(CANCEL_BUTTON_NAME);
         jcbUnidadMBoxM = new JComboBox();
     }
 
@@ -83,13 +83,13 @@ public class CrearCostoOperativo extends JDialog implements ActionListener, KeyL
 
     private void constructLayout() {
         JPanel jpCenter = new JPanel(new MigLayout());
-        jpCenter.add(new JLabel(NAME_OPERATIVE_COST_LABEL));
+        jpCenter.add(new JLabel(NAME_LABEL));
         jpCenter.add(jtfNombre, "growx, push, wrap");
-        jpCenter.add(new JLabel(DESCRIPTION_OPERATIVE_COST_BUTTON_NAME));
+        jpCenter.add(new JLabel(DESCRIPTION_LABEL));
         jpCenter.add(jtDescripcion, "growx, push, wrap");
-        jpCenter.add(new JLabel(UNIT_OPERATIVE_COST_BUTTON_NAME));
+        jpCenter.add(new JLabel(UNIT_MEASURE_LABEL));
         jpCenter.add(jcbUnidadMBoxM, "growx, push, wrap");
-        jpCenter.add(new JLabel(PRECIO_OPERATIVE_COST_BUTTON_NAME));
+        jpCenter.add(new JLabel(PRECIO_LABEL));
         jpCenter.add(jtPrecio, "growx, push");
         JPanel jpSouth = new JPanel();
         jpSouth.add(jbAceptar);
@@ -133,33 +133,33 @@ public class CrearCostoOperativo extends JDialog implements ActionListener, KeyL
         String precioString = jtPrecio.getText().trim();
         Double precio = -1.0;
         if (nombre.length() < 1 || nombre.isEmpty()) {
-            JOptionPane.showMessageDialog(this, OPERATIVE_COST_MIN_CHAR_NAME_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, MIN_CHAR_NAME_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (nombre.length() > 30) {
-            JOptionPane.showMessageDialog(this, OPERATIVE_COST_MAX_CHAR_NAME_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, MAX_CHAR_NAME_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (descripcion.length() > 150) {
-            JOptionPane.showMessageDialog(this, OPERATIVE_COST_MAX_CHAR_DESC_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, MAX_CHAR_DESCRIPTION_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (descripcion.isEmpty()) {
             descripcion = null;
         }
         if (precioString.length() < 1 || precioString.isEmpty()) {
-            JOptionPane.showMessageDialog(this, OPERATIVE_COST_MIN_CHAR_PRICE_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, MIN_CHAR_PRICE_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             return;
         } else {
             try {
                 precio = Double.valueOf(precioString);
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, OPERATIVE_COST_NUMBER_VALID_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, NUMBER_VALID_PRICE_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
         if (precio < 0) {
-            JOptionPane.showMessageDialog(this, OPERATIVE_COST_VALID_POSITIVE_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, VALID_POSITIVE_PRICE_NUMBER_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             return;
         }
         List<CostoOperativo> list = costoOperativoService.obtenerCostosOperativos(nombre, false);
@@ -183,33 +183,33 @@ public class CrearCostoOperativo extends JDialog implements ActionListener, KeyL
         String precioString = jtPrecio.getText().trim();
         Double precio = -1.0;
         if (nombre.length() < 1 || nombre.isEmpty()) {
-            JOptionPane.showMessageDialog(this, OPERATIVE_COST_MIN_CHAR_NAME_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, MIN_CHAR_NAME_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (nombre.length() > 30) {
-            JOptionPane.showMessageDialog(this, OPERATIVE_COST_MAX_CHAR_NAME_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, MAX_CHAR_NAME_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (descripcion.length() > 150) {
-            JOptionPane.showMessageDialog(this, OPERATIVE_COST_MAX_CHAR_DESC_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, MAX_CHAR_DESCRIPTION_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (descripcion.isEmpty()) {
             descripcion = null;
         }
         if (precioString.length() < 1 || precioString.isEmpty()) {
-            JOptionPane.showMessageDialog(this, OPERATIVE_COST_MIN_CHAR_PRICE_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, MIN_CHAR_PRICE_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             return;
         } else {
             try {
                 precio = Double.valueOf(precioString);
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, OPERATIVE_COST_NUMBER_VALID_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, NUMBER_VALID_PRICE_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
         if (precio < 0) {
-            JOptionPane.showMessageDialog(this, OPERATIVE_COST_VALID_POSITIVE_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, VALID_POSITIVE_PRICE_NUMBER_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             return;
         }
         List<CostoOperativo> list = costoOperativoService.obtenerCostosOperativos(nombre, false);

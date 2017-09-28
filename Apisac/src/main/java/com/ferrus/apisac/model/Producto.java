@@ -29,13 +29,9 @@ import javax.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = "producto.obtenerProductos", query = "SELECT p FROM Producto p WHERE LOWER(p.nombre) LIKE :nombre")
     ,
-    @NamedQuery(name = "producto.obtenerProductosMarca", query = "SELECT p FROM Producto p WHERE p.marca.descripcion LIKE :marca")
-    ,
     @NamedQuery(name = "producto.obtenerProductosCategoria", query = "SELECT p FROM Producto p WHERE p.productoCategoria.descripcion LIKE :categoria")
     ,
     @NamedQuery(name = "producto.obtenerProductosSubCategoria", query = "SELECT p FROM Producto p WHERE p.productoSubCategoria.descripcion LIKE :subcategoria")
-    ,
-    @NamedQuery(name = "producto.obtenerProductosImpuesto", query = "SELECT p FROM Producto p WHERE p.impuesto.valor = :valor")
     ,
     @NamedQuery(name = "producto.obtenerProductosMateriaPrima", query = "SELECT p FROM Producto p JOIN p.precio.materiaPrimaDetalles prm WHERE prm.materiaPrima.id = :idMateriaPrima")
 })
@@ -53,12 +49,11 @@ public class Producto implements Serializable {
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, optional = false)
     @JoinColumn(name = "id_precio", nullable = false)
     private Precio precio;
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "id_impuesto", nullable = false)
-    private Impuesto impuesto;
-    @ManyToOne(optional = false)
+    @Column(name = "impuesto", nullable = false, length = 10, precision = 2)
+    private Double impuesto;
+    /*@ManyToOne(optional = false)
     @JoinColumn(name = "id_marca", nullable = false)
-    private Marca marca;
+    private Marca marca;*/
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_productoCategoria", nullable = false)
     private ProductoCategoria productoCategoria;
@@ -101,22 +96,22 @@ public class Producto implements Serializable {
         this.precio = precio;
     }
 
-    public Impuesto getImpuesto() {
+    public Double getImpuesto() {
         return impuesto;
     }
 
-    public void setImpuesto(Impuesto impuesto) {
+    public void setImpuesto(Double impuesto) {
         this.impuesto = impuesto;
     }
 
+    /*
     public Marca getMarca() {
         return marca;
     }
 
     public void setMarca(Marca marca) {
         this.marca = marca;
-    }
-
+    }*/
     public ProductoCategoria getProductoCategoria() {
         return productoCategoria;
     }

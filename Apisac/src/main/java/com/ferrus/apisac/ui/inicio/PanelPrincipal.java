@@ -51,12 +51,12 @@ public class PanelPrincipal extends JPanel {
         this.jpPrecio = new JPanel();
         this.jpBotones = new JPanel();
         this.jpBotones.setBorder(new EtchedBorder());
-        this.jbCrear = new JButton(CREATE_BUTTON_NAME);
-        this.jbModificar = new JButton(MODIFY_BUTTON_NAME);
+        this.jbCrear = new JButton(CREATE_PRODUCT_BUTTON_NAME);
+        this.jbModificar = new JButton(MODIFY_PRODUCT_BUTTON_NAME);
         this.jbModificar.setEnabled(false);
-        this.jbBorrar = new JButton(DELETE_BUTTON_NAME);
+        this.jbBorrar = new JButton(DELETE_PRODUCT_BUTTON_NAME);
         this.jbBorrar.setEnabled(false);
-        this.jbExportar = new JButton(EXPORT_BUTTON_NAME);
+        this.jbExportar = new JButton(EXPORT_PRODUCT_BUTTON_NAME);
         this.jbExportar.setEnabled(false);
         this.jbParametros = new JButton(PARAM_BUTTON_NAME);
         this.jbMateriaPrima = new JButton(RAW_MATERIAL_BUTTON_NAME);

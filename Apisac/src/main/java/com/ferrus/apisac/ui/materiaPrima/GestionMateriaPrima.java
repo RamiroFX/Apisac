@@ -84,10 +84,10 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
         jtfBuscar = new JTextField();
         jtaDescripcion = new JTextArea();
         jtaDescripcion.setEditable(false);
-        jbBuscar = new JButton(AppUIConstants.SEARCH_RAW_MATERIAL_BUTTON_NAME);
-        jbCrear = new JButton(AppUIConstants.CREATE_RAW_MATERIAL_BUTTON_NAME);
-        jbModificar = new JButton(AppUIConstants.UPDATE_RAW_MATERIAL_BUTTON_NAME);
-        jbEliminar = new JButton(AppUIConstants.DELETE_RAW_MATERIAL_BUTTON_NAME);
+        jbBuscar = new JButton(AppUIConstants.SEARCH_BUTTON_NAME);
+        jbCrear = new JButton(AppUIConstants.CREATE_BUTTON_NAME);
+        jbModificar = new JButton(AppUIConstants.UPDATE_BUTTON_NAME);
+        jbEliminar = new JButton(AppUIConstants.DELETE_BUTTON_NAME);
         jtMateriaPrima = new JTable();
         jtMateriaPrima.getTableHeader().setReorderingAllowed(false);
         jspMateriaPrima = new JScrollPane(jtMateriaPrima);
@@ -96,7 +96,7 @@ public class GestionMateriaPrima extends JDialog implements ActionListener, KeyL
         jbModificar.setEnabled(false);
         jbEliminar.setEnabled(false);
         if (formType == SELECCIONAR) {
-            this.jbSeleccionar = new JButton(AppUIConstants.SELECT_RAW_MATERIAL_BUTTON_NAME);
+            this.jbSeleccionar = new JButton(AppUIConstants.SELECT_BUTTON_NAME);
             this.jbSeleccionar.setEnabled(false);
         }
     }

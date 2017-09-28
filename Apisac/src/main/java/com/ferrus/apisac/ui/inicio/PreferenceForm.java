@@ -83,7 +83,7 @@ public class PreferenceForm extends JDialog implements ActionListener {
         this.lookAndFellComboBox = new JComboBox<>();
         //this.lookAndFellComboBox.setRenderer(new ColorCellRenderer());
         this.selectButton = new JButton(AppUIConstants.PREFERENCE_SELECT_BTN);
-        this.cancelButton = new JButton(AppUIConstants.PREFERENCE_CANCEL_BTN);
+        this.cancelButton = new JButton(AppUIConstants.CLOSE_BTN_NAME);
         this.studentName = new JLabel(AppUIConstants.PREFERENCE_LNF);
 
         this.selectButton.addActionListener(this);

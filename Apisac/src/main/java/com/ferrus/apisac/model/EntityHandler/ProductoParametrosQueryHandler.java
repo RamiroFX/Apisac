@@ -79,7 +79,7 @@ public class ProductoParametrosQueryHandler extends AbstractQuery {
         Producto p = EntityManagerHandler.INSTANCE.getEntityManager().find(Producto.class, producto.getId());
         p.setDescripcion(producto.getDescripcion());
         p.setImpuesto(producto.getImpuesto());
-        p.setMarca(producto.getMarca());
+        //p.setMarca(producto.getMarca());
         p.setNombre(producto.getNombre());
         p.setPrecio(producto.getPrecio());
         p.setProductoCategoria(producto.getProductoCategoria());
@@ -91,7 +91,7 @@ public class ProductoParametrosQueryHandler extends AbstractQuery {
         open();
         Producto p = EntityManagerHandler.INSTANCE.getEntityManager().find(Producto.class, producto.getId());
         p.setImpuesto(null);
-        p.setMarca(null);
+        //p.setMarca(null);
         p.setProductoCategoria(null);
         p.setProductoSubCategoria(null);
         EntityManagerHandler.INSTANCE.getEntityManager().remove(p);
@@ -153,6 +153,12 @@ public class ProductoParametrosQueryHandler extends AbstractQuery {
         } else {
             typedQuery.setParameter("descripcion", descripcion);
         }
+        return typedQuery.getResultList();
+    }
+
+    public List<ProductoSubCategoria> obtenerProductosSubCategorias(ProductoCategoria productoCategoria) {
+        TypedQuery<ProductoSubCategoria> typedQuery = EntityManagerHandler.INSTANCE.getEntityManager().createNamedQuery("productoSubCategoria.obtenerProductoSubCategoriaPorCategoria", ProductoSubCategoria.class);
+        typedQuery.setParameter("categoria", productoCategoria.getDescripcion());
         return typedQuery.getResultList();
     }
 

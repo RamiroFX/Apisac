@@ -11,20 +11,7 @@ import com.ferrus.apisac.model.CostoOperativoDetalle;
 import com.ferrus.apisac.model.UnidadMedida;
 import com.ferrus.apisac.model.service.UnidadMedidaService;
 import com.ferrus.apisac.model.serviceImp.UnidadMedidaServImpl;
-import static com.ferrus.apisac.util.AppUIConstants.ACEPT_RAW_MATERIAl_BUTTON_NAME;
-import static com.ferrus.apisac.util.AppUIConstants.ALERT_MESSAGE;
-import static com.ferrus.apisac.util.AppUIConstants.CANCEL_RAW_MATERIAl_BUTTON_NAME;
-import static com.ferrus.apisac.util.AppUIConstants.CANT_RAW_MATERIAl_LABEL_NAME;
-import static com.ferrus.apisac.util.AppUIConstants.NAME_RAW_MATERIAL_LABEL;
-import static com.ferrus.apisac.util.AppUIConstants.PRECIO_RAW_MATERIAl_BUTTON_NAME;
-import static com.ferrus.apisac.util.AppUIConstants.RAW_MATERIAL_NUMBER_VALID_CANT_MESSAGE;
-import static com.ferrus.apisac.util.AppUIConstants.RAW_MATERIAL_NUMBER_VALID_MESSAGE;
-import static com.ferrus.apisac.util.AppUIConstants.RAW_MATERIAL_VALID_POSITIVE_MESSAGE;
-import static com.ferrus.apisac.util.AppUIConstants.SELECT_MATERIAL_VALID_POSITIVE_CANT_MESSAGE;
-import static com.ferrus.apisac.util.AppUIConstants.SELECT_RAW_MATERIAl_SELECT_FORM_TITLE;
-import static com.ferrus.apisac.util.AppUIConstants.SELECT_RAW_MATERIAl_UPDATE_FORM_TITLE;
-import static com.ferrus.apisac.util.AppUIConstants.TOTAL_RAW_MATERIAl_LABEL_NAME;
-import static com.ferrus.apisac.util.AppUIConstants.UNIT_RAW_MATERIAl_BUTTON_NAME;
+import static com.ferrus.apisac.util.AppUIConstants.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -90,8 +77,8 @@ public class SeleccionarCantidadCostoOperativo extends JDialog implements Action
         jtfTotal = new JTextField("0");
         jtfTotal.setEditable(false);
         jtfPrecio = new JTextField("0");
-        jbAceptar = new JButton(ACEPT_RAW_MATERIAl_BUTTON_NAME);
-        jbCancelar = new JButton(CANCEL_RAW_MATERIAl_BUTTON_NAME);
+        jbAceptar = new JButton(ACEPT_BUTTON_NAME);
+        jbCancelar = new JButton(CANCEL_BUTTON_NAME);
         jcbUnidadMBoxM = new JComboBox();
     }
 
@@ -113,13 +100,13 @@ public class SeleccionarCantidadCostoOperativo extends JDialog implements Action
 
     private void constructLayout() {
         JPanel jpCenter = new JPanel(new MigLayout());
-        jpCenter.add(new JLabel(NAME_RAW_MATERIAL_LABEL));
+        jpCenter.add(new JLabel(NAME_LABEL));
         jpCenter.add(jtfNombre, "growx, push, wrap");
-        jpCenter.add(new JLabel(UNIT_RAW_MATERIAl_BUTTON_NAME));
+        jpCenter.add(new JLabel(UNIT_MEASURE_LABEL));
         jpCenter.add(jcbUnidadMBoxM, "growx, push, wrap");
         jpCenter.add(new JLabel(CANT_RAW_MATERIAl_LABEL_NAME));
         jpCenter.add(jtfCantidad, "growx, push, wrap");
-        jpCenter.add(new JLabel(PRECIO_RAW_MATERIAl_BUTTON_NAME));
+        jpCenter.add(new JLabel(PRECIO_LABEL));
         jpCenter.add(jtfPrecio, "growx, push, wrap");
         jpCenter.add(new JLabel(TOTAL_RAW_MATERIAl_LABEL_NAME));
         jpCenter.add(jtfTotal, "growx, push");
@@ -186,13 +173,13 @@ public class SeleccionarCantidadCostoOperativo extends JDialog implements Action
         }
         Double cantidad = Double.valueOf(jtfCantidad.getText().trim().replace(",", "."));
         if (cantidad <= 0) {
-            JOptionPane.showMessageDialog(this, SELECT_MATERIAL_VALID_POSITIVE_CANT_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, SELECT_VALID_POSITIVE_CANT_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             jtfCantidad.setText("0");
             return;
         }
         Double precio = Double.valueOf(jtfPrecio.getText().trim().replace(",", "."));
         if (precio <= 0) {
-            JOptionPane.showMessageDialog(this, RAW_MATERIAL_VALID_POSITIVE_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, VALID_POSITIVE_PRICE_NUMBER_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             jtfPrecio.setText("0");
             return;
         }
@@ -204,11 +191,11 @@ public class SeleccionarCantidadCostoOperativo extends JDialog implements Action
                 unaMatPrima.setNombre(mp.getNombre());
                 unaMatPrima.setPrecio(mp.getPrecio());
                 unaMatPrima.setUnidadMedida((UnidadMedida) jcbUnidadMBoxM.getSelectedItem());
-                CostoOperativoDetalle mpd = new CostoOperativoDetalle();
-                mpd.setCantidad(cantidad);
-                mpd.setCostoOperativo(unaMatPrima);
-                mpd.setPrecioCostoOperativo(precio);
-                this.crearProductoCallback.recibirCostoOperativoDetalle(mpd);
+                CostoOperativoDetalle unaMpd = new CostoOperativoDetalle();
+                unaMpd.setCantidad(cantidad);
+                unaMpd.setCostoOperativo(unaMatPrima);
+                unaMpd.setPrecioCostoOperativo(precio);
+                this.crearProductoCallback.recibirCostoOperativoDetalle(unaMpd);
                 break;
             }
             case MODIFICAR: {
@@ -243,7 +230,7 @@ public class SeleccionarCantidadCostoOperativo extends JDialog implements Action
         try {
             precio = Double.valueOf(precioString);
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, RAW_MATERIAL_NUMBER_VALID_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, NUMBER_VALID_PRICE_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             jtfPrecio.setText("0");
             return false;
         }
@@ -255,7 +242,7 @@ public class SeleccionarCantidadCostoOperativo extends JDialog implements Action
         try {
             Double cantidad = Double.valueOf(cantidadString);
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, RAW_MATERIAL_NUMBER_VALID_CANT_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, NUMBER_VALID_CANT_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             jtfCantidad.setText("0");
             return false;
         }

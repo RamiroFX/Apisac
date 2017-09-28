@@ -77,10 +77,6 @@ public class GestionCostoOperativo extends JDialog implements ActionListener, Ke
         loadData();
     }
 
-    public GestionCostoOperativo(CrearProducto aThis, int SELECCIONAR) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     private void initializeVariables(int formType) {
         this.formType = formType;
         costoOperativoTableModel = new CostoOperativoTableModel();
@@ -89,10 +85,10 @@ public class GestionCostoOperativo extends JDialog implements ActionListener, Ke
         jtfBuscar = new JTextField();
         jtaDescripcion = new JTextArea();
         jtaDescripcion.setEditable(false);
-        jbBuscar = new JButton(SEARCH_OPERATIVE_COST_BUTTON_NAME);
-        jbCrear = new JButton(CREATE_OPERATIVE_COST_BUTTON_NAME);
-        jbModificar = new JButton(UPDATE_OPERATIVE_COST_BUTTON_NAME);
-        jbEliminar = new JButton(DELETE_OPERATIVE_COST_BUTTON_NAME);
+        jbBuscar = new JButton(SEARCH_BUTTON_NAME);
+        jbCrear = new JButton(CREATE_BUTTON_NAME);
+        jbModificar = new JButton(UPDATE_BUTTON_NAME);
+        jbEliminar = new JButton(DELETE_BUTTON_NAME);
         jtCostoOperativo = new JTable();
         jspCostoOperativo = new JScrollPane(jtCostoOperativo);
         jspDescripcion = new JScrollPane(jtaDescripcion);
@@ -100,7 +96,7 @@ public class GestionCostoOperativo extends JDialog implements ActionListener, Ke
         jbModificar.setEnabled(false);
         jbEliminar.setEnabled(false);
         if (formType == SELECCIONAR) {
-            this.jbSeleccionar = new JButton(AppUIConstants.SELECT_RAW_MATERIAL_BUTTON_NAME);
+            this.jbSeleccionar = new JButton(AppUIConstants.SELECT_BUTTON_NAME);
             this.jbSeleccionar.setEnabled(false);
         }
     }

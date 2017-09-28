@@ -63,6 +63,8 @@ public interface ProductoParametrosService {
 
     public List<ProductoSubCategoria> obtenerProductosSubCategorias(String descripcion, boolean inclusivo);
 
+    public List<ProductoSubCategoria> obtenerProductosSubCategorias(ProductoCategoria productoCategoria);
+
     public void modificarProductoSubCategoria(ProductoSubCategoria productoSubCategoria, ProductoCategoria productoCategoria);
 
     public void eliminarProductoSubCategoria(Long idProductoSubCategoria);

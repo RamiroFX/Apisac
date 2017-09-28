@@ -135,6 +135,6 @@ public class Precio implements Serializable {
     }
 
     public Double precioVentaConImpuesto() {
-        return precioVentaSinImpuesto() * (1 + getProducto().getImpuesto().getValor());
+        return precioVentaSinImpuesto() * (1 + getProducto().getImpuesto());
     }
 }

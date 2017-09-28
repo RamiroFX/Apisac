@@ -10,20 +10,28 @@ import com.ferrus.apisac.model.CostoOperativo;
 import com.ferrus.apisac.model.CostoOperativoDetalle;
 import com.ferrus.apisac.model.MateriaPrima;
 import com.ferrus.apisac.model.MateriaPrimaDetalle;
+import com.ferrus.apisac.model.Precio;
+import com.ferrus.apisac.model.Producto;
 import com.ferrus.apisac.model.ProductoCategoria;
 import com.ferrus.apisac.model.ProductoSubCategoria;
 import com.ferrus.apisac.model.UnidadMedida;
+import com.ferrus.apisac.model.service.ProductoParametrosService;
+import com.ferrus.apisac.model.service.UnidadMedidaService;
+import com.ferrus.apisac.model.serviceImp.ProductoParametrosServImpl;
+import com.ferrus.apisac.model.serviceImp.UnidadMedidaServImpl;
 import com.ferrus.apisac.tablemodel.CostoOperativoDetalleTableModel;
 import com.ferrus.apisac.tablemodel.MateriaPrimaDetalleTableModel;
 import com.ferrus.apisac.ui.costoOperativo.GestionCostoOperativo;
 import com.ferrus.apisac.ui.materiaPrima.GestionMateriaPrima;
-import static com.ferrus.apisac.util.AppUIConstants.ALERT_MESSAGE;
+import static com.ferrus.apisac.util.AppUIConstants.*;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -31,6 +39,7 @@ import java.awt.event.MouseListener;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Objects;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -44,6 +53,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import net.miginfocom.swing.MigLayout;
 
@@ -52,29 +62,7 @@ import net.miginfocom.swing.MigLayout;
  * @author Ramiro Ferreira
  */
 public class CrearProducto extends JDialog implements ActionListener, KeyListener,
-        MouseListener, CrearProductoCallback {
-
-    public static final int CREATE_PRODUCT_WINDOWS_WIDTH = 800;
-    public static final int CREATE_PRODUCT_WINDOWS_HEIGHT = 400;
-
-    public static final String CREATE_PRODUCT_PROD_NAME = "Producto";
-    public static final String CREATE_PRODUCT_PROD_COST_TITLE = "Costo de producción";
-    public static final String CREATE_PRODUCT_OPER_COST_TITLE = "Costo operativo";
-    public static final String CREATE_PRODUCT_PROD_PRICE_TITLE = "Precio de venta";
-    public static final String CREATE_PRODUCT_UNIT_PROD_NAME = "Unidades producidas";
-    public static final String CREATE_PRODUCT_FIXED_COST_UNIT_PROD_NAME = "Costo fijo unitario";
-    public static final String CREATE_PRODUCT_VAR_COST_UNIT_PROD_NAME = "Costo variable unitario";
-    public static final String CREATE_PRODUCT_TOTAL_COST_PROD_NAME = "Costo total unitario";
-    public static final String CREATE_PRODUCT_TOTAL_VAR_COST_PROD_NAME = "Costo variable total ";
-    public static final String CREATE_PRODUCT_TOTAL_FIXED_COST_PROD_NAME = "Costo fijo total ";
-    public static final String CREATE_PRODUCT_TAX_LABEL = "Impuesto";
-    public static final String CREATE_PRODUCT_UTILITY_LABEL = "Utilidad";
-
-    public static final String CREATE_PRODUCT_ADD_MAT_BTN_NAME = "Agregar";
-    public static final String CREATE_PRODUCT_UPDATE_MAT_BTN_NAME = "Modificar";
-    public static final String CREATE_PRODUCT_REMOVE_MAT_BTN_NAME = "Quitar";
-    public static final String CREATE_PRODUCT_REPEATED_RAW_MATERIAL_MSG = "La materia prima seleccionada ya se encuentra utilizada.";
-    public static final String CREATE_PRODUCT_REPEATED_OPER_COST_MSG = "El costo operativo seleccionado ya se encuentra utilizado.";
+        MouseListener, CrearProductoCallback, ItemListener {
 
     /*
     SELL PRICE VARS    
@@ -86,7 +74,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
     private JComboBox<UnidadMedida> jcbUnidadMedida;
     private JComboBox<ProductoCategoria> jcbProductoCategoria;
     private JComboBox<ProductoSubCategoria> jcbProductoSubCategoria;
-    private JTextField jtfNombreProducto;
+    private JTextField jtfNombreProducto, jtfDescripcionProducto;
     /*    
     PROD COST VARS
      */
@@ -105,13 +93,16 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
     GENERAL VARS    
      */
     private JTabbedPane jtpPrincipal;
-    private JPanel jpParametros, jpMateriaPrima, jpGastoOperativo, jpPrecio;
+    private JPanel jpMateriaPrima, jpGastoOperativo, jpPrecio;
     private MateriaPrimaDetalleTableModel materiaPrimaDetalleTableModel;
     private CostoOperativoDetalleTableModel costoOperativoDetalleTableModel;
+    private JButton jbAceptar, jbCancelar;
 
     public static final int CREATE_PRODUCT = 1;
     public static final int UPDATE_PRODUCT = 2;
     private int formType;
+    private ProductoParametrosService productoServicio;
+    private UnidadMedidaService unidadMedidaServicio;
 
     public CrearProducto(JFrame frame, int formType) {
         super(frame);
@@ -126,13 +117,15 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         this.materiaPrimaDetalleTableModel = new MateriaPrimaDetalleTableModel();
         this.costoOperativoDetalleTableModel = new CostoOperativoDetalleTableModel();
         this.formType = formType;
+        this.productoServicio = new ProductoParametrosServImpl();
+        this.unidadMedidaServicio = new UnidadMedidaServImpl();
         this.jtpPrincipal = new JTabbedPane();
-        this.jpParametros = new JPanel(new BorderLayout());
         this.jpMateriaPrima = new JPanel(new BorderLayout());
         this.jpGastoOperativo = new JPanel(new BorderLayout());
         this.jpPrecio = new JPanel(new MigLayout());
         this.jcbUnidadMedida = new JComboBox<>();
         this.jcbProductoCategoria = new JComboBox<>();
+        this.jcbProductoSubCategoria = new JComboBox<>();
         this.jtMateriaPrima = new JTable(materiaPrimaDetalleTableModel);
         this.jtMateriaPrima.getTableHeader().setReorderingAllowed(false);
         this.jspMateriaPrima = new JScrollPane(jtMateriaPrima);
@@ -141,6 +134,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         this.jspCostoOperativo = new JScrollPane(jtCostoOperativo);
 
         this.jtfNombreProducto = new JTextField();
+        this.jtfDescripcionProducto = new JTextField();
 
         NumberFormat format = DecimalFormat.getInstance();
         format.setMinimumFractionDigits(2);
@@ -180,34 +174,64 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         this.jbQuitarCO = new JButton(CREATE_PRODUCT_REMOVE_MAT_BTN_NAME);
         this.jbModificarCO.setEnabled(false);
         this.jbQuitarCO.setEnabled(false);
+
+        this.jbAceptar = new JButton(ACEPT_BUTTON_NAME);
+        this.jbCancelar = new JButton(CANCEL_BUTTON_NAME);
     }
 
     private void constructLayout() {
         constructLayoutPrecio();
         constructLayoutCostoProduccion();
         constructLayoutCostoOperativo();
+        JPanel jpBotones = new JPanel();
+        jpBotones.setBorder(new EtchedBorder(EtchedBorder.RAISED));
+        jpBotones.add(jbAceptar);
+        jpBotones.add(jbCancelar);
         getContentPane().add(jtpPrincipal, BorderLayout.CENTER);
+        getContentPane().add(jpBotones, BorderLayout.SOUTH);
     }
 
     private void constructLayoutPrecio() {
         jpPrecio.add(new JLabel(CREATE_PRODUCT_PROD_NAME));
-        jpPrecio.add(jtfNombreProducto, "growx, push, wrap");
+        jpPrecio.add(jtfNombreProducto, "growx, push");
+        jpPrecio.add(new JLabel(DESCRIPTION_LABEL));
+        jpPrecio.add(jtfDescripcionProducto, "growx, push, wrap");
+
         jpPrecio.add(new JLabel(CREATE_PRODUCT_UNIT_PROD_NAME));
-        jpPrecio.add(jftUnidadesProducidas, "growx, push, wrap");
+        jpPrecio.add(jftUnidadesProducidas, "growx, push");
+        jpPrecio.add(new JLabel(CREATE_PRODUCT_UM_LABEL));
+        jpPrecio.add(jcbUnidadMedida, "growx, push, wrap");
+
         jpPrecio.add(new JLabel(CREATE_PRODUCT_UTILITY_LABEL));
-        jpPrecio.add(jftUtilidad, "growx, push, wrap");
+        jpPrecio.add(jftUtilidad, "growx, push");
+        jpPrecio.add(new JLabel(CREATE_PRODUCT_CATEGORY_LABEL));
+        jpPrecio.add(jcbProductoCategoria, "growx, push, wrap");
+
         jpPrecio.add(new JLabel(CREATE_PRODUCT_TAX_LABEL));
-        jpPrecio.add(jftImpuesto, "growx, push, wrap");
-        jpPrecio.add(new JLabel(CREATE_PRODUCT_TOTAL_FIXED_COST_PROD_NAME));
-        jpPrecio.add(jftCostoFijoTotal, "growx, push, wrap");
-        jpPrecio.add(new JLabel(CREATE_PRODUCT_FIXED_COST_UNIT_PROD_NAME));
-        jpPrecio.add(jftCostoFijoUnit, "growx, push, wrap");
-        jpPrecio.add(new JLabel(CREATE_PRODUCT_TOTAL_VAR_COST_PROD_NAME));
-        jpPrecio.add(jftCostoVariableTotal, "growx, push, wrap");
-        jpPrecio.add(new JLabel(CREATE_PRODUCT_VAR_COST_UNIT_PROD_NAME));
-        jpPrecio.add(jftCostoVariableUnit, "growx, push, wrap");
-        jpPrecio.add(new JLabel(CREATE_PRODUCT_TOTAL_COST_PROD_NAME));
-        jpPrecio.add(jftCostoTotalUnit, "growx, push");
+        jpPrecio.add(jftImpuesto, "growx, push");
+        jpPrecio.add(new JLabel(CREATE_PRODUCT_SUB_CATEGORY_LABEL));
+        jpPrecio.add(jcbProductoSubCategoria, "growx, push, wrap");
+        JPanel jpCostoFijo = new JPanel(new MigLayout());
+        jpCostoFijo.setBorder(new EtchedBorder());
+        jpCostoFijo.add(new JLabel(CREATE_PRODUCT_TOTAL_FIXED_COST_PROD_NAME));
+        jpCostoFijo.add(jftCostoFijoTotal, "growx, push, wrap");
+        jpCostoFijo.add(new JLabel(CREATE_PRODUCT_FIXED_COST_UNIT_PROD_NAME));
+        jpCostoFijo.add(jftCostoFijoUnit, "growx, push, wrap");
+        JPanel jpCostoVariable = new JPanel(new MigLayout());
+        jpCostoVariable.setBorder(new EtchedBorder());
+        jpCostoVariable.add(new JLabel(CREATE_PRODUCT_TOTAL_VAR_COST_PROD_NAME));
+        jpCostoVariable.add(jftCostoVariableTotal, "growx, push, wrap");
+        jpCostoVariable.add(new JLabel(CREATE_PRODUCT_VAR_COST_UNIT_PROD_NAME));
+        jpCostoVariable.add(jftCostoVariableUnit, "growx, push, wrap");
+        jpPrecio.add(jpCostoFijo, "growx, push");
+        jpPrecio.add(jpCostoVariable, "growx, push");
+        JPanel jpCostoTotal = new JPanel(new MigLayout());
+        jpCostoTotal.setBorder(new EtchedBorder());
+        jpCostoTotal.add(new JLabel());
+        jpCostoTotal.add(new JLabel(), "growx, push, span, wrap");
+        jpCostoTotal.add(new JLabel(CREATE_PRODUCT_TOTAL_COST_PROD_NAME));
+        jpCostoTotal.add(jftCostoTotalUnit, "growx, push, wrap");
+        jpPrecio.add(jpCostoTotal, "growx, push, span");
         this.jtpPrincipal.addTab(CREATE_PRODUCT_PROD_PRICE_TITLE, jpPrecio);
     }
 
@@ -267,10 +291,34 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         this.jbQuitarMat.addActionListener(this);
         this.jftUnidadesProducidas.addKeyListener(this);
         this.jtMateriaPrima.addMouseListener(this);
-
+        this.jbAgregarCO.addActionListener(this);
+        this.jbModificarCO.addActionListener(this);
+        this.jbQuitarCO.addActionListener(this);
+        this.jtCostoOperativo.addMouseListener(this);
+        this.jcbProductoCategoria.addItemListener(this);
+        this.jbAceptar.addActionListener(this);
+        this.jbCancelar.addActionListener(this);
     }
 
     private void loadData() {
+        List<UnidadMedida> unidadMedidas = unidadMedidaServicio.obtenerUnidadMedidas();
+        jcbUnidadMedida.removeAllItems();
+        for (UnidadMedida unidadMedida : unidadMedidas) {
+            jcbUnidadMedida.addItem(unidadMedida);
+        }
+        List<ProductoCategoria> productoCategorias = productoServicio.obtenerProductosCategorias("", true);
+        jcbProductoCategoria.removeAllItems();
+        for (ProductoCategoria productoCategoria : productoCategorias) {
+            jcbProductoCategoria.addItem(productoCategoria);
+        }
+    }
+
+    private void loadDataProductoSubCategoria(ProductoCategoria pc) {
+        List<ProductoSubCategoria> productoSubCategorias = productoServicio.obtenerProductosSubCategorias(pc);
+        jcbProductoSubCategoria.removeAllItems();
+        for (ProductoSubCategoria productoSubCategoria : productoSubCategorias) {
+            jcbProductoSubCategoria.addItem(productoSubCategoria);
+        }
     }
 
     private void recibirMateriaPrima(MateriaPrimaDetalle mpd) {
@@ -314,9 +362,9 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
     }
 
     private void recibirCostoOperativo(CostoOperativoDetalle cod) {
-        Long idNuevo = cod.getId();
+        Long idNuevo = cod.getCostoOperativo().getId();
         for (CostoOperativoDetalle costoOperativoDetalle : costoOperativoDetalleTableModel.getCostoOperativoDetalleList()) {
-            if (Objects.equals(idNuevo, costoOperativoDetalle.getId())) {
+            if (Objects.equals(idNuevo, costoOperativoDetalle.getCostoOperativo().getId())) {
                 JOptionPane.showMessageDialog(this, CREATE_PRODUCT_REPEATED_OPER_COST_MSG, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -355,6 +403,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
 
     private void calcularSubTotales() {
         Double costoVariableTotal = 0.0;
+        Double costoFijoTotal = 0.0;
         Double unidadesProducidas = 0.0;
         try {
             unidadesProducidas = Double.valueOf("" + jftUnidadesProducidas.getValue());
@@ -370,9 +419,12 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         for (CostoOperativoDetalle costoOperativoDetalle : this.costoOperativoDetalleTableModel.getCostoOperativoDetalleList()) {
             Double cant = costoOperativoDetalle.getCantidad();
             Double precio = costoOperativoDetalle.getPrecioCostoOperativo();
-            costoVariableTotal = costoVariableTotal + (cant * precio);
+            costoFijoTotal = costoFijoTotal + (cant * precio);
         }
         this.jftCostoVariableTotal.setValue(costoVariableTotal);
+        this.jftCostoFijoTotal.setValue(costoFijoTotal);
+        this.jftCostoVariableTotal2.setValue(costoVariableTotal);
+        this.jftCostoFijoTotal2.setValue(costoFijoTotal);
         this.jftCostoVariableUnit.setValue(costoVariableTotal / unidadesProducidas);
     }
 
@@ -421,6 +473,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
                 Double costoFijoUnit = costoFijoTotal / unidadesProducidas;
                 jftCostoVariableUnit.setValue(costoVariableUnit);
                 jftCostoFijoUnit.setValue(costoFijoUnit);
+                jftCostoTotalUnit.setValue(costoVariableUnit + costoFijoUnit);
             }
         });
     }
@@ -487,6 +540,93 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         }
     }
 
+    private void itemStateHandler() {
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                loadDataProductoSubCategoria((ProductoCategoria) jcbProductoCategoria.getSelectedItem());
+            }
+        });
+    }
+
+    private void crearProducto() {
+        String productoNombre = jtfNombreProducto.getText().trim();
+        String productoDescripcion = jtfDescripcionProducto.getText().trim();
+        Double productoImpuesto = null;
+        Double productoUtilidad = null;
+        Double productoUnidadesProd = null;
+        if (productoNombre.length() < 1 || productoNombre.isEmpty()) {
+            JOptionPane.showMessageDialog(this, MIN_CHAR_NAME_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (productoNombre.length() > 30) {
+            JOptionPane.showMessageDialog(this, MAX_CHAR_NAME_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (productoDescripcion.length() > 150) {
+            JOptionPane.showMessageDialog(this, MAX_CHAR_DESCRIPTION_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (productoDescripcion.isEmpty()) {
+            productoDescripcion = null;
+        }
+        try {
+            productoImpuesto = (Double) jftImpuesto.getValue();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, NUMBER_VALID_TAX_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            jftImpuesto.setValue(0);
+
+        }
+        if (productoImpuesto <= 0) {
+            JOptionPane.showMessageDialog(this, SELECT_VALID_POSITIVE_TAX_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            jftImpuesto.setValue(0);
+            return;
+        }
+        try {
+            productoUtilidad = (Double) jftUtilidad.getValue();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, NUMBER_VALID_UTILITY_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            jftImpuesto.setValue(0);
+
+        }
+        if (productoUtilidad <= 0) {
+            JOptionPane.showMessageDialog(this, SELECT_VALID_POSITIVE_UTILITY_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            jftUtilidad.setValue(0);
+            return;
+        }
+
+        try {
+            productoUnidadesProd = (Double) jftUnidadesProducidas.getValue();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, NUMBER_VALID_UNIT_PROD_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            jftUnidadesProducidas.setValue(0);
+
+        }
+        if (productoUnidadesProd <= 0) {
+            JOptionPane.showMessageDialog(this, SELECT_VALID_POSITIVE_UNIT_PROD_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            jftUnidadesProducidas.setValue(0);
+            return;
+        }
+        Precio precio = new Precio();
+        precio.setCostoOperativoDetalles(costoOperativoDetalleTableModel.getCostoOperativoDetalleList());
+        precio.setMateriaPrimaDetalles(materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList());
+        precio.setUnidadesProducidas(productoUnidadesProd);
+        precio.setUtilidad(productoUtilidad);
+
+        Producto producto = new Producto();
+        producto.setNombre(productoNombre);
+        producto.setDescripcion(productoDescripcion);
+        producto.setNombre(productoNombre);
+        producto.setImpuesto(productoImpuesto);
+
+        productoServicio.insertarProducto(producto);
+    }
+
+    private void cerrar() {
+        System.runFinalization();
+        this.dispose();
+    }
+
     @Override
     public void recibirMateriaPrimaDetalle(MateriaPrimaDetalle mpd) {
         recibirMateriaPrima(mpd);
@@ -522,6 +662,10 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
             invocarModificarCostoOperativoForm();
         } else if (src.equals(jbQuitarCO)) {
             removerCostoOperativoDetalle();
+        } else if (src.equals(jbAceptar)) {
+            crearProducto();
+        } else if (src.equals(jbCancelar)) {
+            cerrar();
         }
     }
 
@@ -585,5 +729,10 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
 
     @Override
     public void mouseExited(MouseEvent e) {
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        itemStateHandler();
     }
 }
