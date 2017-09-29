@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -33,9 +34,11 @@ public class MateriaPrimaDetalle implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_materiaprima", nullable = false)
     private MateriaPrima materiaPrima;
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_precio", nullable = false)
     private Precio precioProducto;
     @Column(name = "cantidad", nullable = false, length = 10)
     private Double cantidad;

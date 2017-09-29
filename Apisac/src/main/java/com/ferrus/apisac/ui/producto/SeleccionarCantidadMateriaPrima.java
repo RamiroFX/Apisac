@@ -131,6 +131,7 @@ public class SeleccionarCantidadMateriaPrima extends JDialog implements ActionLi
         setSize(new Dimension(400, 300));
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(jDialog);
+        jtfCantidad.requestFocusInWindow();
     }
 
     private void loadData(MateriaPrima mp) {

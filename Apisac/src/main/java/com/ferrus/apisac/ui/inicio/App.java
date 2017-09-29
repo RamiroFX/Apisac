@@ -1,5 +1,9 @@
 package com.ferrus.apisac.ui.inicio;
 
+import com.ferrus.apisac.model.Producto;
+import com.ferrus.apisac.model.service.ProductoParametrosService;
+import com.ferrus.apisac.model.serviceImp.ProductoParametrosServImpl;
+import com.ferrus.apisac.tablemodel.ProductoTableModel;
 import com.ferrus.apisac.ui.costoOperativo.GestionCostoOperativo;
 import com.ferrus.apisac.ui.materiaPrima.GestionMateriaPrima;
 import com.ferrus.apisac.ui.producto.CrearProducto;
@@ -9,6 +13,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -23,6 +28,8 @@ public class App extends JFrame implements ActionListener {
     private BarraMenu barraMenu;
     private JLabel timeLabel;
     private Timer timer;
+    private ProductoParametrosService productoServicio;
+    private ProductoTableModel productoTableModel;
 
     public App() {
         super(AppUIConstants.APP_TITLE);
@@ -34,6 +41,7 @@ public class App extends JFrame implements ActionListener {
         setIconImage(icono.getImage());
         constructAppWindow();
         startTimer();
+        loadData();
     }
 
     private void initializeVariables() {
@@ -42,6 +50,8 @@ public class App extends JFrame implements ActionListener {
         } catch (Exception e) {
             icono = new ImageIcon();
         }
+        this.productoServicio = new ProductoParametrosServImpl();
+        this.productoTableModel = new ProductoTableModel();
         this.jpPrincipal = new PanelPrincipal();
         this.barraMenu = new BarraMenu(this);
 
@@ -63,6 +73,7 @@ public class App extends JFrame implements ActionListener {
         this.jpPrincipal.jbMateriaPrima.addActionListener(this);
         this.jpPrincipal.jbCostoOperativo.addActionListener(this);
         this.jpPrincipal.jbBuscar.addActionListener(this);
+        this.jpPrincipal.jbLimpiar.addActionListener(this);
     }
 
     private void constructAppWindow() {
@@ -98,6 +109,10 @@ public class App extends JFrame implements ActionListener {
         Object src = e.getSource();
         if (src.equals(this.jpPrincipal.jbCrear)) {
             CrearProducto cp = new CrearProducto(this, CrearProducto.CREATE_PRODUCT);
+        } else if (src.equals(this.jpPrincipal.jbBuscar)) {
+            buscar();
+        } else if (src.equals(this.jpPrincipal.jbLimpiar)) {
+            borrarCampo();
         } else if (src.equals(this.jpPrincipal.jbParametros)) {
             Parametros param = new Parametros(this);
             param.setVisible(true);
@@ -108,5 +123,21 @@ public class App extends JFrame implements ActionListener {
             GestionCostoOperativo gco = new GestionCostoOperativo(this, GestionCostoOperativo.GESTIONAR);
             gco.setVisible(true);
         }
+    }
+
+    private void loadData() {
+        buscar();
+    }
+
+    private void buscar() {
+        String nombreProducto = jpPrincipal.jtfBuscar.getText().trim();
+        List<Producto> productos = productoServicio.obtenerProductos(nombreProducto, true);
+        this.productoTableModel.setProductoList(productos);
+        this.jpPrincipal.jtProductos.setModel(productoTableModel);
+        this.productoTableModel.updateTable();
+    }
+
+    private void borrarCampo() {
+        this.jpPrincipal.jtfBuscar.setText("");
     }
 }

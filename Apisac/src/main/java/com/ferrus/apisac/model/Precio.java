@@ -48,9 +48,12 @@ public class Precio implements Serializable {
         this.costoOperativoDetalles = new ArrayList<>();
     }
 
-    public Precio(Producto producto, Double utilidad) {
+    public Precio(Producto producto, Double utilidad, List<MateriaPrimaDetalle> materiaPrimaDetalles, List<CostoOperativoDetalle> costoOperativoDetalles) {
+        super();
         this.producto = producto;
         this.utilidad = utilidad;
+        this.materiaPrimaDetalles = materiaPrimaDetalles;
+        this.costoOperativoDetalles = costoOperativoDetalles;
     }
 
     public Long getId() {

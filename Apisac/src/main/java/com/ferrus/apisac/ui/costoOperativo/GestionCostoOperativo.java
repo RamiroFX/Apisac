@@ -15,7 +15,6 @@ import com.ferrus.apisac.model.service.ProductoParametrosService;
 import com.ferrus.apisac.model.serviceImp.CostoOperativoServImpl;
 import com.ferrus.apisac.model.serviceImp.ProductoParametrosServImpl;
 import com.ferrus.apisac.tablemodel.CostoOperativoTableModel;
-import com.ferrus.apisac.ui.producto.CrearProducto;
 import com.ferrus.apisac.util.AppUIConstants;
 import static com.ferrus.apisac.util.AppUIConstants.*;
 import java.awt.BorderLayout;
@@ -90,6 +89,7 @@ public class GestionCostoOperativo extends JDialog implements ActionListener, Ke
         jbModificar = new JButton(UPDATE_BUTTON_NAME);
         jbEliminar = new JButton(DELETE_BUTTON_NAME);
         jtCostoOperativo = new JTable();
+        jtCostoOperativo.getTableHeader().setReorderingAllowed(false);
         jspCostoOperativo = new JScrollPane(jtCostoOperativo);
         jspDescripcion = new JScrollPane(jtaDescripcion);
         jspDescripcion.setBorder(new TitledBorder(DESCRIPTION_OPERATIVE_COST_PANEL_NAME));

@@ -15,8 +15,10 @@ import com.ferrus.apisac.model.Producto;
 import com.ferrus.apisac.model.ProductoCategoria;
 import com.ferrus.apisac.model.ProductoSubCategoria;
 import com.ferrus.apisac.model.UnidadMedida;
+import com.ferrus.apisac.model.service.PrecioService;
 import com.ferrus.apisac.model.service.ProductoParametrosService;
 import com.ferrus.apisac.model.service.UnidadMedidaService;
+import com.ferrus.apisac.model.serviceImp.PrecioServImpl;
 import com.ferrus.apisac.model.serviceImp.ProductoParametrosServImpl;
 import com.ferrus.apisac.model.serviceImp.UnidadMedidaServImpl;
 import com.ferrus.apisac.tablemodel.CostoOperativoDetalleTableModel;
@@ -103,6 +105,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
     private int formType;
     private ProductoParametrosService productoServicio;
     private UnidadMedidaService unidadMedidaServicio;
+    private PrecioService precioServicio;
 
     public CrearProducto(JFrame frame, int formType) {
         super(frame);
@@ -119,6 +122,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         this.formType = formType;
         this.productoServicio = new ProductoParametrosServImpl();
         this.unidadMedidaServicio = new UnidadMedidaServImpl();
+        this.precioServicio = new PrecioServImpl();
         this.jtpPrincipal = new JTabbedPane();
         this.jpMateriaPrima = new JPanel(new BorderLayout());
         this.jpGastoOperativo = new JPanel(new BorderLayout());
@@ -555,14 +559,16 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         Double productoImpuesto = null;
         Double productoUtilidad = null;
         Double productoUnidadesProd = null;
+        //CONTROLAR NOMBRE DE PRODUCTO
         if (productoNombre.length() < 1 || productoNombre.isEmpty()) {
-            JOptionPane.showMessageDialog(this, MIN_CHAR_NAME_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, MIN_CHAR_PROD_NAME_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (productoNombre.length() > 30) {
-            JOptionPane.showMessageDialog(this, MAX_CHAR_NAME_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, MAX_CHAR_PROD_NAME_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             return;
         }
+        //CONTROLAR DESCRIPCION DE PRODUCTO
         if (productoDescripcion.length() > 150) {
             JOptionPane.showMessageDialog(this, MAX_CHAR_DESCRIPTION_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             return;
@@ -570,33 +576,9 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         if (productoDescripcion.isEmpty()) {
             productoDescripcion = null;
         }
+        //CONTROLAR UNIDADES PRODUCIDAS
         try {
-            productoImpuesto = (Double) jftImpuesto.getValue();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, NUMBER_VALID_TAX_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
-            jftImpuesto.setValue(0);
-
-        }
-        if (productoImpuesto <= 0) {
-            JOptionPane.showMessageDialog(this, SELECT_VALID_POSITIVE_TAX_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
-            jftImpuesto.setValue(0);
-            return;
-        }
-        try {
-            productoUtilidad = (Double) jftUtilidad.getValue();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, NUMBER_VALID_UTILITY_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
-            jftImpuesto.setValue(0);
-
-        }
-        if (productoUtilidad <= 0) {
-            JOptionPane.showMessageDialog(this, SELECT_VALID_POSITIVE_UTILITY_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
-            jftUtilidad.setValue(0);
-            return;
-        }
-
-        try {
-            productoUnidadesProd = (Double) jftUnidadesProducidas.getValue();
+            productoUnidadesProd = Double.valueOf("" + jftUnidadesProducidas.getValue());
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, NUMBER_VALID_UNIT_PROD_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
             jftUnidadesProducidas.setValue(0);
@@ -607,19 +589,62 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
             jftUnidadesProducidas.setValue(0);
             return;
         }
+        //CONTROLAR UTILIDAD
+        try {
+            productoUtilidad = Double.valueOf("" + jftUtilidad.getValue());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, NUMBER_VALID_UTILITY_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            jftImpuesto.setValue(0);
+
+        }
+        if (productoUtilidad <= 0) {
+            JOptionPane.showMessageDialog(this, SELECT_VALID_POSITIVE_UTILITY_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            jftUtilidad.setValue(0);
+            return;
+        }
+        //CONTROLAR IMPUESTP
+        try {
+            productoImpuesto = Double.valueOf("" + jftImpuesto.getValue());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, NUMBER_VALID_TAX_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            jftImpuesto.setValue(0);
+        }
+        if (productoImpuesto <= 0) {
+            JOptionPane.showMessageDialog(this, SELECT_VALID_POSITIVE_TAX_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            jftImpuesto.setValue(0);
+            return;
+        }
+        //CONTROLAR COSTOS OPERATIVOS
+        if (costoOperativoDetalleTableModel.getCostoOperativoDetalleList().isEmpty()) {
+            int opcion = JOptionPane.showConfirmDialog(this, EMPTY_OPER_COST_LIST_MSG, ALERT_MESSAGE, JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (opcion != JOptionPane.YES_OPTION) {
+                return;
+            }
+        }
+        //CONTROLAR MATERIA PRIMA
+        if (materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList().isEmpty()) {
+            int opcion = JOptionPane.showConfirmDialog(this, EMPTY_RAW_MATERIAL_LIST_MSG, ALERT_MESSAGE, JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (opcion != JOptionPane.YES_OPTION) {
+                return;
+            }
+        }
         Precio precio = new Precio();
         precio.setCostoOperativoDetalles(costoOperativoDetalleTableModel.getCostoOperativoDetalleList());
         precio.setMateriaPrimaDetalles(materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList());
         precio.setUnidadesProducidas(productoUnidadesProd);
         precio.setUtilidad(productoUtilidad);
-
+        //precioServicio.insertarPrecio(precio);
         Producto producto = new Producto();
         producto.setNombre(productoNombre);
         producto.setDescripcion(productoDescripcion);
         producto.setNombre(productoNombre);
         producto.setImpuesto(productoImpuesto);
-
+        producto.setPrecio(precio);
+        producto.setProductoCategoria((ProductoCategoria) jcbProductoCategoria.getSelectedItem());
+        producto.setProductoSubCategoria((ProductoSubCategoria) jcbProductoSubCategoria.getSelectedItem());
+        producto.setUnidadMedida((UnidadMedida) jcbUnidadMedida.getSelectedItem());
         productoServicio.insertarProducto(producto);
+        cerrar();
     }
 
     private void cerrar() {

@@ -131,6 +131,7 @@ public class SeleccionarCantidadCostoOperativo extends JDialog implements Action
         setSize(new Dimension(400, 300));
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(jDialog);
+        jtfCantidad.requestFocusInWindow();
     }
 
     private void loadData(CostoOperativo mp) {

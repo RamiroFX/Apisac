@@ -34,6 +34,8 @@ import javax.persistence.Table;
     @NamedQuery(name = "producto.obtenerProductosSubCategoria", query = "SELECT p FROM Producto p WHERE p.productoSubCategoria.descripcion LIKE :subcategoria")
     ,
     @NamedQuery(name = "producto.obtenerProductosMateriaPrima", query = "SELECT p FROM Producto p JOIN p.precio.materiaPrimaDetalles prm WHERE prm.materiaPrima.id = :idMateriaPrima")
+    ,
+    @NamedQuery(name = "producto.obtenerProductosUnidadMedida", query = "SELECT p FROM Producto p WHERE p.unidadMedida.nombre LIKE :unidadmedida")
 })
 public class Producto implements Serializable {
 
@@ -44,16 +46,16 @@ public class Producto implements Serializable {
     private Long id;
     @Column(name = "nombre", nullable = false, length = 50)
     private String nombre;
-    @Column(name = "descripcion", nullable = false, length = 150)
+    @Column(name = "descripcion", length = 150)
     private String descripcion;
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, optional = false)
     @JoinColumn(name = "id_precio", nullable = false)
     private Precio precio;
     @Column(name = "impuesto", nullable = false, length = 10, precision = 2)
     private Double impuesto;
-    /*@ManyToOne(optional = false)
-    @JoinColumn(name = "id_marca", nullable = false)
-    private Marca marca;*/
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_unidadMedida", nullable = false)
+    private UnidadMedida unidadMedida;
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_productoCategoria", nullable = false)
     private ProductoCategoria productoCategoria;
@@ -104,14 +106,14 @@ public class Producto implements Serializable {
         this.impuesto = impuesto;
     }
 
-    /*
-    public Marca getMarca() {
-        return marca;
+    public UnidadMedida getUnidadMedida() {
+        return unidadMedida;
     }
 
-    public void setMarca(Marca marca) {
-        this.marca = marca;
-    }*/
+    public void setUnidadMedida(UnidadMedida unidadMedida) {
+        this.unidadMedida = unidadMedida;
+    }
+
     public ProductoCategoria getProductoCategoria() {
         return productoCategoria;
     }

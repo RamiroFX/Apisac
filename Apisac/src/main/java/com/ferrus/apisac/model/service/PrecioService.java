@@ -5,7 +5,6 @@
  */
 package com.ferrus.apisac.model.service;
 
-import com.ferrus.apisac.model.EntityHandler.EntityManagerHandler;
 import com.ferrus.apisac.model.Precio;
 
 /**

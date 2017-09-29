@@ -7,7 +7,7 @@ package com.ferrus.apisac.util;
 
 /**
  *
- * @author Ramiro
+ * @author Ramiro Ferreira
  */
 public class AppUIConstants {
 
@@ -27,6 +27,7 @@ public class AppUIConstants {
     public static final String CREATE_BUTTON_NAME = "Crear";
     public static final String UPDATE_BUTTON_NAME = "Modificar";
     public static final String DELETE_BUTTON_NAME = "Eliminar";
+    public static final String CLEAN_BUTTON_NAME = "Limpiar";
     public static final String SELECT_BUTTON_NAME = "Seleccionar";
     public static final String NAME_LABEL = "Nombre";
     public static final String DESCRIPTION_LABEL = "Descripción";
@@ -43,6 +44,8 @@ public class AppUIConstants {
     public static final String NUMBER_VALID_CANT_MESSAGE = "Inserte un número válido en el campo Cantidad";
     public static final String SELECT_VALID_POSITIVE_CANT_MESSAGE = "Inserte un número válido y positivo en el campo Cantidad";
     public static final String SELECT_MIN_CHAR_CANT_MESSAGE = "Inserte 1 caracter por lo menos en el campo Cantidad";
+    public static final String MAX_CHAR_PROD_NAME_MESSAGE = "Máximo permitido 30 caracteres en el campo Producto";
+    public static final String MIN_CHAR_PROD_NAME_MESSAGE = "Inserte 1 caracter por lo menos en el campo Producto";
     public static final String SELECT_VALID_POSITIVE_TAX_MESSAGE = "Inserte un número válido y positivo en el campo Impuesto";
     public static final String NUMBER_VALID_TAX_MESSAGE = "Inserte un número válido en el campo Impuesto";
     public static final String SELECT_VALID_POSITIVE_UTILITY_MESSAGE = "Inserte un número válido y positivo en el campo Utilidad";
@@ -88,7 +91,7 @@ public class AppUIConstants {
     public static final String UPDATE_OPERATIVE_COST_FORM_TITLE = "Modificar costo operativo";
 
     //SELECIONAR CANTIDAD MATERIA PRIMA
-    public static final int SELECT_RAW_MATERIAL_WINDOWS_SIZE_WIDTH = 500;
+    public static final int SELECT_RAW_MATERIAL_WINDOWS_SIZE_WIDTH = 600;
     public static final int SELECT_RAW_MATERIAL_WINDOWS_SIZE_HEIGHT = 300;
     public static final String SELECT_RAW_MATERIAl_SELECT_FORM_TITLE = "Seleccionar cantidad de materia prima";
     public static final String SELECT_RAW_MATERIAl_UPDATE_FORM_TITLE = "Modificar cantidad de materia prima";
@@ -122,4 +125,6 @@ public class AppUIConstants {
     public static final String CREATE_PRODUCT_REMOVE_MAT_BTN_NAME = "Quitar";
     public static final String CREATE_PRODUCT_REPEATED_RAW_MATERIAL_MSG = "La materia prima seleccionada ya se encuentra utilizada.";
     public static final String CREATE_PRODUCT_REPEATED_OPER_COST_MSG = "El costo operativo seleccionado ya se encuentra utilizado.";
+    public static final String EMPTY_OPER_COST_LIST_MSG = "No ingresó ningún Costo operativo. ¿Desea continuar?";
+    public static final String EMPTY_RAW_MATERIAL_LIST_MSG = "No ingresó ninguna Materia prima. ¿Desea continuar?";
 }

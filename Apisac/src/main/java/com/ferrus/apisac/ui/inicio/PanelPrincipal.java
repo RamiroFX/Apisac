@@ -20,6 +20,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
+import net.miginfocom.swing.MigLayout;
 
 /**
  *
@@ -29,7 +30,7 @@ public class PanelPrincipal extends JPanel {
 
     private JPanel jpProductos, jpBotones, jpPrecio;
     public JButton jbCrear, jbModificar, jbBorrar, jbExportar, jbParametros,
-            jbBuscar, jbMateriaPrima, jbCostoOperativo;
+            jbBuscar, jbLimpiar, jbMateriaPrima, jbCostoOperativo;
     public JTextField jtfBuscar;
     public JTable jtProductos;
     public JScrollPane jspProductos;
@@ -62,8 +63,10 @@ public class PanelPrincipal extends JPanel {
         this.jbMateriaPrima = new JButton(RAW_MATERIAL_BUTTON_NAME);
         this.jbCostoOperativo = new JButton(OPERATIVE_COST_BUTTON_NAME);
         this.jbBuscar = new JButton(SEARCH_BUTTON_NAME);
-        this.jtfBuscar = new JTextField(15);
+        this.jbLimpiar = new JButton(CLEAN_BUTTON_NAME);
+        this.jtfBuscar = new JTextField();
         this.jtProductos = new JTable();
+        this.jtProductos.getTableHeader().setReorderingAllowed(false);
         this.jspProductos = new JScrollPane(jtProductos);
     }
 
@@ -75,10 +78,11 @@ public class PanelPrincipal extends JPanel {
         this.jpBotones.add(jbParametros);
         this.jpBotones.add(jbMateriaPrima);
         this.jpBotones.add(jbCostoOperativo);
-        JPanel jpBuscar = new JPanel();
+        JPanel jpBuscar = new JPanel(new MigLayout());
         jpBuscar.setBorder(new BevelBorder(BevelBorder.RAISED));
-        jpBuscar.add(this.jtfBuscar);
+        jpBuscar.add(this.jtfBuscar,"growx, push");
         jpBuscar.add(this.jbBuscar);
+        jpBuscar.add(this.jbLimpiar);
         this.jpProductos.add(jpBuscar, BorderLayout.NORTH);
         this.jpProductos.add(jspProductos, BorderLayout.CENTER);
 
