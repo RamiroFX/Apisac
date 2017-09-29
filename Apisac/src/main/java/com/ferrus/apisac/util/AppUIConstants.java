@@ -115,10 +115,13 @@ public class AppUIConstants {
     public static final String CREATE_PRODUCT_TOTAL_VAR_COST_PROD_NAME = "Costo variable total ";
     public static final String CREATE_PRODUCT_TOTAL_FIXED_COST_PROD_NAME = "Costo fijo total ";
     public static final String CREATE_PRODUCT_TAX_LABEL = "Impuesto";
-    public static final String CREATE_PRODUCT_UTILITY_LABEL = "Utilidad";
+    public static final String CREATE_PRODUCT_UTILITY_PERCENT_LABEL = "Porcentaje de utilidad";
     public static final String CREATE_PRODUCT_UM_LABEL = "Unidad de medida";
     public static final String CREATE_PRODUCT_CATEGORY_LABEL = "Categoría";
     public static final String CREATE_PRODUCT_SUB_CATEGORY_LABEL = "Sub-categoría";
+    public static final String CREATE_PRODUCT_SELL_PRICE_LABEL = "Precio de venta sin Impuesto";
+    public static final String CREATE_PRODUCT_SELL_PRICE_TAX_LABEL = "Precio de venta con Impuesto";
+    public static final String CREATE_PRODUCT_UTILITY_LABEL = "Utilidad";
 
     public static final String CREATE_PRODUCT_ADD_MAT_BTN_NAME = "Agregar";
     public static final String CREATE_PRODUCT_UPDATE_MAT_BTN_NAME = "Modificar";

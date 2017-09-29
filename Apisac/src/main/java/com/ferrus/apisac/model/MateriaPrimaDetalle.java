@@ -35,7 +35,7 @@ public class MateriaPrimaDetalle implements Serializable {
     @Column(name = "id")
     private Long id;
     @ManyToOne(optional = false)
-    @JoinColumn(name = "id_materiaprima", nullable = false)
+    @JoinColumn(name = "id_materia_prima", nullable = false)
     private MateriaPrima materiaPrima;
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_precio", nullable = false)

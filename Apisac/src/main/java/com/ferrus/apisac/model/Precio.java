@@ -38,9 +38,9 @@ public class Precio implements Serializable {
     private Double utilidad;
     @Column(name = "unid_prod", nullable = false, length = 10)
     private Double unidadesProducidas;
-    @OneToMany(mappedBy = "materiaPrima")
+    @OneToMany(mappedBy = "precioProducto")
     private List<MateriaPrimaDetalle> materiaPrimaDetalles;
-    @OneToMany(mappedBy = "costoOperativo")
+    @OneToMany(mappedBy = "precioProducto")
     private List<CostoOperativoDetalle> costoOperativoDetalles;
 
     public Precio() {
