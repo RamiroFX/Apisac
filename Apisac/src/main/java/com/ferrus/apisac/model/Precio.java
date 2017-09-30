@@ -109,35 +109,47 @@ public class Precio implements Serializable {
         return getProducto() + " " + getUtilidad();
     }
 
-    public Double costoUnitarioProduccion() {
-        Double subTotalMateriaPrima = 0.0;
+    public Double costoVariableTotal() {
+        Double costoVariableTotal = 0.0;
         for (MateriaPrimaDetalle materiaPrimaDetalle : getMateriaPrimaDetalles()) {
-            subTotalMateriaPrima = subTotalMateriaPrima + materiaPrimaDetalle.subTotal();
+            costoVariableTotal = costoVariableTotal + materiaPrimaDetalle.subTotal();
         }
-        return subTotalMateriaPrima / getUnidadesProducidas();
+        return costoVariableTotal;
     }
 
-    public Double costoUnitarioOperativo() {
-        Double subTotalCostoOperativo = 0.0;
+    public Double costoFijoTotal() {
+        Double costoFijoTotal = 0.0;
         for (CostoOperativoDetalle costoOperativoDetalle : getCostoOperativoDetalles()) {
-            subTotalCostoOperativo = subTotalCostoOperativo + costoOperativoDetalle.subTotal();
+            costoFijoTotal = costoFijoTotal + costoOperativoDetalle.subTotal();
         }
-        return subTotalCostoOperativo / getUnidadesProducidas();
+        return costoFijoTotal;
     }
 
-    public Double costoTotalVenta() {
-        return costoUnitarioProduccion() + costoUnitarioOperativo();
+    public Double costoProduccionUnitario() {
+        return costoVariableTotal() / getUnidadesProducidas();
+    }
+
+    public Double costoOperativoUnitario() {
+        return costoFijoTotal() / getUnidadesProducidas();
+    }
+
+    public Double costoTotal() {
+        return costoFijoTotal() + costoVariableTotal();
+    }
+
+    public Double costoTotalUnitario() {
+        return costoProduccionUnitario() + costoOperativoUnitario();
     }
 
     public Double calcularUtilida() {
-        return costoTotalVenta() / (100 * getUtilidad());
+        return (getUtilidad() * costoTotalUnitario()) / 100;
     }
 
     public Double precioVentaSinImpuesto() {
-        return costoTotalVenta() + calcularUtilida();
+        return costoTotalUnitario() + calcularUtilida();
     }
 
-    public Double precioVentaConImpuesto() {
-        return precioVentaSinImpuesto() * (1 + getProducto().getImpuesto());
+    public Double precioVentaConImpuesto(Double impuesto) {
+        return precioVentaSinImpuesto() + ((impuesto * precioVentaSinImpuesto()) / 100);
     }
 }

@@ -28,7 +28,8 @@ import net.miginfocom.swing.MigLayout;
  */
 public class PanelPrincipal extends JPanel {
 
-    private JPanel jpProductos, jpBotones, jpPrecio;
+    private JPanel jpProductos, jpBotones;
+    public MostrarInfoProducto jpInfoProd;
     public JButton jbCrear, jbModificar, jbBorrar, jbExportar, jbParametros,
             jbBuscar, jbLimpiar, jbMateriaPrima, jbCostoOperativo;
     public JTextField jtfBuscar;
@@ -37,19 +38,19 @@ public class PanelPrincipal extends JPanel {
     public ProductoParametrosService servicio;
     public ProductoTableModel productoTableModel;
 
-    public PanelPrincipal() {
+    public PanelPrincipal(MostrarInfoProducto infoProd) {
         setLayout(new BorderLayout());
-        initializeVariables();
+        initializeVariables(infoProd);
         constructLayout();
         loadData();
     }
 
-    private void initializeVariables() {
+    private void initializeVariables(MostrarInfoProducto infoProd) {
         this.servicio = new ProductoParametrosServImpl();
         this.productoTableModel = new ProductoTableModel();
         this.jpProductos = new JPanel(new BorderLayout());
         this.jpProductos.setBorder(new EtchedBorder(EtchedBorder.RAISED));
-        this.jpPrecio = new JPanel();
+        this.jpInfoProd = infoProd;
         this.jpBotones = new JPanel();
         this.jpBotones.setBorder(new EtchedBorder());
         this.jbCrear = new JButton(CREATE_PRODUCT_BUTTON_NAME);
@@ -80,14 +81,14 @@ public class PanelPrincipal extends JPanel {
         this.jpBotones.add(jbCostoOperativo);
         JPanel jpBuscar = new JPanel(new MigLayout());
         jpBuscar.setBorder(new BevelBorder(BevelBorder.RAISED));
-        jpBuscar.add(this.jtfBuscar,"growx, push");
+        jpBuscar.add(this.jtfBuscar, "growx, push");
         jpBuscar.add(this.jbBuscar);
         jpBuscar.add(this.jbLimpiar);
         this.jpProductos.add(jpBuscar, BorderLayout.NORTH);
         this.jpProductos.add(jspProductos, BorderLayout.CENTER);
 
         add(this.jpProductos, BorderLayout.WEST);
-        add(this.jpPrecio, BorderLayout.CENTER);
+        add(this.jpInfoProd, BorderLayout.CENTER);
         add(this.jpBotones, BorderLayout.SOUTH);
     }
 
@@ -98,5 +99,4 @@ public class PanelPrincipal extends JPanel {
         productoTableModel.updateTable();
         PackColumn.packColumns(jtProductos, 1);
     }
-
 }

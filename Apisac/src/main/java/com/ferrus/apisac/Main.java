@@ -6,20 +6,30 @@
 package com.ferrus.apisac;
 
 import com.ferrus.apisac.model.CostoOperativo;
+import com.ferrus.apisac.model.CostoOperativoDetalle;
 import com.ferrus.apisac.model.Impuesto;
 import com.ferrus.apisac.model.Marca;
 import com.ferrus.apisac.model.MateriaPrima;
+import com.ferrus.apisac.model.MateriaPrimaDetalle;
+import com.ferrus.apisac.model.Precio;
+import com.ferrus.apisac.model.Producto;
 import com.ferrus.apisac.model.ProductoCategoria;
 import com.ferrus.apisac.model.ProductoSubCategoria;
 import com.ferrus.apisac.model.UnidadMedida;
 import com.ferrus.apisac.model.UnidadMedidaCategoria;
+import com.ferrus.apisac.model.service.CostoOperativoDetalleService;
 import com.ferrus.apisac.model.service.CostoOperativoService;
+import com.ferrus.apisac.model.service.MateriaPrimaDetalleService;
 import com.ferrus.apisac.model.service.MateriaPrimaService;
+import com.ferrus.apisac.model.service.PrecioService;
 import com.ferrus.apisac.model.service.PreferenciaService;
 import com.ferrus.apisac.model.service.ProductoParametrosService;
 import com.ferrus.apisac.model.service.UnidadMedidaService;
+import com.ferrus.apisac.model.serviceImp.CostoOperativoDetalleServImpl;
 import com.ferrus.apisac.model.serviceImp.CostoOperativoServImpl;
+import com.ferrus.apisac.model.serviceImp.MateriaPrimaDetalleServImpl;
 import com.ferrus.apisac.model.serviceImp.MateriaPrimaServImpl;
+import com.ferrus.apisac.model.serviceImp.PrecioServImpl;
 import com.ferrus.apisac.model.serviceImp.PreferenciaServImpl;
 import com.ferrus.apisac.model.serviceImp.ProductoParametrosServImpl;
 import com.ferrus.apisac.model.serviceImp.UnidadMedidaServImpl;
@@ -210,5 +220,49 @@ public class Main {
         parametrosService.insertarImpuesto(impuesto2);
         parametrosService.insertarImpuesto(impuesto3);
 
+        /*
+        //PRUEBA
+        List<MateriaPrimaDetalle> materiPrimaDetalles = new ArrayList<>();
+        MateriaPrimaDetalle mpd = new MateriaPrimaDetalle();
+        mpd.setCantidad(1.0);
+        //mpd.setMateriaPrima(new MateriaPrima(mpHarina.getNombre(), mpHarina.getDescripcion(), mpHarina.getPrecio(), mpHarina.getUnidadMedida()));
+        mpd.setMateriaPrima(mpHarina);
+        mpd.setPrecioMateriaPrima(15000.0);
+        materiPrimaDetalles.add(mpd);
+
+        List<CostoOperativoDetalle> costoOperativoDetalles = new ArrayList<>();
+        CostoOperativoDetalle costoOperativoDetalle1 = new CostoOperativoDetalle();
+        costoOperativoDetalle1.setCantidad(1.0);
+        //costoOperativoDetalle1.setCostoOperativo(new CostoOperativo(co1.getNombre(), co1.getDescripcion(), co1.getPrecio(), co1.getUnidadMedida(), 24));
+        costoOperativoDetalle1.setCostoOperativo(co1);
+        costoOperativoDetalle1.setPrecioCostoOperativo(15000.0);
+        costoOperativoDetalles.add(costoOperativoDetalle1);
+
+        Precio precio = new Precio();
+        precio.setUnidadesProducidas(10.0);
+        precio.setUtilidad(30.0);
+        precio.setMateriaPrimaDetalles(materiPrimaDetalles);
+        precio.setCostoOperativoDetalles(costoOperativoDetalles);
+        PrecioService precioService = new PrecioServImpl();
+        precioService.insertarPrecio(precio);
+
+        mpd.setPrecioProducto(precio);
+        costoOperativoDetalle1.setPrecioProducto(precio);
+        MateriaPrimaDetalleService materiaPrimaDetalleService = new MateriaPrimaDetalleServImpl();
+        materiaPrimaDetalleService.insertarMateriaPrimaDetalle(mpd);
+
+        CostoOperativoDetalleService costoOperativoDetalleService = new CostoOperativoDetalleServImpl();
+        costoOperativoDetalleService.insertarCostoOperativoDetalle(costoOperativoDetalle1);
+
+        Producto producto = new Producto();
+        producto.setDescripcion("");
+        producto.setImpuesto(10.0);
+        producto.setNombre("Empanada de carne");
+        producto.setPrecio(precio);
+        producto.setProductoCategoria(categoria1);
+        producto.setProductoSubCategoria(productoSubCategoria1);
+        producto.setUnidadMedida(umUnidad);
+        parametrosService.insertarProducto(producto);
+         */
     }
 }

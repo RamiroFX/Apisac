@@ -13,6 +13,8 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -20,9 +22,10 @@ import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JToolBar;
 
-public class App extends JFrame implements ActionListener {
+public class App extends JFrame implements ActionListener, MouseListener {
 
     private PanelPrincipal jpPrincipal;
+    private MostrarInfoProducto jpMostrarInfoProd;
     private JToolBar jtbBarraHerramientas = null;
     private ImageIcon icono;
     private BarraMenu barraMenu;
@@ -52,7 +55,8 @@ public class App extends JFrame implements ActionListener {
         }
         this.productoServicio = new ProductoParametrosServImpl();
         this.productoTableModel = new ProductoTableModel();
-        this.jpPrincipal = new PanelPrincipal();
+        this.jpMostrarInfoProd = new MostrarInfoProducto();
+        this.jpPrincipal = new PanelPrincipal(jpMostrarInfoProd);
         this.barraMenu = new BarraMenu(this);
 
         this.timeLabel = new JLabel();
@@ -74,6 +78,8 @@ public class App extends JFrame implements ActionListener {
         this.jpPrincipal.jbCostoOperativo.addActionListener(this);
         this.jpPrincipal.jbBuscar.addActionListener(this);
         this.jpPrincipal.jbLimpiar.addActionListener(this);
+        //MOUSE LISTENERS
+        this.jpPrincipal.jtProductos.addMouseListener(this);
     }
 
     private void constructAppWindow() {
@@ -139,5 +145,41 @@ public class App extends JFrame implements ActionListener {
 
     private void borrarCampo() {
         this.jpPrincipal.jtfBuscar.setText("");
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (e.getSource().equals(this.jpPrincipal.jtProductos)) {
+            int fila = this.jpPrincipal.jtProductos.rowAtPoint(e.getPoint());
+            int columna = this.jpPrincipal.jtProductos.columnAtPoint(e.getPoint());
+            if ((fila > -1) && (columna > -1)) {
+                Long idProd = (Long) this.jpPrincipal.jtProductos.getValueAt(fila, 0);
+                Producto prod = productoServicio.obtenerProducto(idProd);
+                this.jpPrincipal.jpInfoProd.loadData(prod);
+                this.jpPrincipal.jbModificar.setEnabled(true);
+                this.jpPrincipal.jbBorrar.setEnabled(true);
+                if (e.getClickCount() == 2) {
+                }
+            } else {
+                this.jpPrincipal.jbModificar.setEnabled(false);
+                this.jpPrincipal.jbBorrar.setEnabled(false);
+            }
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
     }
 }
