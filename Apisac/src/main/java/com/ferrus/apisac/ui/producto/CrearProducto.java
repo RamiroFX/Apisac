@@ -75,7 +75,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
     SELL PRICE VARS    
      */
     private JFormattedTextField jftCostoFijoUnit, jftCostoVariableUnit,
-            jftCostoTotalUnit, jftCostoFijoTotal,
+            jftCostoTotalUnit, jftCostoTotal, jftCostoFijoTotal,
             jftCostoVariableTotal, jftUnidadesProducidas,
             jftUtilidadPorcentaje, jftImpuesto,
             jftUtilidad, jftPrecioVentaIVA, jftPrecioVenta;
@@ -156,8 +156,6 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         format.setRoundingMode(RoundingMode.HALF_UP);
         this.jftUnidadesProducidas = new JFormattedTextField(format);
         this.jftUnidadesProducidas.setValue(0.0);
-        this.jftUnidadesProducidas = new JFormattedTextField(format);
-        this.jftUnidadesProducidas.setValue(0.0);
         this.jftImpuesto = new JFormattedTextField(format);
         this.jftImpuesto.setValue(0.0);
         this.jftUtilidadPorcentaje = new JFormattedTextField(format);
@@ -175,6 +173,8 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         this.jftCostoFijoUnit.setEditable(false);
         this.jftCostoVariableUnit = new JFormattedTextField(0);
         this.jftCostoVariableUnit.setEditable(false);
+        this.jftCostoTotal = new JFormattedTextField(0);
+        this.jftCostoTotal.setEditable(false);
         this.jftCostoTotalUnit = new JFormattedTextField(0);
         this.jftCostoTotalUnit.setEditable(false);
         this.jftCostoFijoTotal = new JFormattedTextField(0);
@@ -250,9 +250,9 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         jpPrecio.add(jpCostoVariable, "growx, push");
         JPanel jpCostoTotal = new JPanel(new MigLayout());
         jpCostoTotal.setBorder(new EtchedBorder());
-        jpCostoTotal.add(new JLabel());
-        jpCostoTotal.add(new JLabel(), "growx, push, span, wrap");
         jpCostoTotal.add(new JLabel(CREATE_PRODUCT_TOTAL_COST_PROD_NAME));
+        jpCostoTotal.add(jftCostoTotal, "growx, push, span, wrap");
+        jpCostoTotal.add(new JLabel(CREATE_PRODUCT_TOTAL_UNIT_COST_PROD_NAME));
         jpCostoTotal.add(jftCostoTotalUnit, "growx, push, wrap");
         jpPrecio.add(jpCostoTotal, "growx, push, span, wrap");
         //
@@ -369,7 +369,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         }
         this.materiaPrimaDetalleTableModel.agregarMateriaPrima(mpd);
         calcularSubTotales();
-        checkearUnidadesProducidas();
+        checkearEntradas();
     }
 
     private void modificarMateriaPrima(MateriaPrimaDetalle mpd) {
@@ -384,7 +384,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         }
         materiaPrimaDetalleTableModel.updateTable();
         calcularSubTotales();
-        checkearUnidadesProducidas();
+        checkearEntradas();
     }
 
     private void removerMateriaPrimaDetalle() {
@@ -393,7 +393,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
             this.materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList().remove(row);
             this.materiaPrimaDetalleTableModel.updateTable();
             calcularSubTotales();
-            checkearUnidadesProducidas();
+            checkearEntradas();
         }
         this.jbModificarMat.setEnabled(false);
         this.jbQuitarMat.setEnabled(false);
@@ -409,7 +409,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         }
         this.costoOperativoDetalleTableModel.agregarCostoOperativo(cod);
         calcularSubTotales();
-        checkearUnidadesProducidas();
+        checkearEntradas();
     }
 
     private void modificarCostoOperativo(CostoOperativoDetalle cod) {
@@ -424,7 +424,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         }
         materiaPrimaDetalleTableModel.updateTable();
         calcularSubTotales();
-        checkearUnidadesProducidas();
+        checkearEntradas();
     }
 
     private void removerCostoOperativoDetalle() {
@@ -433,7 +433,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
             this.costoOperativoDetalleTableModel.getCostoOperativoDetalleList().remove(row);
             this.costoOperativoDetalleTableModel.updateTable();
             calcularSubTotales();
-            checkearUnidadesProducidas();
+            checkearEntradas();
         }
         this.jbModificarCO.setEnabled(false);
         this.jbQuitarCO.setEnabled(false);
@@ -460,13 +460,14 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
             costoFijoTotal = costoFijoTotal + (cant * precio);
         }
         this.jftCostoVariableTotal.setValue(costoVariableTotal);
-        this.jftCostoFijoTotal.setValue(costoFijoTotal);
         this.jftCostoVariableTotal2.setValue(costoVariableTotal);
+        this.jftCostoFijoTotal.setValue(costoFijoTotal);
         this.jftCostoFijoTotal2.setValue(costoFijoTotal);
         this.jftCostoVariableUnit.setValue(costoVariableTotal / unidadesProducidas);
+        this.jftCostoFijoUnit.setValue(costoFijoTotal / unidadesProducidas);
     }
 
-    private void checkearUnidadesProducidas() {
+    private void checkearEntradas() {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -478,70 +479,79 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
                 try {
                     unidadesProducidas = Double.valueOf("" + jftUnidadesProducidas.getValue());
                 } catch (NumberFormatException e) {
-                    javax.swing.JOptionPane.showMessageDialog(null, "Verifique en uno de los campos el parametro:"
-                            + e.getMessage().substring(12) + "\n"
-                            + "Asegurese de colocar un numero valido\n"
-                            + "en el campo Total.",
-                            "Parametros incorrectos",
+                    JOptionPane.showMessageDialog(null, NUMBER_VALID_UNIT_PROD_MESSAGE,
+                            ALERT_MESSAGE,
+                            javax.swing.JOptionPane.OK_OPTION);
+                    jftUnidadesProducidas.setValue(0);
+                    return;
+                }
+                if (unidadesProducidas < 0) {
+                    JOptionPane.showMessageDialog(null, SELECT_VALID_POSITIVE_UNIT_PROD_MESSAGE,
+                            ALERT_MESSAGE,
                             javax.swing.JOptionPane.OK_OPTION);
                     jftUnidadesProducidas.setValue(0);
                     return;
                 }
                 try {
-                    costoVariableTotal = Double.valueOf(jftCostoVariableTotal2.getValue().toString());
+                    utilidad = Double.valueOf("" + jftUtilidadPorcentaje.getValue());
                 } catch (NumberFormatException e) {
-                    javax.swing.JOptionPane.showMessageDialog(null, "Verifique en uno de los campos el parametro:"
-                            + e.getMessage().substring(12) + "\n"
-                            + "Asegurese de colocar un numero valido\n"
-                            + "en el campo Cantidad.",
-                            "Parametros incorrectos",
+                    javax.swing.JOptionPane.showMessageDialog(null, NUMBER_VALID_UTILITY_MESSAGE,
+                            ALERT_MESSAGE,
+                            javax.swing.JOptionPane.OK_OPTION);
+                    return;
+                }
+                if (utilidad < 0) {
+                    JOptionPane.showMessageDialog(null, SELECT_VALID_POSITIVE_UTILITY_MESSAGE,
+                            ALERT_MESSAGE,
+                            javax.swing.JOptionPane.OK_OPTION);
+                    jftUtilidadPorcentaje.setValue(0);
+                    return;
+                }
+                try {
+                    impuesto = Double.valueOf("" + jftImpuesto.getValue());
+                } catch (NumberFormatException e) {
+                    javax.swing.JOptionPane.showMessageDialog(null, NUMBER_VALID_TAX_MESSAGE,
+                            ALERT_MESSAGE,
+                            javax.swing.JOptionPane.OK_OPTION);
+                    return;
+                }
+                if (impuesto < 0) {
+                    JOptionPane.showMessageDialog(null, SELECT_VALID_POSITIVE_TAX_MESSAGE,
+                            ALERT_MESSAGE,
+                            javax.swing.JOptionPane.OK_OPTION);
+                    jftImpuesto.setValue(0);
+                    return;
+                }
+                try {
+                    costoVariableTotal = Double.valueOf("" + jftCostoVariableTotal2.getValue());
+                } catch (NumberFormatException e) {
+                    javax.swing.JOptionPane.showMessageDialog(null, "",
+                            ALERT_MESSAGE,
                             javax.swing.JOptionPane.OK_OPTION);
                     return;
                 }
                 try {
-                    costoFijoTotal = Double.valueOf(jftCostoFijoTotal2.getValue().toString());
+                    costoFijoTotal = Double.valueOf("" + jftCostoFijoTotal2.getValue());
                 } catch (NumberFormatException e) {
-                    javax.swing.JOptionPane.showMessageDialog(null, "Verifique en uno de los campos el parametro:"
-                            + e.getMessage().substring(12) + "\n"
-                            + "Asegurese de colocar un numero valido\n"
-                            + "en el campo Cantidad.",
-                            "Parametros incorrectos",
-                            javax.swing.JOptionPane.OK_OPTION);
-                    return;
-                }
-                try {
-                    utilidad = Double.valueOf(jftUtilidadPorcentaje.getValue().toString());
-                } catch (NumberFormatException e) {
-                    javax.swing.JOptionPane.showMessageDialog(null, "Verifique en uno de los campos el parametro:"
-                            + e.getMessage().substring(12) + "\n"
-                            + "Asegurese de colocar un numero valido\n"
-                            + "en el campo Utilidad.",
-                            "Parametros incorrectos",
-                            javax.swing.JOptionPane.OK_OPTION);
-                    return;
-                }
-                try {
-                    impuesto = Double.valueOf(jftImpuesto.getValue().toString());
-                } catch (NumberFormatException e) {
-                    javax.swing.JOptionPane.showMessageDialog(null, "Verifique en uno de los campos el parametro:"
-                            + e.getMessage().substring(12) + "\n"
-                            + "Asegurese de colocar un numero valido\n"
-                            + "en el campo Utilidad.",
-                            "Parametros incorrectos",
+                    javax.swing.JOptionPane.showMessageDialog(null, "",
+                            ALERT_MESSAGE,
                             javax.swing.JOptionPane.OK_OPTION);
                     return;
                 }
                 Double costoVariableUnit = costoVariableTotal / unidadesProducidas;
                 Double costoFijoUnit = costoFijoTotal / unidadesProducidas;
                 Double costoTotal = costoVariableTotal + costoFijoTotal;
-                Double calculoUtilidad = costoTotal / (100 * utilidad);
-                Double precioVentaSinImpuesto = costoTotal + calculoUtilidad;
+                Double costoTotalUnitario = costoVariableUnit + costoFijoUnit;
+                Double calculoUtilidad = (utilidad * costoTotalUnitario) / 100;
+                Double precioVentaSinImpuesto = costoTotalUnitario + calculoUtilidad;
+                Double precioVentaConImpuesto = precioVentaSinImpuesto + ((impuesto * precioVentaSinImpuesto) / 100);
                 jftCostoVariableUnit.setValue(costoVariableUnit);
                 jftCostoFijoUnit.setValue(costoFijoUnit);
-                jftCostoTotalUnit.setValue(costoVariableUnit + costoFijoUnit);
+                jftCostoTotal.setValue(costoTotal);
+                jftCostoTotalUnit.setValue(costoTotalUnitario);
                 jftUtilidad.setValue(calculoUtilidad);
                 jftPrecioVenta.setValue(precioVentaSinImpuesto);
-                jftPrecioVentaIVA.setValue(precioVentaSinImpuesto * (1 + (impuesto / 100)));
+                jftPrecioVentaIVA.setValue(precioVentaConImpuesto);
             }
         });
     }
@@ -769,12 +779,11 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
 
     @Override
     public void keyTyped(KeyEvent e) {
-        checkearUnidadesProducidas();
+        checkearEntradas();
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-
     }
 
     @Override
