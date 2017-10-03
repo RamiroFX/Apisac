@@ -43,13 +43,15 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
     private javax.swing.JButton jbCrear, jbModificar, jbEliminar;
     private JTabbedPane jtpCenter;
     private JPanel jpSouth;
-    private JScrollPane jspMarcas, jspCategorias, jspSubCategorias, jspImpuestos;
-    private JTable jtMarcas, jtCategorias, jtSubCategorias, jtImpuestos;
+    private JScrollPane jspCategorias, jspSubCategorias;
+    //private JScrollPane jspMarcas, jspImpuestos;
+    private JTable jtCategorias, jtSubCategorias;
+    //private JTable jtMarcas, jtImpuestos;
     private ProductoParametrosService servicio;
-    private MarcaTableModel marcaTableModel;
     private ProductoCategoriaTableModel productoCategoriaTableModel;
     private ProductoSubCategoriaTableModel productoSubCategoriaTableModel;
-    private ImpuestoTableModel impuestoTableModel;
+    //private MarcaTableModel marcaTableModel;
+    //private ImpuestoTableModel impuestoTableModel;
 
     public Parametros(App app) {
         super(app, true);
@@ -63,18 +65,18 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
     }
 
     private void loadData() {
-        loadDataMarca();
         loadDataCategoria();
         loadDataSubCategoria();
-        loadDataImpuesto();
+        //loadDataMarca();
+        //loadDataImpuesto();
     }
 
+    /*
     private void loadDataMarca() {
         marcaTableModel.setMarcaList(servicio.obtenerMarcas("", true));
         jtMarcas.setModel(marcaTableModel);
         marcaTableModel.updateTable();
-    }
-
+    }*/
     private void loadDataCategoria() {
         productoCategoriaTableModel.setProductoCategoriaList(servicio.obtenerProductosCategorias("", true));
         jtCategorias.setModel(productoCategoriaTableModel);
@@ -87,12 +89,12 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
         productoSubCategoriaTableModel.updateTable();
     }
 
+    /*
     private void loadDataImpuesto() {
         impuestoTableModel.setImpuestoList(servicio.obtenerImpuestos());
         jtImpuestos.setModel(impuestoTableModel);
         impuestoTableModel.updateTable();
-    }
-
+    }*/
     private void inicializarVista() {
         jbEliminar.setEnabled(false);
         jbModificar.setEnabled(false);
@@ -100,28 +102,28 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
 
     private void initComponents() {
         servicio = new ProductoParametrosServImpl();
-        marcaTableModel = new MarcaTableModel();
         productoCategoriaTableModel = new ProductoCategoriaTableModel();
         productoSubCategoriaTableModel = new ProductoSubCategoriaTableModel();
-        impuestoTableModel = new ImpuestoTableModel();
-        jtMarcas = new JTable();
-        jtMarcas.getTableHeader().setReorderingAllowed(false);
-        jspMarcas = new JScrollPane(jtMarcas);
         jtCategorias = new JTable();
         jtCategorias.getTableHeader().setReorderingAllowed(false);
         jspCategorias = new JScrollPane(jtCategorias);
         jtSubCategorias = new JTable();
         jtSubCategorias.getTableHeader().setReorderingAllowed(false);
         jspSubCategorias = new JScrollPane(jtSubCategorias);
+        /*impuestoTableModel = new ImpuestoTableModel();
+        marcaTableModel = new MarcaTableModel();
+        jtMarcas = new JTable();
+        jtMarcas.getTableHeader().setReorderingAllowed(false);
+        jspMarcas = new JScrollPane(jtMarcas);
         jtImpuestos = new JTable();
         jtImpuestos.getTableHeader().setReorderingAllowed(false);
-        jspImpuestos = new JScrollPane(jtImpuestos);
+        jspImpuestos = new JScrollPane(jtImpuestos);*/
 
         jtpCenter = new JTabbedPane();
-        jtpCenter.add("Marcas", jspMarcas);
         jtpCenter.add("Categorías", jspCategorias);
         jtpCenter.add("Sub-Categorías", jspSubCategorias);
-        jtpCenter.add("Impuestos", jspImpuestos);
+        //jtpCenter.add("Impuestos", jspImpuestos);
+        //jtpCenter.add("Marcas", jspMarcas);
         jpSouth = new JPanel();
         jbCrear = new javax.swing.JButton("Agregar");
         jbModificar = new javax.swing.JButton("Modificar");
@@ -138,8 +140,8 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
         jtpCenter.addMouseListener(this);
         jtCategorias.addMouseListener(this);
         jtSubCategorias.addMouseListener(this);
-        jtMarcas.addMouseListener(this);
-        jtImpuestos.addMouseListener(this);
+        //jtMarcas.addMouseListener(this);
+        //jtImpuestos.addMouseListener(this);
         jbCrear.addActionListener(this);
         jbModificar.addActionListener(this);
         jbEliminar.addActionListener(this);
@@ -149,13 +151,14 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
         jtpCenter.addKeyListener(this);
         jtCategorias.addKeyListener(this);
         jtSubCategorias.addKeyListener(this);
-        jtMarcas.addKeyListener(this);
-        jtImpuestos.addKeyListener(this);
+        //jtMarcas.addKeyListener(this);
+        //jtImpuestos.addKeyListener(this);
         jbCrear.addKeyListener(this);
         jbModificar.addKeyListener(this);
         jbEliminar.addKeyListener(this);
     }
 
+    /*
     private void agregarMarca(String marca) {
         String m = marca.trim();
         if (m.length() < 1 || m.isEmpty()) {
@@ -237,8 +240,7 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
         } else {
             JOptionPane.showMessageDialog(this, "Existe productos que se encuentran utilizando la marca seleccionada.", "Alerta", JOptionPane.ERROR_MESSAGE);
         }
-    }
-
+    }*/
     private void agregarCategoria(String categoria) {
         String c = categoria.trim();
         if (c.length() < 1 || c.isEmpty()) {
@@ -283,7 +285,7 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
                 servicio.modificarProductoCategoria(productoCategoria);
                 this.jbModificar.setEnabled(false);
                 this.jbEliminar.setEnabled(false);
-                loadDataMarca();
+                loadDataCategoria();
             } else {
                 JOptionPane.showMessageDialog(this, "Categoría existente.", "Alerta", JOptionPane.ERROR_MESSAGE);
             }
@@ -295,7 +297,7 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
             servicio.modificarProductoCategoria(productoCategoria);
             this.jbModificar.setEnabled(false);
             this.jbEliminar.setEnabled(false);
-            loadDataMarca();
+            loadDataCategoria();
         } else {
             JOptionPane.showMessageDialog(this, "Categoría existente.", "Alerta", JOptionPane.ERROR_MESSAGE);
         }
@@ -408,6 +410,7 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
         }
     }
 
+    /*
     private void agregarImpuesto(String impuesto) {
         Double impuestoValor = -1.0;
         try {
@@ -477,17 +480,9 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
                 e.printStackTrace();
             }
         }
-    }
-
+    }*/
     private void createButtonHandler() {
-        if (this.jtpCenter.getSelectedComponent().equals(this.jspMarcas)) {
-            String marca = JOptionPane.showInputDialog(this, "Inserte el nombre de la marca", "Insertar marca", JOptionPane.PLAIN_MESSAGE);
-            if (marca != null) {
-                if (!marca.isEmpty()) {
-                    agregarMarca(marca);
-                }
-            }
-        } else if (this.jtpCenter.getSelectedComponent().equals(this.jspCategorias)) {
+        if (this.jtpCenter.getSelectedComponent().equals(this.jspCategorias)) {
             String rubro = JOptionPane.showInputDialog(this, "Inserte el nombre de la Categoría", "Insertar categoria", JOptionPane.PLAIN_MESSAGE);
             if (rubro != null) {
                 if (!rubro.isEmpty()) {
@@ -512,25 +507,27 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
             String subCategoria = jtfSubCategoria.getText();
             ProductoCategoria pc = (ProductoCategoria) jcb.getSelectedItem();
             agregarSubCategoria(subCategoria, pc);
-        } else if (this.jtpCenter.getSelectedComponent().equals(this.jspImpuestos)) {
+        }
+        /*else if (this.jtpCenter.getSelectedComponent().equals(this.jspImpuestos)) {
             String impuesto = JOptionPane.showInputDialog(this, "Inserte el valor del Impuesto", "Insertar impuesto", JOptionPane.PLAIN_MESSAGE);
             if (impuesto != null) {
                 if (!impuesto.isEmpty()) {
                     agregarImpuesto(impuesto);
                 }
             }
-        }
-    }
-
-    private void updateButtonHandler() {
+        } else 
         if (this.jtpCenter.getSelectedComponent().equals(this.jspMarcas)) {
             String marca = JOptionPane.showInputDialog(this, "Inserte el nombre de la marca", "Insertar marca", JOptionPane.PLAIN_MESSAGE);
             if (marca != null) {
                 if (!marca.isEmpty()) {
-                    modificarMarca(marca);
+                    agregarMarca(marca);
                 }
             }
-        } else if (this.jtpCenter.getSelectedComponent().equals(this.jspCategorias)) {
+        }*/
+    }
+
+    private void updateButtonHandler() {
+        if (this.jtpCenter.getSelectedComponent().equals(this.jspCategorias)) {
             String categoria = JOptionPane.showInputDialog(this, "Inserte el nombre de la Categoría", "Insertar categoria", JOptionPane.PLAIN_MESSAGE);
             if (categoria != null) {
                 if (!categoria.isEmpty()) {
@@ -555,26 +552,36 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
             String subCategoria = jtfSubCategoria.getText();
             ProductoCategoria pc = (ProductoCategoria) jcb.getSelectedItem();
             modificarSubCategoria(subCategoria, pc);
-        } else if (this.jtpCenter.getSelectedComponent().equals(this.jspImpuestos)) {
+        }
+        /*else if (this.jtpCenter.getSelectedComponent().equals(this.jspImpuestos)) {
             String impuesto = JOptionPane.showInputDialog(this, "Inserte el valor del Impuesto", "Insertar categoria", JOptionPane.PLAIN_MESSAGE);
             if (impuesto != null) {
                 if (!impuesto.isEmpty()) {
                     modificarImpuesto(impuesto);
                 }
             }
-        }
+        }else 
+        if (this.jtpCenter.getSelectedComponent().equals(this.jspMarcas)) {
+            String marca = JOptionPane.showInputDialog(this, "Inserte el nombre de la marca", "Insertar marca", JOptionPane.PLAIN_MESSAGE);
+            if (marca != null) {
+                if (!marca.isEmpty()) {
+                    modificarMarca(marca);
+                }
+            }
+        } */
     }
 
     private void deleteButtonHandler() {
-        if (this.jtpCenter.getSelectedComponent().equals(this.jspMarcas)) {
-            eliminarMarca();
-        } else if (this.jtpCenter.getSelectedComponent().equals(this.jspCategorias)) {
+        if (this.jtpCenter.getSelectedComponent().equals(this.jspCategorias)) {
             eliminarCategoria();
         } else if (this.jtpCenter.getSelectedComponent().equals(this.jspSubCategorias)) {
             eliminarSubCategoria();
-        } else if (this.jtpCenter.getSelectedComponent().equals(this.jspImpuestos)) {
-            eliminarImpuesto();
         }
+        /*else if (this.jtpCenter.getSelectedComponent().equals(this.jspImpuestos)) {
+            eliminarImpuesto();
+        } else if (this.jtpCenter.getSelectedComponent().equals(this.jspMarcas)) {
+            eliminarMarca();
+        } */
     }
 
     private void cerrar() {
@@ -601,17 +608,6 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
             this.jbModificar.setEnabled(false);
             this.jbEliminar.setEnabled(false);
         }
-        if (e.getSource().equals(this.jtMarcas)) {
-            int fila = this.jtMarcas.rowAtPoint(e.getPoint());
-            int columna = this.jtMarcas.columnAtPoint(e.getPoint());
-            if ((fila > -1) && (columna > -1)) {
-                this.jbModificar.setEnabled(true);
-                this.jbEliminar.setEnabled(true);
-            } else {
-                this.jbModificar.setEnabled(false);
-                this.jbEliminar.setEnabled(false);
-            }
-        }
         if (e.getSource().equals(this.jtCategorias)) {
             int fila = this.jtCategorias.rowAtPoint(e.getPoint());
             int columna = this.jtCategorias.columnAtPoint(e.getPoint());
@@ -634,6 +630,7 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
                 this.jbEliminar.setEnabled(false);
             }
         }
+        /*
         if (e.getSource().equals(this.jtImpuestos)) {
             int fila = this.jtImpuestos.rowAtPoint(e.getPoint());
             int columna = this.jtImpuestos.columnAtPoint(e.getPoint());
@@ -645,6 +642,17 @@ public class Parametros extends javax.swing.JDialog implements ActionListener, M
                 this.jbEliminar.setEnabled(false);
             }
         }
+        if (e.getSource().equals(this.jtMarcas)) {
+            int fila = this.jtMarcas.rowAtPoint(e.getPoint());
+            int columna = this.jtMarcas.columnAtPoint(e.getPoint());
+            if ((fila > -1) && (columna > -1)) {
+                this.jbModificar.setEnabled(true);
+                this.jbEliminar.setEnabled(true);
+            } else {
+                this.jbModificar.setEnabled(false);
+                this.jbEliminar.setEnabled(false);
+            }
+        }*/
     }
 
     @Override

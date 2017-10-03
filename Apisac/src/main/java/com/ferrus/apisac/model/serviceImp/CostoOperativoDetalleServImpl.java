@@ -43,8 +43,8 @@ public class CostoOperativoDetalleServImpl implements CostoOperativoDetalleServi
     }
 
     @Override
-    public void eliminarCostoOperativoDetalle(CostoOperativoDetalle cod) {
-        this.queryHandler.eliminarCostoOperativoDetalle(cod);
+    public void eliminarCostoOperativoDetalle(Long idCod) {
+        this.queryHandler.eliminarCostoOperativoDetalle(idCod);
     }
 
 }

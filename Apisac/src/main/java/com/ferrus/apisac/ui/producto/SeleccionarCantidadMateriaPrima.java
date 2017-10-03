@@ -192,11 +192,11 @@ public class SeleccionarCantidadMateriaPrima extends JDialog implements ActionLi
                 unaMatPrima.setNombre(mp.getNombre());
                 unaMatPrima.setPrecio(mp.getPrecio());
                 unaMatPrima.setUnidadMedida((UnidadMedida) jcbUnidadMBoxM.getSelectedItem());
-                MateriaPrimaDetalle mpd = new MateriaPrimaDetalle();
-                mpd.setCantidad(cantidad);
-                mpd.setMateriaPrima(unaMatPrima);
-                mpd.setPrecioMateriaPrima(precio);
-                this.crearProductoCallback.recibirMateriaPrimaDetalle(mpd);
+                MateriaPrimaDetalle unaMpd = new MateriaPrimaDetalle();
+                unaMpd.setCantidad(cantidad);
+                unaMpd.setMateriaPrima(unaMatPrima);
+                unaMpd.setPrecioMateriaPrima(precio);
+                this.crearProductoCallback.recibirMateriaPrimaDetalle(unaMpd);
                 break;
             }
             case MODIFICAR: {

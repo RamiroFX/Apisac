@@ -220,7 +220,6 @@ public class Main {
         parametrosService.insertarImpuesto(impuesto2);
         parametrosService.insertarImpuesto(impuesto3);
 
-        /*
         //PRUEBA
         List<MateriaPrimaDetalle> materiPrimaDetalles = new ArrayList<>();
         MateriaPrimaDetalle mpd = new MateriaPrimaDetalle();
@@ -243,11 +242,11 @@ public class Main {
         precio.setUtilidad(30.0);
         precio.setMateriaPrimaDetalles(materiPrimaDetalles);
         precio.setCostoOperativoDetalles(costoOperativoDetalles);
+        mpd.setPrecioProducto(precio);
+        costoOperativoDetalle1.setPrecioProducto(precio);
         PrecioService precioService = new PrecioServImpl();
         precioService.insertarPrecio(precio);
 
-        mpd.setPrecioProducto(precio);
-        costoOperativoDetalle1.setPrecioProducto(precio);
         MateriaPrimaDetalleService materiaPrimaDetalleService = new MateriaPrimaDetalleServImpl();
         materiaPrimaDetalleService.insertarMateriaPrimaDetalle(mpd);
 
@@ -263,6 +262,6 @@ public class Main {
         producto.setProductoSubCategoria(productoSubCategoria1);
         producto.setUnidadMedida(umUnidad);
         parametrosService.insertarProducto(producto);
-         */
+         
     }
 }

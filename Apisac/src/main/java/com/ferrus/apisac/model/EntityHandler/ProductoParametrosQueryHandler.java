@@ -7,6 +7,7 @@ package com.ferrus.apisac.model.EntityHandler;
 
 import com.ferrus.apisac.model.Impuesto;
 import com.ferrus.apisac.model.Marca;
+import com.ferrus.apisac.model.Precio;
 import com.ferrus.apisac.model.Producto;
 import com.ferrus.apisac.model.ProductoCategoria;
 import com.ferrus.apisac.model.ProductoSubCategoria;
@@ -87,11 +88,10 @@ public class ProductoParametrosQueryHandler extends AbstractQuery {
         EntityManagerHandler.INSTANCE.getEntityTransaction().commit();
     }
 
-    public void eliminarProducto(Producto producto) {
+    public void eliminarProducto(Long idProducto) {
         open();
-        Producto p = EntityManagerHandler.INSTANCE.getEntityManager().find(Producto.class, producto.getId());
+        Producto p = EntityManagerHandler.INSTANCE.getEntityManager().find(Producto.class, idProducto);
         p.setImpuesto(null);
-        //p.setMarca(null);
         p.setProductoCategoria(null);
         p.setProductoSubCategoria(null);
         EntityManagerHandler.INSTANCE.getEntityManager().remove(p);

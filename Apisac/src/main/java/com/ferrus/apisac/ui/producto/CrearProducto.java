@@ -114,6 +114,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
     private PrecioService precioServicio;
     private CostoOperativoDetalleService costoOperativoDetalleService;
     private MateriaPrimaDetalleService materiaPrimaDetalleService;
+    private Producto producto;
 
     public CrearProducto(JFrame frame, int formType) {
         super(frame, true);
@@ -215,7 +216,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
     }
 
     private void constructLayoutPrecio() {
-        jpPrecio.add(new JLabel(CREATE_PRODUCT_PROD_NAME));
+        jpPrecio.add(new JLabel(NAME_LABEL));
         jpPrecio.add(jtfNombreProducto, "growx, push");
         jpPrecio.add(new JLabel(DESCRIPTION_LABEL));
         jpPrecio.add(jtfDescripcionProducto, "growx, push, wrap");
@@ -305,19 +306,17 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
     private void constructWindows(JFrame jframe) {
         switch (formType) {
             case CREATE_PRODUCT: {
-                setTitle(CREATE_PRODUCT_PROD_NAME);
+                setTitle(CREATE_PRODUCT_TITLE);
                 break;
             }
             case UPDATE_PRODUCT: {
-                setTitle(CREATE_PRODUCT_PROD_NAME);
+                setTitle(UPDATE_PRODUCT_TITLE);
                 break;
             }
         }
-        setPreferredSize(new Dimension(CREATE_PRODUCT_WINDOWS_WIDTH, CREATE_PRODUCT_WINDOWS_HEIGHT));
+        setSize(new Dimension(CREATE_PRODUCT_WINDOWS_WIDTH, CREATE_PRODUCT_WINDOWS_HEIGHT));
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        pack();
         setLocationRelativeTo(jframe);
-        setVisible(true);
     }
 
     private void addListeners() {
@@ -360,40 +359,66 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
     }
 
     private void recibirMateriaPrima(MateriaPrimaDetalle mpd) {
-        Long idNuevo = mpd.getId();
+        Long idNuevo = mpd.getMateriaPrima().getId();
         for (MateriaPrimaDetalle materiaPrimaDetalle : materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList()) {
             if (Objects.equals(idNuevo, materiaPrimaDetalle.getId())) {
                 JOptionPane.showMessageDialog(this, CREATE_PRODUCT_REPEATED_RAW_MATERIAL_MSG, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
-        this.materiaPrimaDetalleTableModel.agregarMateriaPrima(mpd);
+        if (formType == CREATE_PRODUCT) {
+            this.materiaPrimaDetalleTableModel.agregarMateriaPrima(mpd);
+        } else if (formType == UPDATE_PRODUCT) {
+            System.out.println("com.ferrus.apisac.ui.producto.CrearProducto.recibirMateriaPrima().UPDATE_PRODUCT");
+            mpd.setPrecioProducto(producto.getPrecio());
+            this.materiaPrimaDetalleService.insertarMateriaPrimaDetalle(mpd);
+            this.materiaPrimaDetalleTableModel.setMateriaPrimaDetalleList(materiaPrimaDetalleService.obtenerMateriasPrimasDetalles(producto.getPrecio().getId()));
+            this.jtMateriaPrima.setModel(materiaPrimaDetalleTableModel);
+            this.materiaPrimaDetalleTableModel.updateTable();
+        }
         calcularSubTotales();
-        checkearEntradas();
+        keyStrokeHandler();
     }
 
     private void modificarMateriaPrima(MateriaPrimaDetalle mpd) {
         Long idNuevo = mpd.getId();
         for (MateriaPrimaDetalle materiaPrimaDetalle : materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList()) {
             if (Objects.equals(idNuevo, materiaPrimaDetalle.getId())) {
-                materiaPrimaDetalle.setCantidad(mpd.getCantidad());
-                materiaPrimaDetalle.setPrecioMateriaPrima(mpd.getPrecioMateriaPrima());
-                materiaPrimaDetalle.getMateriaPrima().setUnidadMedida(mpd.getMateriaPrima().getUnidadMedida());
+                if (formType == CREATE_PRODUCT) {
+                    materiaPrimaDetalle.setCantidad(mpd.getCantidad());
+                    materiaPrimaDetalle.setPrecioMateriaPrima(mpd.getPrecioMateriaPrima());
+                    materiaPrimaDetalle.getMateriaPrima().setUnidadMedida(mpd.getMateriaPrima().getUnidadMedida());
+                } else if (formType == UPDATE_PRODUCT) {
+                    System.out.println("com.ferrus.apisac.ui.producto.CrearProducto.modificarMateriaPrima().UPDATE_PRODUCT");
+                    materiaPrimaDetalle.setCantidad(mpd.getCantidad());
+                    materiaPrimaDetalle.setPrecioMateriaPrima(mpd.getPrecioMateriaPrima());
+                    materiaPrimaDetalle.getMateriaPrima().setUnidadMedida(mpd.getMateriaPrima().getUnidadMedida());
+                    materiaPrimaDetalleService.modificarMateriaPrimaDetalle(materiaPrimaDetalle);
+                }
                 break;
             }
         }
         materiaPrimaDetalleTableModel.updateTable();
         calcularSubTotales();
-        checkearEntradas();
+        keyStrokeHandler();
     }
 
     private void removerMateriaPrimaDetalle() {
         int row = this.jtMateriaPrima.getSelectedRow();
         if (row > -1) {
-            this.materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList().remove(row);
-            this.materiaPrimaDetalleTableModel.updateTable();
+            if (formType == CREATE_PRODUCT) {
+                this.materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList().remove(row);
+                this.materiaPrimaDetalleTableModel.updateTable();
+            } else if (formType == UPDATE_PRODUCT) {
+                System.out.println("com.ferrus.apisac.ui.producto.CrearProducto.removerMateriaPrimaDetalle().UPDATE_PRODUCT");
+                Long idMpd = this.materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList().get(row).getId();
+                this.materiaPrimaDetalleService.eliminarMateriaPrimaDetalle(idMpd);
+                this.materiaPrimaDetalleTableModel.setMateriaPrimaDetalleList(materiaPrimaDetalleService.obtenerMateriasPrimasDetalles(producto.getPrecio().getId()));
+                this.jtMateriaPrima.setModel(materiaPrimaDetalleTableModel);
+                this.materiaPrimaDetalleTableModel.updateTable();
+            }
             calcularSubTotales();
-            checkearEntradas();
+            keyStrokeHandler();
         }
         this.jbModificarMat.setEnabled(false);
         this.jbQuitarMat.setEnabled(false);
@@ -407,33 +432,50 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
                 return;
             }
         }
-        this.costoOperativoDetalleTableModel.agregarCostoOperativo(cod);
+        if (formType == CREATE_PRODUCT) {
+            this.costoOperativoDetalleTableModel.agregarCostoOperativo(cod);
+        } else if (formType == UPDATE_PRODUCT) {
+            cod.setPrecioProducto(producto.getPrecio());
+            costoOperativoDetalleService.insertarCostoOperativoDetalle(cod);
+        }
         calcularSubTotales();
-        checkearEntradas();
+        keyStrokeHandler();
     }
 
     private void modificarCostoOperativo(CostoOperativoDetalle cod) {
         Long idNuevo = cod.getId();
         for (CostoOperativoDetalle costoOperativoDetalle : costoOperativoDetalleTableModel.getCostoOperativoDetalleList()) {
             if (Objects.equals(idNuevo, costoOperativoDetalle.getId())) {
-                costoOperativoDetalle.setCantidad(cod.getCantidad());
-                costoOperativoDetalle.setPrecioCostoOperativo(cod.getPrecioCostoOperativo());
-                costoOperativoDetalle.getCostoOperativo().setUnidadMedida(cod.getCostoOperativo().getUnidadMedida());
+                if (formType == CREATE_PRODUCT) {
+                    costoOperativoDetalle.setCantidad(cod.getCantidad());
+                    costoOperativoDetalle.setPrecioCostoOperativo(cod.getPrecioCostoOperativo());
+                    costoOperativoDetalle.getCostoOperativo().setUnidadMedida(cod.getCostoOperativo().getUnidadMedida());
+                } else if (formType == UPDATE_PRODUCT) {
+                    costoOperativoDetalle.setCantidad(cod.getCantidad());
+                    costoOperativoDetalle.setPrecioCostoOperativo(cod.getPrecioCostoOperativo());
+                    costoOperativoDetalle.getCostoOperativo().setUnidadMedida(cod.getCostoOperativo().getUnidadMedida());
+                    costoOperativoDetalleService.modificarCostoOperativoDetalle(costoOperativoDetalle);
+                }
                 break;
             }
         }
         materiaPrimaDetalleTableModel.updateTable();
         calcularSubTotales();
-        checkearEntradas();
+        keyStrokeHandler();
     }
 
     private void removerCostoOperativoDetalle() {
         int row = this.jtCostoOperativo.getSelectedRow();
         if (row > -1) {
-            this.costoOperativoDetalleTableModel.getCostoOperativoDetalleList().remove(row);
-            this.costoOperativoDetalleTableModel.updateTable();
+            if (formType == CREATE_PRODUCT) {
+                this.costoOperativoDetalleTableModel.getCostoOperativoDetalleList().remove(row);
+                this.costoOperativoDetalleTableModel.updateTable();
+            } else if (formType == UPDATE_PRODUCT) {
+                Long idCod = this.costoOperativoDetalleTableModel.getCostoOperativoDetalleList().get(row).getId();
+                this.costoOperativoDetalleService.eliminarCostoOperativoDetalle(idCod);
+            }
             calcularSubTotales();
-            checkearEntradas();
+            keyStrokeHandler();
         }
         this.jbModificarCO.setEnabled(false);
         this.jbQuitarCO.setEnabled(false);
@@ -467,7 +509,54 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         this.jftCostoFijoUnit.setValue(costoFijoTotal / unidadesProducidas);
     }
 
-    private void checkearEntradas() {
+    private boolean checkearInputs() {
+        Double productoImpuesto = null;
+        Double productoUtilidad = null;
+        Double productoUnidadesProd = null;
+        //CONTROLAR UNIDADES PRODUCIDAS
+        try {
+            productoUnidadesProd = Double.valueOf("" + jftUnidadesProducidas.getValue());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, NUMBER_VALID_UNIT_PROD_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            jftUnidadesProducidas.setValue(0);
+            return false;
+        }
+        if (productoUnidadesProd < 0) {
+            JOptionPane.showMessageDialog(this, SELECT_VALID_POSITIVE_UNIT_PROD_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            jftUnidadesProducidas.setValue(0);
+            return false;
+        }
+        //CONTROLAR UTILIDAD
+        try {
+            productoUtilidad = Double.valueOf("" + jftUtilidadPorcentaje.getValue());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, NUMBER_VALID_UTILITY_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            jftImpuesto.setValue(0);
+            return false;
+
+        }
+        if (productoUtilidad < 0) {
+            JOptionPane.showMessageDialog(this, SELECT_VALID_POSITIVE_UTILITY_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            jftUtilidadPorcentaje.setValue(0);
+            return false;
+        }
+        //CONTROLAR IMPUESTP
+        try {
+            productoImpuesto = Double.valueOf("" + jftImpuesto.getValue());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, NUMBER_VALID_TAX_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            jftImpuesto.setValue(0);
+            return false;
+        }
+        if (productoImpuesto < 0) {
+            JOptionPane.showMessageDialog(this, SELECT_VALID_POSITIVE_TAX_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            jftImpuesto.setValue(0);
+            return false;
+        }
+        return true;
+    }
+
+    private void keyStrokeHandler() {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -476,82 +565,41 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
                 Double unidadesProducidas = null;
                 Double utilidad = null;
                 Double impuesto = null;
-                try {
+                if (checkearInputs()) {
                     unidadesProducidas = Double.valueOf("" + jftUnidadesProducidas.getValue());
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(null, NUMBER_VALID_UNIT_PROD_MESSAGE,
-                            ALERT_MESSAGE,
-                            javax.swing.JOptionPane.OK_OPTION);
-                    jftUnidadesProducidas.setValue(0);
-                    return;
-                }
-                if (unidadesProducidas < 0) {
-                    JOptionPane.showMessageDialog(null, SELECT_VALID_POSITIVE_UNIT_PROD_MESSAGE,
-                            ALERT_MESSAGE,
-                            javax.swing.JOptionPane.OK_OPTION);
-                    jftUnidadesProducidas.setValue(0);
-                    return;
-                }
-                try {
                     utilidad = Double.valueOf("" + jftUtilidadPorcentaje.getValue());
-                } catch (NumberFormatException e) {
-                    javax.swing.JOptionPane.showMessageDialog(null, NUMBER_VALID_UTILITY_MESSAGE,
-                            ALERT_MESSAGE,
-                            javax.swing.JOptionPane.OK_OPTION);
-                    return;
-                }
-                if (utilidad < 0) {
-                    JOptionPane.showMessageDialog(null, SELECT_VALID_POSITIVE_UTILITY_MESSAGE,
-                            ALERT_MESSAGE,
-                            javax.swing.JOptionPane.OK_OPTION);
-                    jftUtilidadPorcentaje.setValue(0);
-                    return;
-                }
-                try {
                     impuesto = Double.valueOf("" + jftImpuesto.getValue());
-                } catch (NumberFormatException e) {
-                    javax.swing.JOptionPane.showMessageDialog(null, NUMBER_VALID_TAX_MESSAGE,
-                            ALERT_MESSAGE,
-                            javax.swing.JOptionPane.OK_OPTION);
-                    return;
+                    try {
+                        costoVariableTotal = Double.valueOf("" + jftCostoVariableTotal2.getValue());
+                    } catch (NumberFormatException e) {
+                        javax.swing.JOptionPane.showMessageDialog(null, "",
+                                ALERT_MESSAGE,
+                                javax.swing.JOptionPane.OK_OPTION);
+                        return;
+                    }
+                    try {
+                        costoFijoTotal = Double.valueOf("" + jftCostoFijoTotal2.getValue());
+                    } catch (NumberFormatException e) {
+                        javax.swing.JOptionPane.showMessageDialog(null, "",
+                                ALERT_MESSAGE,
+                                javax.swing.JOptionPane.OK_OPTION);
+                        return;
+                    }
+                    Double costoVariableUnit = costoVariableTotal / unidadesProducidas;
+                    Double costoFijoUnit = costoFijoTotal / unidadesProducidas;
+                    Double costoTotal = costoVariableTotal + costoFijoTotal;
+                    Double costoTotalUnitario = costoVariableUnit + costoFijoUnit;
+                    Double calculoUtilidad = (utilidad * costoTotalUnitario) / 100;
+                    Double precioVentaSinImpuesto = costoTotalUnitario + calculoUtilidad;
+                    Double precioVentaConImpuesto = precioVentaSinImpuesto + ((impuesto * precioVentaSinImpuesto) / 100);
+                    jftCostoVariableUnit.setValue(costoVariableUnit);
+                    jftCostoFijoUnit.setValue(costoFijoUnit);
+                    jftCostoTotal.setValue(costoTotal);
+                    jftCostoTotalUnit.setValue(costoTotalUnitario);
+                    jftUtilidad.setValue(calculoUtilidad);
+                    jftPrecioVenta.setValue(precioVentaSinImpuesto);
+                    jftPrecioVentaIVA.setValue(precioVentaConImpuesto);
                 }
-                if (impuesto < 0) {
-                    JOptionPane.showMessageDialog(null, SELECT_VALID_POSITIVE_TAX_MESSAGE,
-                            ALERT_MESSAGE,
-                            javax.swing.JOptionPane.OK_OPTION);
-                    jftImpuesto.setValue(0);
-                    return;
-                }
-                try {
-                    costoVariableTotal = Double.valueOf("" + jftCostoVariableTotal2.getValue());
-                } catch (NumberFormatException e) {
-                    javax.swing.JOptionPane.showMessageDialog(null, "",
-                            ALERT_MESSAGE,
-                            javax.swing.JOptionPane.OK_OPTION);
-                    return;
-                }
-                try {
-                    costoFijoTotal = Double.valueOf("" + jftCostoFijoTotal2.getValue());
-                } catch (NumberFormatException e) {
-                    javax.swing.JOptionPane.showMessageDialog(null, "",
-                            ALERT_MESSAGE,
-                            javax.swing.JOptionPane.OK_OPTION);
-                    return;
-                }
-                Double costoVariableUnit = costoVariableTotal / unidadesProducidas;
-                Double costoFijoUnit = costoFijoTotal / unidadesProducidas;
-                Double costoTotal = costoVariableTotal + costoFijoTotal;
-                Double costoTotalUnitario = costoVariableUnit + costoFijoUnit;
-                Double calculoUtilidad = (utilidad * costoTotalUnitario) / 100;
-                Double precioVentaSinImpuesto = costoTotalUnitario + calculoUtilidad;
-                Double precioVentaConImpuesto = precioVentaSinImpuesto + ((impuesto * precioVentaSinImpuesto) / 100);
-                jftCostoVariableUnit.setValue(costoVariableUnit);
-                jftCostoFijoUnit.setValue(costoFijoUnit);
-                jftCostoTotal.setValue(costoTotal);
-                jftCostoTotalUnit.setValue(costoTotalUnitario);
-                jftUtilidad.setValue(calculoUtilidad);
-                jftPrecioVenta.setValue(precioVentaSinImpuesto);
-                jftPrecioVentaIVA.setValue(precioVentaConImpuesto);
             }
         });
     }
@@ -627,7 +675,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         });
     }
 
-    private void crearProducto() {
+    private void crearOModificarProducto() {
         String productoNombre = jtfNombreProducto.getText().trim();
         String productoDescripcion = jtfDescripcionProducto.getText().trim();
         Double productoImpuesto = null;
@@ -650,89 +698,123 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         if (productoDescripcion.isEmpty()) {
             productoDescripcion = null;
         }
-        //CONTROLAR UNIDADES PRODUCIDAS
-        try {
+        if (checkearInputs()) {
             productoUnidadesProd = Double.valueOf("" + jftUnidadesProducidas.getValue());
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, NUMBER_VALID_UNIT_PROD_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
-            jftUnidadesProducidas.setValue(0);
-
-        }
-        if (productoUnidadesProd <= 0) {
-            JOptionPane.showMessageDialog(this, SELECT_VALID_POSITIVE_UNIT_PROD_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
-            jftUnidadesProducidas.setValue(0);
-            return;
-        }
-        //CONTROLAR UTILIDAD
-        try {
             productoUtilidad = Double.valueOf("" + jftUtilidadPorcentaje.getValue());
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, NUMBER_VALID_UTILITY_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
-            jftImpuesto.setValue(0);
-
-        }
-        if (productoUtilidad <= 0) {
-            JOptionPane.showMessageDialog(this, SELECT_VALID_POSITIVE_UTILITY_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
-            jftUtilidadPorcentaje.setValue(0);
-            return;
-        }
-        //CONTROLAR IMPUESTP
-        try {
             productoImpuesto = Double.valueOf("" + jftImpuesto.getValue());
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, NUMBER_VALID_TAX_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
-            jftImpuesto.setValue(0);
-        }
-        if (productoImpuesto <= 0) {
-            JOptionPane.showMessageDialog(this, SELECT_VALID_POSITIVE_TAX_MESSAGE, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
-            jftImpuesto.setValue(0);
-            return;
-        }
-        //CONTROLAR COSTOS OPERATIVOS
-        if (costoOperativoDetalleTableModel.getCostoOperativoDetalleList().isEmpty()) {
-            int opcion = JOptionPane.showConfirmDialog(this, EMPTY_OPER_COST_LIST_MSG, ALERT_MESSAGE, JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
-            if (opcion != JOptionPane.YES_OPTION) {
-                return;
+            //CONTROLAR COSTOS OPERATIVOS
+            if (costoOperativoDetalleTableModel.getCostoOperativoDetalleList().isEmpty()) {
+                int opcion = JOptionPane.showConfirmDialog(this, EMPTY_OPER_COST_LIST_MSG, ALERT_MESSAGE, JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+                if (opcion != JOptionPane.YES_OPTION) {
+                    return;
+                }
             }
-        }
-        //CONTROLAR MATERIA PRIMA
-        if (materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList().isEmpty()) {
-            int opcion = JOptionPane.showConfirmDialog(this, EMPTY_RAW_MATERIAL_LIST_MSG, ALERT_MESSAGE, JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
-            if (opcion != JOptionPane.YES_OPTION) {
-                return;
+            //CONTROLAR MATERIA PRIMA
+            if (materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList().isEmpty()) {
+                int opcion = JOptionPane.showConfirmDialog(this, EMPTY_RAW_MATERIAL_LIST_MSG, ALERT_MESSAGE, JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+                if (opcion != JOptionPane.YES_OPTION) {
+                    return;
+                }
             }
+            if (formType == CREATE_PRODUCT) {
+                Precio precio = new Precio();
+                precio.setCostoOperativoDetalles(costoOperativoDetalleTableModel.getCostoOperativoDetalleList());
+                precio.setMateriaPrimaDetalles(materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList());
+                precio.setUnidadesProducidas(productoUnidadesProd);
+                precio.setUtilidad(productoUtilidad);
+                for (CostoOperativoDetalle costoOperativoDetalle : costoOperativoDetalleTableModel.getCostoOperativoDetalleList()) {
+                    costoOperativoDetalle.setPrecioProducto(precio);
+                }
+                for (MateriaPrimaDetalle materiaPrimaDetalle : materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList()) {
+                    materiaPrimaDetalle.setPrecioProducto(precio);
+                }
+                precioServicio.insertarPrecio(precio);
+                for (CostoOperativoDetalle costoOperativoDetalle : costoOperativoDetalleTableModel.getCostoOperativoDetalleList()) {
+                    costoOperativoDetalle.setPrecioProducto(precio);
+                    costoOperativoDetalleService.insertarCostoOperativoDetalle(costoOperativoDetalle);
+                }
+                for (MateriaPrimaDetalle materiaPrimaDetalle : materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList()) {
+                    materiaPrimaDetalle.setPrecioProducto(precio);
+                    materiaPrimaDetalleService.insertarMateriaPrimaDetalle(materiaPrimaDetalle);
+                }
+                Producto unProducto = new Producto();
+                unProducto.setNombre(productoNombre);
+                unProducto.setDescripcion(productoDescripcion);
+                unProducto.setNombre(productoNombre);
+                unProducto.setImpuesto(productoImpuesto);
+                unProducto.setPrecio(precio);
+                unProducto.setProductoCategoria((ProductoCategoria) jcbProductoCategoria.getSelectedItem());
+                unProducto.setProductoSubCategoria((ProductoSubCategoria) jcbProductoSubCategoria.getSelectedItem());
+                unProducto.setUnidadMedida((UnidadMedida) jcbUnidadMedida.getSelectedItem());
+                productoServicio.insertarProducto(unProducto);
+            } else if (formType == UPDATE_PRODUCT) {
+                Precio precio = new Precio();
+                precio.setId(producto.getPrecio().getId());
+                precio.setCostoOperativoDetalles(costoOperativoDetalleTableModel.getCostoOperativoDetalleList());
+                precio.setMateriaPrimaDetalles(materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList());
+                precio.setUnidadesProducidas(productoUnidadesProd);
+                precio.setUtilidad(productoUtilidad);
+                /*for (CostoOperativoDetalle costoOperativoDetalle : costoOperativoDetalleTableModel.getCostoOperativoDetalleList()) {
+                    costoOperativoDetalle.setPrecioProducto(precio);
+                }
+                for (MateriaPrimaDetalle materiaPrimaDetalle : materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList()) {
+                    materiaPrimaDetalle.setPrecioProducto(precio);
+                }*/
+                precioServicio.modificarPrecio(precio);
+                Producto unProducto = new Producto();
+                unProducto.setId(producto.getId());
+                unProducto.setNombre(productoNombre);
+                unProducto.setDescripcion(productoDescripcion);
+                unProducto.setNombre(productoNombre);
+                unProducto.setImpuesto(productoImpuesto);
+                unProducto.setPrecio(precio);
+                unProducto.setProductoCategoria((ProductoCategoria) jcbProductoCategoria.getSelectedItem());
+                unProducto.setProductoSubCategoria((ProductoSubCategoria) jcbProductoSubCategoria.getSelectedItem());
+                unProducto.setUnidadMedida((UnidadMedida) jcbUnidadMedida.getSelectedItem());
+                productoServicio.modificarProducto(unProducto);
+            }
+            cerrar();
         }
-        Precio precio = new Precio();
-        precio.setCostoOperativoDetalles(costoOperativoDetalleTableModel.getCostoOperativoDetalleList());
-        precio.setMateriaPrimaDetalles(materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList());
-        precio.setUnidadesProducidas(productoUnidadesProd);
-        precio.setUtilidad(productoUtilidad);
-        precioServicio.insertarPrecio(precio);
-        for (CostoOperativoDetalle costoOperativoDetalle : costoOperativoDetalleTableModel.getCostoOperativoDetalleList()) {
-            costoOperativoDetalle.setPrecioProducto(precio);
-            costoOperativoDetalleService.insertarCostoOperativoDetalle(costoOperativoDetalle);
-        }
-        for (MateriaPrimaDetalle materiaPrimaDetalle : materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList()) {
-            materiaPrimaDetalle.setPrecioProducto(precio);
-            materiaPrimaDetalleService.insertarMateriaPrimaDetalle(materiaPrimaDetalle);
-        }
-        //precioServicio.insertarPrecio(precio);
-        Producto producto = new Producto();
-        producto.setNombre(productoNombre);
-        producto.setDescripcion(productoDescripcion);
-        producto.setNombre(productoNombre);
-        producto.setImpuesto(productoImpuesto);
-        producto.setPrecio(precio);
-        producto.setProductoCategoria((ProductoCategoria) jcbProductoCategoria.getSelectedItem());
-        producto.setProductoSubCategoria((ProductoSubCategoria) jcbProductoSubCategoria.getSelectedItem());
-        producto.setUnidadMedida((UnidadMedida) jcbUnidadMedida.getSelectedItem());
-        productoServicio.insertarProducto(producto);
-        cerrar();
     }
 
     private void cerrar() {
         System.runFinalization();
         this.dispose();
+    }
+
+    public void loadData(Producto prod) {
+        this.jtfNombreProducto.setText(prod.getNombre());
+        this.jtfDescripcionProducto.setText(prod.getDescripcion());
+        this.jftUnidadesProducidas.setValue(prod.getPrecio().getUnidadesProducidas());
+        this.jcbUnidadMedida.setSelectedItem(prod.getUnidadMedida());
+        this.jftUtilidadPorcentaje.setValue(prod.getPrecio().getUtilidad());
+        this.jcbProductoCategoria.setSelectedItem(prod.getProductoCategoria());
+        loadDataProductoSubCategoria((ProductoCategoria) jcbProductoCategoria.getSelectedItem());
+        this.jftImpuesto.setValue(prod.getImpuesto());
+        //
+        this.jftCostoFijoTotal.setValue(prod.getPrecio().costoFijoTotal());
+        this.jftCostoFijoUnit.setValue(prod.getPrecio().costoOperativoUnitario());
+        //
+        this.jftCostoVariableTotal.setValue(prod.getPrecio().costoVariableTotal());
+        this.jftCostoVariableUnit.setValue(prod.getPrecio().costoProduccionUnitario());
+        //
+        this.jftCostoTotal.setValue(prod.getPrecio().costoTotal());
+        this.jftCostoTotalUnit.setValue(prod.getPrecio().costoTotalUnitario());
+        //
+        this.jftUtilidad.setValue(prod.getPrecio().calcularUtilida());
+        this.jftPrecioVenta.setValue(prod.getPrecio().precioVentaSinImpuesto());
+        this.jftPrecioVentaIVA.setValue(prod.getPrecio().precioVentaConImpuesto(prod.getImpuesto()));
+
+        this.costoOperativoDetalleTableModel.setCostoOperativoDetalleList(prod.getPrecio().getCostoOperativoDetalles());
+        this.jtCostoOperativo.setModel(costoOperativoDetalleTableModel);
+        this.costoOperativoDetalleTableModel.updateTable();
+        this.materiaPrimaDetalleTableModel.setMateriaPrimaDetalleList(prod.getPrecio().getMateriaPrimaDetalles());
+        this.jtMateriaPrima.setModel(materiaPrimaDetalleTableModel);
+        this.materiaPrimaDetalleTableModel.updateTable();
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
     }
 
     @Override
@@ -771,7 +853,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         } else if (src.equals(jbQuitarCO)) {
             removerCostoOperativoDetalle();
         } else if (src.equals(jbAceptar)) {
-            crearProducto();
+            crearOModificarProducto();
         } else if (src.equals(jbCancelar)) {
             cerrar();
         }
@@ -779,7 +861,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
 
     @Override
     public void keyTyped(KeyEvent e) {
-        checkearEntradas();
+        keyStrokeHandler();
     }
 
     @Override

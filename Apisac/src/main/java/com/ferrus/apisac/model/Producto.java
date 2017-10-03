@@ -48,7 +48,7 @@ public class Producto implements Serializable {
     private String nombre;
     @Column(name = "descripcion", length = 150)
     private String descripcion;
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "id_precio", nullable = false)
     private Precio precio;
     @Column(name = "impuesto", nullable = false, length = 10, precision = 2)

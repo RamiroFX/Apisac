@@ -8,6 +8,8 @@ import com.ferrus.apisac.ui.costoOperativo.GestionCostoOperativo;
 import com.ferrus.apisac.ui.materiaPrima.GestionMateriaPrima;
 import com.ferrus.apisac.ui.producto.CrearProducto;
 import com.ferrus.apisac.util.AppUIConstants;
+import static com.ferrus.apisac.util.AppUIConstants.ALERT_MESSAGE;
+import static com.ferrus.apisac.util.AppUIConstants.CONFIRM_MESSAGE;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -20,6 +22,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 
 public class App extends JFrame implements ActionListener, MouseListener {
@@ -110,27 +113,6 @@ public class App extends JFrame implements ActionListener, MouseListener {
         this.timer.setRunning(false);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        Object src = e.getSource();
-        if (src.equals(this.jpPrincipal.jbCrear)) {
-            CrearProducto cp = new CrearProducto(this, CrearProducto.CREATE_PRODUCT);
-        } else if (src.equals(this.jpPrincipal.jbBuscar)) {
-            buscar();
-        } else if (src.equals(this.jpPrincipal.jbLimpiar)) {
-            borrarCampo();
-        } else if (src.equals(this.jpPrincipal.jbParametros)) {
-            Parametros param = new Parametros(this);
-            param.setVisible(true);
-        } else if (src.equals(this.jpPrincipal.jbMateriaPrima)) {
-            GestionMateriaPrima gmp = new GestionMateriaPrima(this, GestionMateriaPrima.GESTIONAR);
-            gmp.setVisible(true);
-        } else if (src.equals(this.jpPrincipal.jbCostoOperativo)) {
-            GestionCostoOperativo gco = new GestionCostoOperativo(this, GestionCostoOperativo.GESTIONAR);
-            gco.setVisible(true);
-        }
-    }
-
     private void loadData() {
         buscar();
     }
@@ -147,6 +129,63 @@ public class App extends JFrame implements ActionListener, MouseListener {
         this.jpPrincipal.jtfBuscar.setText("");
     }
 
+    private void modificarProducto() {
+        int row = this.jpPrincipal.jtProductos.getSelectedRow();
+        if (row > -1) {
+            Long idProd = (Long) this.jpPrincipal.jtProductos.getValueAt(row, 0);
+            Producto prod = productoServicio.obtenerProducto(idProd);
+            CrearProducto modProd = new CrearProducto(this, CrearProducto.UPDATE_PRODUCT);
+            modProd.setProducto(prod);
+            modProd.loadData(prod);
+            modProd.setVisible(true);
+            this.jpPrincipal.jbModificar.setEnabled(false);
+            this.jpPrincipal.jbBorrar.setEnabled(false);
+            this.jpPrincipal.jbExportar.setEnabled(false);
+        }
+    }
+
+    private void eliminarProducto() {
+        int row = this.jpPrincipal.jtProductos.getSelectedRow();
+        if (row > -1) {
+            int opcion = JOptionPane.showConfirmDialog(this, CONFIRM_MESSAGE, ALERT_MESSAGE, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (opcion == JOptionPane.YES_OPTION) {
+                Long idProd = (Long) this.jpPrincipal.jtProductos.getValueAt(row, 0);
+                productoServicio.eliminarProducto(idProd);
+                jpPrincipal.jpInfoProd.cleanFields();
+                buscar();
+                this.jpPrincipal.jbModificar.setEnabled(false);
+                this.jpPrincipal.jbBorrar.setEnabled(false);
+                this.jpPrincipal.jbExportar.setEnabled(false);
+            }
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object src = e.getSource();
+        if (src.equals(this.jpPrincipal.jbCrear)) {
+            CrearProducto cp = new CrearProducto(this, CrearProducto.CREATE_PRODUCT);
+            cp.setVisible(true);
+        } else if (src.equals(this.jpPrincipal.jbModificar)) {
+            modificarProducto();
+        } else if (src.equals(this.jpPrincipal.jbBorrar)) {
+            eliminarProducto();
+        } else if (src.equals(this.jpPrincipal.jbBuscar)) {
+            buscar();
+        } else if (src.equals(this.jpPrincipal.jbLimpiar)) {
+            borrarCampo();
+        } else if (src.equals(this.jpPrincipal.jbParametros)) {
+            Parametros param = new Parametros(this);
+            param.setVisible(true);
+        } else if (src.equals(this.jpPrincipal.jbMateriaPrima)) {
+            GestionMateriaPrima gmp = new GestionMateriaPrima(this, GestionMateriaPrima.GESTIONAR);
+            gmp.setVisible(true);
+        } else if (src.equals(this.jpPrincipal.jbCostoOperativo)) {
+            GestionCostoOperativo gco = new GestionCostoOperativo(this, GestionCostoOperativo.GESTIONAR);
+            gco.setVisible(true);
+        }
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource().equals(this.jpPrincipal.jtProductos)) {
@@ -158,11 +197,14 @@ public class App extends JFrame implements ActionListener, MouseListener {
                 this.jpPrincipal.jpInfoProd.loadData(prod);
                 this.jpPrincipal.jbModificar.setEnabled(true);
                 this.jpPrincipal.jbBorrar.setEnabled(true);
+                this.jpPrincipal.jbExportar.setEnabled(true);
                 if (e.getClickCount() == 2) {
+                    modificarProducto();
                 }
             } else {
                 this.jpPrincipal.jbModificar.setEnabled(false);
                 this.jpPrincipal.jbBorrar.setEnabled(false);
+                this.jpPrincipal.jbExportar.setEnabled(false);
             }
         }
     }

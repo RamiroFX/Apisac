@@ -46,9 +46,10 @@ public class CostoOperativoDetalleQueryHandler extends AbstractQuery {
         EntityManagerHandler.INSTANCE.getEntityTransaction().commit();
     }
 
-    public void eliminarCostoOperativoDetalle(CostoOperativoDetalle cod) {
+    public void eliminarCostoOperativoDetalle(Long idCod) {
         open();
-        EntityManagerHandler.INSTANCE.getEntityManager().remove(cod);
+        CostoOperativoDetalle codTemp = EntityManagerHandler.INSTANCE.getEntityManager().find(CostoOperativoDetalle.class, idCod);
+        EntityManagerHandler.INSTANCE.getEntityManager().remove(codTemp);
         EntityManagerHandler.INSTANCE.getEntityTransaction().commit();
     }
 }

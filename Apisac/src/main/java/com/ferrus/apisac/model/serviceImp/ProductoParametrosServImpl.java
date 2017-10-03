@@ -68,12 +68,12 @@ public class ProductoParametrosServImpl implements ProductoParametrosService {
 
     @Override
     public void modificarProducto(Producto producto) {
-        this.queryHandler.eliminarProducto(producto);
+        this.queryHandler.modificarProducto(producto);
     }
 
     @Override
-    public void eliminarProducto(Producto producto) {
-
+    public void eliminarProducto(Long idProducto) {
+        this.queryHandler.eliminarProducto(idProducto);
     }
 
     @Override

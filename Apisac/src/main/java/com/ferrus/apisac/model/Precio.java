@@ -8,6 +8,7 @@ package com.ferrus.apisac.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -38,9 +39,9 @@ public class Precio implements Serializable {
     private Double utilidad;
     @Column(name = "unid_prod", nullable = false, length = 10)
     private Double unidadesProducidas;
-    @OneToMany(mappedBy = "precioProducto")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "precioProducto", orphanRemoval = true)
     private List<MateriaPrimaDetalle> materiaPrimaDetalles;
-    @OneToMany(mappedBy = "precioProducto")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "precioProducto", orphanRemoval = true)
     private List<CostoOperativoDetalle> costoOperativoDetalles;
 
     public Precio() {

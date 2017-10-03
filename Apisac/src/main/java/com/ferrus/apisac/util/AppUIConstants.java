@@ -104,17 +104,18 @@ public class AppUIConstants {
     public static final int CREATE_PRODUCT_WINDOWS_WIDTH = 800;
     public static final int CREATE_PRODUCT_WINDOWS_HEIGHT = 400;
 
-    public static final String CREATE_PRODUCT_PROD_NAME = "Producto";
+    public static final String CREATE_PRODUCT_TITLE = "Crear producto";
+    public static final String UPDATE_PRODUCT_TITLE = "Modificar producto";
     public static final String CREATE_PRODUCT_PROD_COST_TITLE = "Costo de producción";
     public static final String CREATE_PRODUCT_OPER_COST_TITLE = "Costo operativo";
     public static final String CREATE_PRODUCT_PROD_PRICE_TITLE = "Precio de venta";
     public static final String CREATE_PRODUCT_UNIT_PROD_NAME = "Unidades producidas";
-    public static final String CREATE_PRODUCT_FIXED_COST_UNIT_PROD_NAME = "Costo fijo unitario";
-    public static final String CREATE_PRODUCT_VAR_COST_UNIT_PROD_NAME = "Costo variable unitario";
+    public static final String CREATE_PRODUCT_FIXED_COST_UNIT_PROD_NAME = "Costo operativo unitario";
+    public static final String CREATE_PRODUCT_VAR_COST_UNIT_PROD_NAME = "Costo de prod unitario";
     public static final String CREATE_PRODUCT_TOTAL_COST_PROD_NAME = "Costo total";
     public static final String CREATE_PRODUCT_TOTAL_UNIT_COST_PROD_NAME = "Costo total unitario";
-    public static final String CREATE_PRODUCT_TOTAL_VAR_COST_PROD_NAME = "Costo variable total ";
-    public static final String CREATE_PRODUCT_TOTAL_FIXED_COST_PROD_NAME = "Costo fijo total ";
+    public static final String CREATE_PRODUCT_TOTAL_VAR_COST_PROD_NAME = "Costo de prod total ";
+    public static final String CREATE_PRODUCT_TOTAL_FIXED_COST_PROD_NAME = "Costo operativo total ";
     public static final String CREATE_PRODUCT_TAX_LABEL = "Impuesto";
     public static final String CREATE_PRODUCT_UTILITY_PERCENT_LABEL = "Porcentaje de utilidad";
     public static final String CREATE_PRODUCT_UM_LABEL = "Unidad de medida";

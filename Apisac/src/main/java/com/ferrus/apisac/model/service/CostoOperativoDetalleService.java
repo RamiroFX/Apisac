@@ -22,5 +22,5 @@ public interface CostoOperativoDetalleService {
 
     public void modificarCostoOperativoDetalle(CostoOperativoDetalle cod);
 
-    public void eliminarCostoOperativoDetalle(CostoOperativoDetalle cod);
+    public void eliminarCostoOperativoDetalle(Long idCod);
 }

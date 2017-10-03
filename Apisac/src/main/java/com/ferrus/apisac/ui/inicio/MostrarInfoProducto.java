@@ -22,7 +22,7 @@ import static com.ferrus.apisac.util.AppUIConstants.CREATE_PRODUCT_CATEGORY_LABE
 import static com.ferrus.apisac.util.AppUIConstants.CREATE_PRODUCT_FIXED_COST_UNIT_PROD_NAME;
 import static com.ferrus.apisac.util.AppUIConstants.CREATE_PRODUCT_OPER_COST_TITLE;
 import static com.ferrus.apisac.util.AppUIConstants.CREATE_PRODUCT_PROD_COST_TITLE;
-import static com.ferrus.apisac.util.AppUIConstants.CREATE_PRODUCT_PROD_NAME;
+import static com.ferrus.apisac.util.AppUIConstants.NAME_LABEL;
 import static com.ferrus.apisac.util.AppUIConstants.CREATE_PRODUCT_SELL_PRICE_LABEL;
 import static com.ferrus.apisac.util.AppUIConstants.CREATE_PRODUCT_SELL_PRICE_TAX_LABEL;
 import static com.ferrus.apisac.util.AppUIConstants.CREATE_PRODUCT_SUB_CATEGORY_LABEL;
@@ -176,7 +176,7 @@ public class MostrarInfoProducto extends JPanel {
     }
 
     private void constructLayoutPrecio() {
-        jpPrecio.add(new JLabel(CREATE_PRODUCT_PROD_NAME));
+        jpPrecio.add(new JLabel(NAME_LABEL));
         jpPrecio.add(jtfNombreProducto, "growx, push");
         jpPrecio.add(new JLabel(DESCRIPTION_LABEL));
         jpPrecio.add(jtfDescripcionProducto, "growx, push, wrap");
@@ -264,6 +264,36 @@ public class MostrarInfoProducto extends JPanel {
         this.jftPrecioVentaIVA.setValue(producto.getPrecio().precioVentaConImpuesto(producto.getImpuesto()));
         this.materiaPrimaDetalleTableModel.setMateriaPrimaDetalleList(producto.getPrecio().getMateriaPrimaDetalles());
         this.costoOperativoDetalleTableModel.setCostoOperativoDetalleList(producto.getPrecio().getCostoOperativoDetalles());
+        this.jtCostoOperativo.setModel(costoOperativoDetalleTableModel);
+        this.costoOperativoDetalleTableModel.updateTable();
+        this.jtMateriaPrima.setModel(materiaPrimaDetalleTableModel);
+        this.materiaPrimaDetalleTableModel.updateTable();
+    }
+
+    public void cleanFields() {
+        this.jtfNombreProducto.setText("");
+        this.jtfDescripcionProducto.setText("");
+        this.jftUnidadesProducidas.setValue(null);
+        this.jtfUnidadMedida.setText("");
+        this.jftUtilidadPorcentaje.setValue(null);
+        this.jtfProductoCategoria.setText("");
+        this.jftImpuesto.setValue(0);
+        this.jtfProductoSubCategoria.setText("");
+        //
+        this.jftCostoFijoTotal.setValue(null);
+        this.jftCostoFijoUnit.setValue(null);
+        //
+        this.jftCostoVariableTotal.setValue(null);
+        this.jftCostoVariableUnit.setValue(null);
+        //
+        this.jftCostoTotal.setValue(null);
+        this.jftCostoTotalUnit.setValue(null);
+        //
+        this.jftUtilidad.setValue(null);
+        this.jftPrecioVenta.setValue(null);
+        this.jftPrecioVentaIVA.setValue(null);
+        this.materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList().clear();
+        this.costoOperativoDetalleTableModel.getCostoOperativoDetalleList().clear();
         this.jtCostoOperativo.setModel(costoOperativoDetalleTableModel);
         this.costoOperativoDetalleTableModel.updateTable();
         this.jtMateriaPrima.setModel(materiaPrimaDetalleTableModel);

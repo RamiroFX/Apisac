@@ -39,7 +39,7 @@ public interface ProductoParametrosService {
 
     public void modificarProducto(Producto producto);
 
-    public void eliminarProducto(Producto producto);
+    public void eliminarProducto(Long producto);
 
     /*
     PRODUCTO CATEGORIA
