@@ -262,6 +262,5 @@ public class Main {
         producto.setProductoSubCategoria(productoSubCategoria1);
         producto.setUnidadMedida(umUnidad);
         parametrosService.insertarProducto(producto);
-         
     }
 }

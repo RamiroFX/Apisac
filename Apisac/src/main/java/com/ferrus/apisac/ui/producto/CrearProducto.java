@@ -369,7 +369,6 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         if (formType == CREATE_PRODUCT) {
             this.materiaPrimaDetalleTableModel.agregarMateriaPrima(mpd);
         } else if (formType == UPDATE_PRODUCT) {
-            System.out.println("com.ferrus.apisac.ui.producto.CrearProducto.recibirMateriaPrima().UPDATE_PRODUCT");
             mpd.setPrecioProducto(producto.getPrecio());
             this.materiaPrimaDetalleService.insertarMateriaPrimaDetalle(mpd);
             this.materiaPrimaDetalleTableModel.setMateriaPrimaDetalleList(materiaPrimaDetalleService.obtenerMateriasPrimasDetalles(producto.getPrecio().getId()));
@@ -410,8 +409,8 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
                 this.materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList().remove(row);
                 this.materiaPrimaDetalleTableModel.updateTable();
             } else if (formType == UPDATE_PRODUCT) {
-                System.out.println("com.ferrus.apisac.ui.producto.CrearProducto.removerMateriaPrimaDetalle().UPDATE_PRODUCT");
                 Long idMpd = this.materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList().get(row).getId();
+                producto.getPrecio().getMateriaPrimaDetalles().remove(row);
                 this.materiaPrimaDetalleService.eliminarMateriaPrimaDetalle(idMpd);
                 this.materiaPrimaDetalleTableModel.setMateriaPrimaDetalleList(materiaPrimaDetalleService.obtenerMateriasPrimasDetalles(producto.getPrecio().getId()));
                 this.jtMateriaPrima.setModel(materiaPrimaDetalleTableModel);
@@ -437,6 +436,9 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         } else if (formType == UPDATE_PRODUCT) {
             cod.setPrecioProducto(producto.getPrecio());
             costoOperativoDetalleService.insertarCostoOperativoDetalle(cod);
+            this.costoOperativoDetalleTableModel.setCostoOperativoDetalleList(costoOperativoDetalleService.obtenerCostosOperativosDetalles(producto.getPrecio().getId()));
+            this.jtCostoOperativo.setModel(costoOperativoDetalleTableModel);
+            this.costoOperativoDetalleTableModel.updateTable();
         }
         calcularSubTotales();
         keyStrokeHandler();

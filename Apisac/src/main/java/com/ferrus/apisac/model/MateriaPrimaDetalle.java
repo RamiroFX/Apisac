@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  *
@@ -101,6 +102,6 @@ public class MateriaPrimaDetalle implements Serializable {
 
     @Override
     public String toString() {
-        return getPrecioMateriaPrima() + " " + getCantidad() + " " + getMateriaPrima();
+        return ToStringBuilder.reflectionToString(this);
     }
 }

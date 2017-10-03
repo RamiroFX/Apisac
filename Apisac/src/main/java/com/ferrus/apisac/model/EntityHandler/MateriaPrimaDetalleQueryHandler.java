@@ -51,7 +51,6 @@ public class MateriaPrimaDetalleQueryHandler extends AbstractQuery {
         open();
         MateriaPrimaDetalle mpd = EntityManagerHandler.INSTANCE.getEntityManager().find(MateriaPrimaDetalle.class, idMpd);
         EntityManagerHandler.INSTANCE.getEntityManager().remove(mpd);
-        EntityManagerHandler.INSTANCE.getEntityManager().clear();
         EntityManagerHandler.INSTANCE.getEntityTransaction().commit();
     }
 }
