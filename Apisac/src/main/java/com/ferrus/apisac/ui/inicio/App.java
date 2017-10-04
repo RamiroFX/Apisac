@@ -141,6 +141,7 @@ public class App extends JFrame implements ActionListener, MouseListener {
             this.jpPrincipal.jbModificar.setEnabled(false);
             this.jpPrincipal.jbBorrar.setEnabled(false);
             this.jpPrincipal.jbExportar.setEnabled(false);
+            this.jpPrincipal.jpInfoProd.cleanFields();
         }
     }
 
@@ -156,6 +157,7 @@ public class App extends JFrame implements ActionListener, MouseListener {
                 this.jpPrincipal.jbModificar.setEnabled(false);
                 this.jpPrincipal.jbBorrar.setEnabled(false);
                 this.jpPrincipal.jbExportar.setEnabled(false);
+                this.jpPrincipal.jpInfoProd.cleanFields();
             }
         }
     }
@@ -205,6 +207,7 @@ public class App extends JFrame implements ActionListener, MouseListener {
                 this.jpPrincipal.jbModificar.setEnabled(false);
                 this.jpPrincipal.jbBorrar.setEnabled(false);
                 this.jpPrincipal.jbExportar.setEnabled(false);
+                this.jpPrincipal.jpInfoProd.cleanFields();
             }
         }
     }

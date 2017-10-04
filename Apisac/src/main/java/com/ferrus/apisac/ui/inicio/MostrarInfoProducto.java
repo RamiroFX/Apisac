@@ -43,6 +43,7 @@ import java.awt.GridLayout;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -292,12 +293,11 @@ public class MostrarInfoProducto extends JPanel {
         this.jftUtilidad.setValue(null);
         this.jftPrecioVenta.setValue(null);
         this.jftPrecioVentaIVA.setValue(null);
-        this.materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList().clear();
-        this.costoOperativoDetalleTableModel.getCostoOperativoDetalleList().clear();
+        this.materiaPrimaDetalleTableModel.setMateriaPrimaDetalleList(new ArrayList<>());
+        this.costoOperativoDetalleTableModel.setCostoOperativoDetalleList(new ArrayList<>());
         this.jtCostoOperativo.setModel(costoOperativoDetalleTableModel);
         this.costoOperativoDetalleTableModel.updateTable();
         this.jtMateriaPrima.setModel(materiaPrimaDetalleTableModel);
         this.materiaPrimaDetalleTableModel.updateTable();
     }
-
 }

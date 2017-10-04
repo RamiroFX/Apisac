@@ -34,7 +34,7 @@ public class MateriaPrima implements Serializable {
     private String nombre;
     @Column(name = "descripcion", length = 150)
     private String descripcion;
-    @Column(name = "precio", unique = true, length = 10, nullable = false)
+    @Column(name = "precio", length = 10, nullable = false)
     private Double precio;
     @ManyToOne
     private UnidadMedida unidadMedida;

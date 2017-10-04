@@ -133,8 +133,20 @@ public class Main {
         medidaService.insertarUnidadMedida(umL);
 
         MateriaPrima mpHarina = new MateriaPrima("Harina 000", null, 2500.0, umKG);
+        MateriaPrima mpAgua = new MateriaPrima("Agua", null, 2000.0, umL);
+        MateriaPrima mpAzucar = new MateriaPrima("Azucar", null, 5500.0, umKG);
+        MateriaPrima mpSal = new MateriaPrima("Sal", null, 2050.0, umKG);
+        MateriaPrima mpPolvoHornear = new MateriaPrima("Polvo de hornear", null, 2000.0, umKG);
+        MateriaPrima mpLevadura = new MateriaPrima("Levadura en pan", null, 9000.0, umKG);
+        MateriaPrima mpHuevo = new MateriaPrima("Huevo", null, 500.0, umUnidad);
         MateriaPrimaService materiaPrimaService = new MateriaPrimaServImpl();
         materiaPrimaService.insertarMateriaPrima(mpHarina);
+        materiaPrimaService.insertarMateriaPrima(mpAgua);
+        materiaPrimaService.insertarMateriaPrima(mpAzucar);
+        materiaPrimaService.insertarMateriaPrima(mpSal);
+        materiaPrimaService.insertarMateriaPrima(mpPolvoHornear);
+        materiaPrimaService.insertarMateriaPrima(mpLevadura);
+        materiaPrimaService.insertarMateriaPrima(mpHuevo);
 
         CostoOperativo co1 = new CostoOperativo("Jornales y comisiones", "Jornales y comisiones de comercialización", 11000.0, umUnidad, 24);
         CostoOperativo co2 = new CostoOperativo("Gastos de publicidad", null, 1000.0, umUnidad, 24);
@@ -224,7 +236,6 @@ public class Main {
         List<MateriaPrimaDetalle> materiPrimaDetalles = new ArrayList<>();
         MateriaPrimaDetalle mpd = new MateriaPrimaDetalle();
         mpd.setCantidad(1.0);
-        //mpd.setMateriaPrima(new MateriaPrima(mpHarina.getNombre(), mpHarina.getDescripcion(), mpHarina.getPrecio(), mpHarina.getUnidadMedida()));
         mpd.setMateriaPrima(mpHarina);
         mpd.setPrecioMateriaPrima(15000.0);
         materiPrimaDetalles.add(mpd);
@@ -262,5 +273,21 @@ public class Main {
         producto.setProductoSubCategoria(productoSubCategoria1);
         producto.setUnidadMedida(umUnidad);
         parametrosService.insertarProducto(producto);
+        //parametrosService.eliminarProducto(producto.getId());
+        /*
+        eliminar materia prima detalle      
+        precio.getMateriaPrimaDetalles().remove(mpd);
+        materiaPrimaDetalleService.eliminarMateriaPrimaDetalle(mpd.getId());  
+         */
+ /*
+        modificar
+        MateriaPrimaDetalle mpdTest = new MateriaPrimaDetalle();
+        mpdTest.setId(mpd.getId());
+        mpdTest.setCantidad(2.0);
+        mpdTest.setMateriaPrima(mpHarina);
+        mpdTest.setPrecioMateriaPrima(14500.0);
+        mpdTest.setPrecioProducto(precio);
+        materiaPrimaDetalleService.modificarMateriaPrimaDetalle(mpdTest);
+         */
     }
 }

@@ -380,7 +380,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
     }
 
     private void modificarMateriaPrima(MateriaPrimaDetalle mpd) {
-        Long idNuevo = mpd.getId();
+        Long idNuevo = mpd.getMateriaPrima().getId();
         for (MateriaPrimaDetalle materiaPrimaDetalle : materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList()) {
             if (Objects.equals(idNuevo, materiaPrimaDetalle.getId())) {
                 if (formType == CREATE_PRODUCT) {
@@ -388,11 +388,9 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
                     materiaPrimaDetalle.setPrecioMateriaPrima(mpd.getPrecioMateriaPrima());
                     materiaPrimaDetalle.getMateriaPrima().setUnidadMedida(mpd.getMateriaPrima().getUnidadMedida());
                 } else if (formType == UPDATE_PRODUCT) {
-                    System.out.println("com.ferrus.apisac.ui.producto.CrearProducto.modificarMateriaPrima().UPDATE_PRODUCT");
                     materiaPrimaDetalle.setCantidad(mpd.getCantidad());
                     materiaPrimaDetalle.setPrecioMateriaPrima(mpd.getPrecioMateriaPrima());
                     materiaPrimaDetalle.getMateriaPrima().setUnidadMedida(mpd.getMateriaPrima().getUnidadMedida());
-                    materiaPrimaDetalleService.modificarMateriaPrimaDetalle(materiaPrimaDetalle);
                 }
                 break;
             }
@@ -412,10 +410,8 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
                 Long idMpd = this.materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList().get(row).getId();
                 producto.getPrecio().getMateriaPrimaDetalles().remove(row);
                 this.materiaPrimaDetalleService.eliminarMateriaPrimaDetalle(idMpd);
-                this.materiaPrimaDetalleTableModel.setMateriaPrimaDetalleList(materiaPrimaDetalleService.obtenerMateriasPrimasDetalles(producto.getPrecio().getId()));
-                this.jtMateriaPrima.setModel(materiaPrimaDetalleTableModel);
-                this.materiaPrimaDetalleTableModel.updateTable();
             }
+            materiaPrimaDetalleTableModel.updateTable();
             calcularSubTotales();
             keyStrokeHandler();
         }
@@ -438,8 +434,8 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
             costoOperativoDetalleService.insertarCostoOperativoDetalle(cod);
             this.costoOperativoDetalleTableModel.setCostoOperativoDetalleList(costoOperativoDetalleService.obtenerCostosOperativosDetalles(producto.getPrecio().getId()));
             this.jtCostoOperativo.setModel(costoOperativoDetalleTableModel);
-            this.costoOperativoDetalleTableModel.updateTable();
         }
+            this.costoOperativoDetalleTableModel.updateTable();
         calcularSubTotales();
         keyStrokeHandler();
     }
@@ -461,7 +457,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
                 break;
             }
         }
-        materiaPrimaDetalleTableModel.updateTable();
+        costoOperativoDetalleTableModel.updateTable();
         calcularSubTotales();
         keyStrokeHandler();
     }
@@ -810,6 +806,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         this.costoOperativoDetalleTableModel.setCostoOperativoDetalleList(prod.getPrecio().getCostoOperativoDetalles());
         this.jtCostoOperativo.setModel(costoOperativoDetalleTableModel);
         this.costoOperativoDetalleTableModel.updateTable();
+        
         this.materiaPrimaDetalleTableModel.setMateriaPrimaDetalleList(prod.getPrecio().getMateriaPrimaDetalles());
         this.jtMateriaPrima.setModel(materiaPrimaDetalleTableModel);
         this.materiaPrimaDetalleTableModel.updateTable();
