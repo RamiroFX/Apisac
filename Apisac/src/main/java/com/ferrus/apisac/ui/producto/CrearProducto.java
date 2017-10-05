@@ -320,20 +320,24 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
     }
 
     private void addListeners() {
+        //ACTIONLISTENERS
         this.jbAgregarMat.addActionListener(this);
         this.jbModificarMat.addActionListener(this);
         this.jbQuitarMat.addActionListener(this);
-        this.jftUnidadesProducidas.addKeyListener(this);
-        this.jftUtilidadPorcentaje.addKeyListener(this);
-        this.jftImpuesto.addKeyListener(this);
-        this.jtMateriaPrima.addMouseListener(this);
         this.jbAgregarCO.addActionListener(this);
         this.jbModificarCO.addActionListener(this);
         this.jbQuitarCO.addActionListener(this);
-        this.jtCostoOperativo.addMouseListener(this);
-        this.jcbProductoCategoria.addItemListener(this);
         this.jbAceptar.addActionListener(this);
         this.jbCancelar.addActionListener(this);
+        //KEYLISTENERS        
+        this.jftUnidadesProducidas.addKeyListener(this);
+        this.jftUtilidadPorcentaje.addKeyListener(this);
+        this.jftImpuesto.addKeyListener(this);
+        //MOUSELISTENERS
+        this.jtMateriaPrima.addMouseListener(this);
+        this.jtCostoOperativo.addMouseListener(this);
+        //ITEMLISTENER
+        this.jcbProductoCategoria.addItemListener(this);
     }
 
     private void loadData() {
@@ -361,7 +365,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
     private void recibirMateriaPrima(MateriaPrimaDetalle mpd) {
         Long idNuevo = mpd.getMateriaPrima().getId();
         for (MateriaPrimaDetalle materiaPrimaDetalle : materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList()) {
-            if (Objects.equals(idNuevo, materiaPrimaDetalle.getId())) {
+            if (Objects.equals(idNuevo, materiaPrimaDetalle.getMateriaPrima().getId())) {
                 JOptionPane.showMessageDialog(this, CREATE_PRODUCT_REPEATED_RAW_MATERIAL_MSG, ALERT_MESSAGE, JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -370,9 +374,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
             this.materiaPrimaDetalleTableModel.agregarMateriaPrima(mpd);
         } else if (formType == UPDATE_PRODUCT) {
             mpd.setPrecioProducto(producto.getPrecio());
-            this.materiaPrimaDetalleService.insertarMateriaPrimaDetalle(mpd);
-            this.materiaPrimaDetalleTableModel.setMateriaPrimaDetalleList(materiaPrimaDetalleService.obtenerMateriasPrimasDetalles(producto.getPrecio().getId()));
-            this.jtMateriaPrima.setModel(materiaPrimaDetalleTableModel);
+            producto.getPrecio().getMateriaPrimaDetalles().add(mpd);
             this.materiaPrimaDetalleTableModel.updateTable();
         }
         calcularSubTotales();
@@ -382,15 +384,16 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
     private void modificarMateriaPrima(MateriaPrimaDetalle mpd) {
         Long idNuevo = mpd.getMateriaPrima().getId();
         for (MateriaPrimaDetalle materiaPrimaDetalle : materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList()) {
-            if (Objects.equals(idNuevo, materiaPrimaDetalle.getId())) {
+            if (Objects.equals(idNuevo, materiaPrimaDetalle.getMateriaPrima().getId())) {
                 if (formType == CREATE_PRODUCT) {
                     materiaPrimaDetalle.setCantidad(mpd.getCantidad());
                     materiaPrimaDetalle.setPrecioMateriaPrima(mpd.getPrecioMateriaPrima());
-                    materiaPrimaDetalle.getMateriaPrima().setUnidadMedida(mpd.getMateriaPrima().getUnidadMedida());
+                    materiaPrimaDetalle.setUnidadMedida(mpd.getUnidadMedida());
                 } else if (formType == UPDATE_PRODUCT) {
                     materiaPrimaDetalle.setCantidad(mpd.getCantidad());
                     materiaPrimaDetalle.setPrecioMateriaPrima(mpd.getPrecioMateriaPrima());
-                    materiaPrimaDetalle.getMateriaPrima().setUnidadMedida(mpd.getMateriaPrima().getUnidadMedida());
+                    materiaPrimaDetalle.setUnidadMedida(mpd.getUnidadMedida());
+                    materiaPrimaDetalleService.modificarMateriaPrimaDetalle(materiaPrimaDetalle);
                 }
                 break;
             }
@@ -405,7 +408,6 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         if (row > -1) {
             if (formType == CREATE_PRODUCT) {
                 this.materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList().remove(row);
-                this.materiaPrimaDetalleTableModel.updateTable();
             } else if (formType == UPDATE_PRODUCT) {
                 Long idMpd = this.materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList().get(row).getId();
                 producto.getPrecio().getMateriaPrimaDetalles().remove(row);
@@ -431,11 +433,9 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
             this.costoOperativoDetalleTableModel.agregarCostoOperativo(cod);
         } else if (formType == UPDATE_PRODUCT) {
             cod.setPrecioProducto(producto.getPrecio());
-            costoOperativoDetalleService.insertarCostoOperativoDetalle(cod);
-            this.costoOperativoDetalleTableModel.setCostoOperativoDetalleList(costoOperativoDetalleService.obtenerCostosOperativosDetalles(producto.getPrecio().getId()));
-            this.jtCostoOperativo.setModel(costoOperativoDetalleTableModel);
-        }
+            producto.getPrecio().getCostoOperativoDetalles().add(cod);
             this.costoOperativoDetalleTableModel.updateTable();
+        }
         calcularSubTotales();
         keyStrokeHandler();
     }
@@ -451,7 +451,7 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
                 } else if (formType == UPDATE_PRODUCT) {
                     costoOperativoDetalle.setCantidad(cod.getCantidad());
                     costoOperativoDetalle.setPrecioCostoOperativo(cod.getPrecioCostoOperativo());
-                    costoOperativoDetalle.getCostoOperativo().setUnidadMedida(cod.getCostoOperativo().getUnidadMedida());
+                    costoOperativoDetalle.setUnidadMedida(cod.getUnidadMedida());
                     costoOperativoDetalleService.modificarCostoOperativoDetalle(costoOperativoDetalle);
                 }
                 break;
@@ -467,11 +467,12 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
         if (row > -1) {
             if (formType == CREATE_PRODUCT) {
                 this.costoOperativoDetalleTableModel.getCostoOperativoDetalleList().remove(row);
-                this.costoOperativoDetalleTableModel.updateTable();
             } else if (formType == UPDATE_PRODUCT) {
                 Long idCod = this.costoOperativoDetalleTableModel.getCostoOperativoDetalleList().get(row).getId();
+                producto.getPrecio().getCostoOperativoDetalles().remove(row);
                 this.costoOperativoDetalleService.eliminarCostoOperativoDetalle(idCod);
             }
+            this.costoOperativoDetalleTableModel.updateTable();
             calcularSubTotales();
             keyStrokeHandler();
         }
@@ -746,30 +747,16 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
                 unProducto.setUnidadMedida((UnidadMedida) jcbUnidadMedida.getSelectedItem());
                 productoServicio.insertarProducto(unProducto);
             } else if (formType == UPDATE_PRODUCT) {
-                Precio precio = new Precio();
-                precio.setId(producto.getPrecio().getId());
-                precio.setCostoOperativoDetalles(costoOperativoDetalleTableModel.getCostoOperativoDetalleList());
-                precio.setMateriaPrimaDetalles(materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList());
-                precio.setUnidadesProducidas(productoUnidadesProd);
-                precio.setUtilidad(productoUtilidad);
-                /*for (CostoOperativoDetalle costoOperativoDetalle : costoOperativoDetalleTableModel.getCostoOperativoDetalleList()) {
-                    costoOperativoDetalle.setPrecioProducto(precio);
-                }
-                for (MateriaPrimaDetalle materiaPrimaDetalle : materiaPrimaDetalleTableModel.getMateriaPrimaDetalleList()) {
-                    materiaPrimaDetalle.setPrecioProducto(precio);
-                }*/
-                precioServicio.modificarPrecio(precio);
-                Producto unProducto = new Producto();
-                unProducto.setId(producto.getId());
-                unProducto.setNombre(productoNombre);
-                unProducto.setDescripcion(productoDescripcion);
-                unProducto.setNombre(productoNombre);
-                unProducto.setImpuesto(productoImpuesto);
-                unProducto.setPrecio(precio);
-                unProducto.setProductoCategoria((ProductoCategoria) jcbProductoCategoria.getSelectedItem());
-                unProducto.setProductoSubCategoria((ProductoSubCategoria) jcbProductoSubCategoria.getSelectedItem());
-                unProducto.setUnidadMedida((UnidadMedida) jcbUnidadMedida.getSelectedItem());
-                productoServicio.modificarProducto(unProducto);
+                producto.getPrecio().setUnidadesProducidas(productoUnidadesProd);
+                producto.getPrecio().setUtilidad(productoUtilidad);
+                producto.setNombre(productoNombre);
+                producto.setDescripcion(productoDescripcion);
+                producto.setNombre(productoNombre);
+                producto.setImpuesto(productoImpuesto);
+                producto.setProductoCategoria((ProductoCategoria) jcbProductoCategoria.getSelectedItem());
+                producto.setProductoSubCategoria((ProductoSubCategoria) jcbProductoSubCategoria.getSelectedItem());
+                producto.setUnidadMedida((UnidadMedida) jcbUnidadMedida.getSelectedItem());
+                productoServicio.modificarProducto(producto);
             }
             cerrar();
         }
@@ -781,35 +768,39 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
     }
 
     public void loadData(Producto prod) {
-        this.jtfNombreProducto.setText(prod.getNombre());
-        this.jtfDescripcionProducto.setText(prod.getDescripcion());
-        this.jftUnidadesProducidas.setValue(prod.getPrecio().getUnidadesProducidas());
-        this.jcbUnidadMedida.setSelectedItem(prod.getUnidadMedida());
-        this.jftUtilidadPorcentaje.setValue(prod.getPrecio().getUtilidad());
-        this.jcbProductoCategoria.setSelectedItem(prod.getProductoCategoria());
+        this.producto = prod;
+        this.jtfNombreProducto.setText(producto.getNombre());
+        this.jtfDescripcionProducto.setText(producto.getDescripcion());
+        this.jftUnidadesProducidas.setValue(producto.getPrecio().getUnidadesProducidas());
+        this.jcbUnidadMedida.setSelectedItem(producto.getUnidadMedida());
+        this.jftUtilidadPorcentaje.setValue(producto.getPrecio().getUtilidad());
+        this.jcbProductoCategoria.setSelectedItem(producto.getProductoCategoria());
         loadDataProductoSubCategoria((ProductoCategoria) jcbProductoCategoria.getSelectedItem());
-        this.jftImpuesto.setValue(prod.getImpuesto());
+        this.jftImpuesto.setValue(producto.getImpuesto());
         //
-        this.jftCostoFijoTotal.setValue(prod.getPrecio().costoFijoTotal());
-        this.jftCostoFijoUnit.setValue(prod.getPrecio().costoOperativoUnitario());
+        this.jftCostoFijoTotal.setValue(producto.getPrecio().costoFijoTotal());
+        this.jftCostoFijoUnit.setValue(producto.getPrecio().costoOperativoUnitario());
         //
-        this.jftCostoVariableTotal.setValue(prod.getPrecio().costoVariableTotal());
-        this.jftCostoVariableUnit.setValue(prod.getPrecio().costoProduccionUnitario());
+        this.jftCostoVariableTotal.setValue(producto.getPrecio().costoVariableTotal());
+        this.jftCostoVariableUnit.setValue(producto.getPrecio().costoProduccionUnitario());
         //
-        this.jftCostoTotal.setValue(prod.getPrecio().costoTotal());
-        this.jftCostoTotalUnit.setValue(prod.getPrecio().costoTotalUnitario());
+        this.jftCostoTotal.setValue(producto.getPrecio().costoTotal());
+        this.jftCostoTotalUnit.setValue(producto.getPrecio().costoTotalUnitario());
         //
-        this.jftUtilidad.setValue(prod.getPrecio().calcularUtilida());
-        this.jftPrecioVenta.setValue(prod.getPrecio().precioVentaSinImpuesto());
-        this.jftPrecioVentaIVA.setValue(prod.getPrecio().precioVentaConImpuesto(prod.getImpuesto()));
+        this.jftUtilidad.setValue(producto.getPrecio().calcularUtilida());
+        this.jftPrecioVenta.setValue(producto.getPrecio().precioVentaSinImpuesto());
+        this.jftPrecioVentaIVA.setValue(producto.getPrecio().precioVentaConImpuesto(producto.getImpuesto()));
 
-        this.costoOperativoDetalleTableModel.setCostoOperativoDetalleList(prod.getPrecio().getCostoOperativoDetalles());
+        this.costoOperativoDetalleTableModel.setCostoOperativoDetalleList(producto.getPrecio().getCostoOperativoDetalles());
         this.jtCostoOperativo.setModel(costoOperativoDetalleTableModel);
         this.costoOperativoDetalleTableModel.updateTable();
-        
-        this.materiaPrimaDetalleTableModel.setMateriaPrimaDetalleList(prod.getPrecio().getMateriaPrimaDetalles());
+
+        this.materiaPrimaDetalleTableModel.setMateriaPrimaDetalleList(producto.getPrecio().getMateriaPrimaDetalles());
         this.jtMateriaPrima.setModel(materiaPrimaDetalleTableModel);
         this.materiaPrimaDetalleTableModel.updateTable();
+
+        calcularSubTotales();
+        keyStrokeHandler();
     }
 
     public void setProducto(Producto producto) {

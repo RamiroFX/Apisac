@@ -237,13 +237,14 @@ public class Main {
         MateriaPrimaDetalle mpd = new MateriaPrimaDetalle();
         mpd.setCantidad(1.0);
         mpd.setMateriaPrima(mpHarina);
+        mpd.setUnidadMedida(umKG);
         mpd.setPrecioMateriaPrima(15000.0);
         materiPrimaDetalles.add(mpd);
 
         List<CostoOperativoDetalle> costoOperativoDetalles = new ArrayList<>();
         CostoOperativoDetalle costoOperativoDetalle1 = new CostoOperativoDetalle();
         costoOperativoDetalle1.setCantidad(1.0);
-        //costoOperativoDetalle1.setCostoOperativo(new CostoOperativo(co1.getNombre(), co1.getDescripcion(), co1.getPrecio(), co1.getUnidadMedida(), 24));
+        costoOperativoDetalle1.setUnidadMedida(umUnidad);
         costoOperativoDetalle1.setCostoOperativo(co1);
         costoOperativoDetalle1.setPrecioCostoOperativo(15000.0);
         costoOperativoDetalles.add(costoOperativoDetalle1);

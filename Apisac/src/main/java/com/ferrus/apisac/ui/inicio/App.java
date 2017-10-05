@@ -135,7 +135,6 @@ public class App extends JFrame implements ActionListener, MouseListener {
             Long idProd = (Long) this.jpPrincipal.jtProductos.getValueAt(row, 0);
             Producto prod = productoServicio.obtenerProducto(idProd);
             CrearProducto modProd = new CrearProducto(this, CrearProducto.UPDATE_PRODUCT);
-            modProd.setProducto(prod);
             modProd.loadData(prod);
             modProd.setVisible(true);
             this.jpPrincipal.jbModificar.setEnabled(false);

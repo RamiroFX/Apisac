@@ -40,7 +40,7 @@ public class CostoOperativoDetalleQueryHandler extends AbstractQuery {
         open();
         CostoOperativoDetalle codTemp = EntityManagerHandler.INSTANCE.getEntityManager().find(CostoOperativoDetalle.class, cod.getId());
         codTemp.setCantidad(cod.getCantidad());
-        codTemp.setCostoOperativo(cod.getCostoOperativo());
+        codTemp.setUnidadMedida(cod.getUnidadMedida());
         codTemp.setPrecioCostoOperativo(cod.getPrecioCostoOperativo());
         codTemp.setPrecioProducto(cod.getPrecioProducto());
         EntityManagerHandler.INSTANCE.getEntityTransaction().commit();

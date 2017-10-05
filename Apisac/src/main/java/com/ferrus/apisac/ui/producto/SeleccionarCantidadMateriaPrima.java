@@ -155,7 +155,7 @@ public class SeleccionarCantidadMateriaPrima extends JDialog implements ActionLi
         for (UnidadMedida unidadMedida : unidadMedidas) {
             jcbUnidadMBoxM.addItem(unidadMedida);
         }
-        jcbUnidadMBoxM.setSelectedItem(mpd.getMateriaPrima().getUnidadMedida());
+        jcbUnidadMBoxM.setSelectedItem(mpd.getUnidadMedida());
         jtfCantidad.setText("" + this.mpd.getCantidad());
         jtfPrecio.setText("" + this.mpd.getPrecioMateriaPrima());
         jtfTotal.setText("" + (this.mpd.getCantidad() * this.mpd.getPrecioMateriaPrima()));
@@ -191,11 +191,11 @@ public class SeleccionarCantidadMateriaPrima extends JDialog implements ActionLi
                 unaMatPrima.setId(mp.getId());
                 unaMatPrima.setNombre(mp.getNombre());
                 unaMatPrima.setPrecio(mp.getPrecio());
-                unaMatPrima.setUnidadMedida((UnidadMedida) jcbUnidadMBoxM.getSelectedItem());
                 MateriaPrimaDetalle unaMpd = new MateriaPrimaDetalle();
                 unaMpd.setCantidad(cantidad);
                 unaMpd.setMateriaPrima(unaMatPrima);
                 unaMpd.setPrecioMateriaPrima(precio);
+                unaMpd.setUnidadMedida((UnidadMedida) jcbUnidadMBoxM.getSelectedItem());
                 this.crearProductoCallback.recibirMateriaPrimaDetalle(unaMpd);
                 break;
             }
@@ -204,11 +204,11 @@ public class SeleccionarCantidadMateriaPrima extends JDialog implements ActionLi
                 unaMatPrima.setId(mpd.getMateriaPrima().getId());
                 unaMatPrima.setNombre(mpd.getMateriaPrima().getNombre());
                 unaMatPrima.setPrecio(mpd.getMateriaPrima().getPrecio());
-                unaMatPrima.setUnidadMedida((UnidadMedida) jcbUnidadMBoxM.getSelectedItem());
                 MateriaPrimaDetalle unaMpd = new MateriaPrimaDetalle();
                 unaMpd.setCantidad(cantidad);
                 unaMpd.setMateriaPrima(unaMatPrima);
                 unaMpd.setPrecioMateriaPrima(precio);
+                unaMpd.setUnidadMedida((UnidadMedida) jcbUnidadMBoxM.getSelectedItem());
                 this.crearProductoCallback.modificarMateriaPrimaDetalle(unaMpd);
                 break;
             }

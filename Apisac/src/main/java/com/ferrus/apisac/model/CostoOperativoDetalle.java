@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  *
@@ -38,6 +39,9 @@ public class CostoOperativoDetalle implements Serializable {
     @JoinColumn(name = "id_costo_operativo", nullable = false)
     private CostoOperativo costoOperativo;
     @ManyToOne(optional = false)
+    @JoinColumn(name = "id_unidad_medida", nullable = false)
+    private UnidadMedida unidadMedida;
+    @ManyToOne(optional = false)
     @JoinColumn(name = "id_precio", nullable = false)
     private Precio precioProducto;
     @Column(name = "cantidad", nullable = false, length = 10)
@@ -48,8 +52,9 @@ public class CostoOperativoDetalle implements Serializable {
     public CostoOperativoDetalle() {
     }
 
-    public CostoOperativoDetalle(CostoOperativo costoOperativo, Precio precioProducto, Double cantidad, Double precioMateriaPrima) {
+    public CostoOperativoDetalle(CostoOperativo costoOperativo, UnidadMedida unidadMedida, Precio precioProducto, Double cantidad, Double precioMateriaPrima) {
         this.costoOperativo = costoOperativo;
+        this.unidadMedida = unidadMedida;
         this.precioProducto = precioProducto;
         this.cantidad = cantidad;
         this.precioCostoOperativo = precioMateriaPrima;
@@ -69,6 +74,14 @@ public class CostoOperativoDetalle implements Serializable {
 
     public void setCostoOperativo(CostoOperativo costoOperativo) {
         this.costoOperativo = costoOperativo;
+    }
+
+    public UnidadMedida getUnidadMedida() {
+        return unidadMedida;
+    }
+
+    public void setUnidadMedida(UnidadMedida unidadMedida) {
+        this.unidadMedida = unidadMedida;
     }
 
     public Precio getPrecioProducto() {
@@ -101,7 +114,6 @@ public class CostoOperativoDetalle implements Serializable {
 
     @Override
     public String toString() {
-        return getPrecioCostoOperativo() + " " + getCantidad() + " " + getCostoOperativo();
+        return ToStringBuilder.reflectionToString(this);
     }
-
 }

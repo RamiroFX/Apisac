@@ -39,6 +39,9 @@ public class MateriaPrimaDetalle implements Serializable {
     @JoinColumn(name = "id_materia_prima", nullable = false)
     private MateriaPrima materiaPrima;
     @ManyToOne(optional = false)
+    @JoinColumn(name = "id_unidad_medida", nullable = false)
+    private UnidadMedida unidadMedida;
+    @ManyToOne(optional = false)
     @JoinColumn(name = "id_precio", nullable = false)
     private Precio precioProducto;
     @Column(name = "cantidad", nullable = false, length = 10)
@@ -49,8 +52,9 @@ public class MateriaPrimaDetalle implements Serializable {
     public MateriaPrimaDetalle() {
     }
 
-    public MateriaPrimaDetalle(MateriaPrima materiaPrima, Precio precioProducto, Double cantidad, Double precioMateriaPrima) {
+    public MateriaPrimaDetalle(MateriaPrima materiaPrima, UnidadMedida unidadMedida, Precio precioProducto, Double cantidad, Double precioMateriaPrima) {
         this.materiaPrima = materiaPrima;
+        this.unidadMedida = unidadMedida;
         this.precioProducto = precioProducto;
         this.cantidad = cantidad;
         this.precioMateriaPrima = precioMateriaPrima;
@@ -78,6 +82,14 @@ public class MateriaPrimaDetalle implements Serializable {
 
     public void setMateriaPrima(MateriaPrima materiaPrima) {
         this.materiaPrima = materiaPrima;
+    }
+
+    public UnidadMedida getUnidadMedida() {
+        return unidadMedida;
+    }
+
+    public void setUnidadMedida(UnidadMedida unidadMedida) {
+        this.unidadMedida = unidadMedida;
     }
 
     public Precio getPrecioProducto() {

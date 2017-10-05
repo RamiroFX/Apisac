@@ -80,7 +80,6 @@ public class ProductoParametrosQueryHandler extends AbstractQuery {
         Producto p = EntityManagerHandler.INSTANCE.getEntityManager().find(Producto.class, producto.getId());
         p.setDescripcion(producto.getDescripcion());
         p.setImpuesto(producto.getImpuesto());
-        //p.setMarca(producto.getMarca());
         p.setNombre(producto.getNombre());
         p.setPrecio(producto.getPrecio());
         p.setProductoCategoria(producto.getProductoCategoria());

@@ -41,7 +41,7 @@ public class MateriaPrimaDetalleQueryHandler extends AbstractQuery {
         open();
         MateriaPrimaDetalle materiaPrimaDetalle = EntityManagerHandler.INSTANCE.getEntityManager().find(MateriaPrimaDetalle.class, mpd.getId());
         materiaPrimaDetalle.setCantidad(mpd.getCantidad());
-        materiaPrimaDetalle.setMateriaPrima(mpd.getMateriaPrima());
+        materiaPrimaDetalle.setUnidadMedida(mpd.getUnidadMedida());
         materiaPrimaDetalle.setPrecioMateriaPrima(mpd.getPrecioMateriaPrima());
         materiaPrimaDetalle.setPrecioProducto(mpd.getPrecioProducto());
         EntityManagerHandler.INSTANCE.getEntityTransaction().commit();
