@@ -6,6 +6,12 @@
 package com.ferrus.apisac.tablemodel;
 
 import com.ferrus.apisac.model.CostoOperativoDetalle;
+import static com.ferrus.apisac.util.AppUIConstants.TABLE_MODEL_CANT;
+import static com.ferrus.apisac.util.AppUIConstants.TABLE_MODEL_ID;
+import static com.ferrus.apisac.util.AppUIConstants.TABLE_MODEL_NAME;
+import static com.ferrus.apisac.util.AppUIConstants.TABLE_MODEL_SUB_TOTAL;
+import static com.ferrus.apisac.util.AppUIConstants.TABLE_MODEL_PRICE;
+import static com.ferrus.apisac.util.AppUIConstants.TABLE_MODEL_UNIT_MEASURE;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -17,7 +23,7 @@ import javax.swing.table.AbstractTableModel;
 public class CostoOperativoDetalleTableModel extends AbstractTableModel {
 
     List<CostoOperativoDetalle> costoOperativoDetalle;
-    private String[] colNames = {"Id", "Nombre", "Unidad medida", "Precio", "Cantidad", "SubTotal"};
+    private String[] colNames = {TABLE_MODEL_ID, TABLE_MODEL_NAME, TABLE_MODEL_UNIT_MEASURE, TABLE_MODEL_PRICE, TABLE_MODEL_CANT, TABLE_MODEL_SUB_TOTAL};
 
     public CostoOperativoDetalleTableModel() {
         costoOperativoDetalle = new ArrayList<>();

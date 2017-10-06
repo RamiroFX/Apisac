@@ -129,6 +129,19 @@ public class App extends JFrame implements ActionListener, MouseListener {
         this.jpPrincipal.jtfBuscar.setText("");
     }
 
+    private void exportarProducto() {
+        int row = this.jpPrincipal.jtProductos.getSelectedRow();
+        if (row > -1) {
+            Long idProd = (Long) this.jpPrincipal.jtProductos.getValueAt(row, 0);
+            Producto prod = productoServicio.obtenerProducto(idProd);
+            Exportar exportar = new Exportar(prod);
+            exportar.exportar();
+            this.jpPrincipal.jbModificar.setEnabled(false);
+            this.jpPrincipal.jbBorrar.setEnabled(false);
+            this.jpPrincipal.jbExportar.setEnabled(false);
+        }
+    }
+
     private void modificarProducto() {
         int row = this.jpPrincipal.jtProductos.getSelectedRow();
         if (row > -1) {
@@ -175,6 +188,8 @@ public class App extends JFrame implements ActionListener, MouseListener {
             buscar();
         } else if (src.equals(this.jpPrincipal.jbLimpiar)) {
             borrarCampo();
+        } else if (src.equals(this.jpPrincipal.jbExportar)) {
+            exportarProducto();
         } else if (src.equals(this.jpPrincipal.jbParametros)) {
             Parametros param = new Parametros(this);
             param.setVisible(true);

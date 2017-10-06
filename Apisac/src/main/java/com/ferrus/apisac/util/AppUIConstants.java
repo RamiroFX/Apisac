@@ -135,5 +135,16 @@ public class AppUIConstants {
     /*
     EXPORT PRODUCT
      */
-    public static final String EXPORT_PRODUCT_PROD_NAME = "Nombre del producto";
+
+ /*
+    TABLE MODELS
+     */
+    public static final String TABLE_MODEL_ID = "Id";
+    public static final String TABLE_MODEL_NAME = "Nombre";
+    public static final String TABLE_MODEL_RAW_MATERIAL = "Materia prima";
+    public static final String TABLE_MODEL_OPERATIVE_COST = "Costo operativo";
+    public static final String TABLE_MODEL_UNIT_MEASURE = "Unidad medida";
+    public static final String TABLE_MODEL_PRICE = "Precio";
+    public static final String TABLE_MODEL_CANT = "Cantidad";
+    public static final String TABLE_MODEL_SUB_TOTAL = "SubTotal";
 }
