@@ -132,4 +132,8 @@ public class AppUIConstants {
     public static final String EMPTY_RAW_MATERIAL_LIST_MSG = "No ingresó ninguna Materia prima. ¿Desea continuar?";
     public static final String CREATE_PRODUCT_REPEATED_RAW_MATERIAL_MSG = "La materia prima seleccionada ya se encuentra utilizada.";
     public static final String CREATE_PRODUCT_REPEATED_OPER_COST_MSG = "El costo operativo seleccionado ya se encuentra utilizado.";
+    /*
+    EXPORT PRODUCT
+     */
+    public static final String EXPORT_PRODUCT_PROD_NAME = "Nombre del producto";
 }
