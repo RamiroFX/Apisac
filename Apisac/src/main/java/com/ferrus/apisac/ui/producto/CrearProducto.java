@@ -652,11 +652,11 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
             co.setId(idMp);
             co.setNombre(nombre);
             co.setPrecio(precio);
-            co.setUnidadMedida(um);
             CostoOperativoDetalle cod = new CostoOperativoDetalle();
             cod.setCantidad(cantidad);
             cod.setCostoOperativo(co);
             cod.setPrecioCostoOperativo(precio);
+            cod.setUnidadMedida(um);
             SeleccionarCantidadCostoOperativo sc = new SeleccionarCantidadCostoOperativo(this, cod, SeleccionarCantidadCostoOperativo.MODIFICAR);
             sc.setCrearProductoCallback(this);
             sc.setVisible(true);

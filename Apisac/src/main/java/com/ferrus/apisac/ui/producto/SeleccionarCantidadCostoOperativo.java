@@ -150,7 +150,7 @@ public class SeleccionarCantidadCostoOperativo extends JDialog implements Action
         this.mpd = mpd;
         this.jtfNombre.setText(this.mpd.getCostoOperativo().getNombre());
         this.jtfPrecio.setText(this.mpd.getCostoOperativo().getPrecio() + "");
-        List<UnidadMedida> unidadMedidas = unidadMedidaService.obtenerUnidadMedidasPorCategoria(this.mpd.getCostoOperativo().getUnidadMedida().getMedidaCategoria());
+        List<UnidadMedida> unidadMedidas = unidadMedidaService.obtenerUnidadMedidasPorCategoria(this.mpd.getUnidadMedida().getMedidaCategoria());
         jcbUnidadMBoxM.removeAllItems();
         for (UnidadMedida unidadMedida : unidadMedidas) {
             jcbUnidadMBoxM.addItem(unidadMedida);
