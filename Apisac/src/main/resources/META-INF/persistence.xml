@@ -6,13 +6,20 @@
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
             <property name = "hibernate.show_sql" value = "true" />
             <!--<property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test"/>-->
-            <property name="javax.persistence.jdbc.url" value="jdbc:h2:~/Desktop/test"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:./Data/apisac_db"/>
             <!--<property name="javax.persistence.jdbc.url" value="jdbc:h2:file:/test"/>-->
             <property name="javax.persistence.jdbc.user" value="sa"/>
             <property name="javax.persistence.jdbc.password" value=""/>
             
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
-            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="hibernate.hbm2ddl.import_files" value="./Data/initial_data.sql"/>
+            <property name="hibernate.c3p0.min_size" value="10"/>
+            <property name="hibernate.c3p0.max_size" value="20"/>
+            <property name="hibernate.c3p0.acquire_increment" value="1"/>
+            <property name="hibernate.c3p0.idle_test_period" value="3000"/>
+            <property name="hibernate.c3p0.max_statements" value="5"/>
+            <property name="hibernate.c3p0.timeout" value="1800"/>
         </properties>
     </persistence-unit>
 </persistence>

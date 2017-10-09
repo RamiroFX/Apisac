@@ -47,7 +47,6 @@ public class CostoOperativoQueryHandler extends AbstractQuery {
         mp.setNombre(costoOperativo.getNombre());
         mp.setDescripcion(costoOperativo.getDescripcion());
         mp.setPrecio(costoOperativo.getPrecio());
-        mp.setDiasLaborales(costoOperativo.getDiasLaborales());
         mp.setUnidadMedida(costoOperativo.getUnidadMedida());
         EntityManagerHandler.INSTANCE.getEntityTransaction().commit();
     }

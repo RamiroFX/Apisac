@@ -49,7 +49,7 @@ public class Main {
 
     public static void main(String[] args) {
         loadPreferences();
-        loadData();
+        //loadData();
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -148,21 +148,21 @@ public class Main {
         materiaPrimaService.insertarMateriaPrima(mpLevadura);
         materiaPrimaService.insertarMateriaPrima(mpHuevo);
 
-        CostoOperativo co1 = new CostoOperativo("Jornales y comisiones", "Jornales y comisiones de comercialización", 11000.0, umUnidad, 24);
-        CostoOperativo co2 = new CostoOperativo("Gastos de publicidad", null, 1000.0, umUnidad, 24);
-        CostoOperativo co3 = new CostoOperativo("Panfletos", null, 1000.0, umUnidad, 24);
-        CostoOperativo co4 = new CostoOperativo("Distribución", null, 1000.0, umUnidad, 24);
-        CostoOperativo co5 = new CostoOperativo("Encuestas", null, 1000.0, umUnidad, 24);
-        CostoOperativo co6 = new CostoOperativo("Documentos comerciales", null, 1000.0, umUnidad, 24);
-        CostoOperativo co7 = new CostoOperativo("Diseño e impresión de logos", null, 1000.0, umUnidad, 24);
-        CostoOperativo co8 = new CostoOperativo("Mano de obra", null, 11000.0, umHora, 24);
-        CostoOperativo co9 = new CostoOperativo("Alquiler de local", null, 1000.0, umHora, 24);
-        CostoOperativo co10 = new CostoOperativo("Alquiler de maquinarias", null, 1000.0, umHora, 24);
-        CostoOperativo co11 = new CostoOperativo("Energía eléctrica", null, 1000.0, umHora, 24);
-        CostoOperativo co12 = new CostoOperativo("Servicio telefónico", null, 1000.0, umHora, 24);
-        CostoOperativo co13 = new CostoOperativo("Servicio de agua", null, 1000.0, umHora, 24);
-        CostoOperativo co14 = new CostoOperativo("Servicio de gas", null, 1000.0, umHora, 24);
-        CostoOperativo co15 = new CostoOperativo("Servicio de internet", null, 1000.0, umHora, 24);
+        CostoOperativo co1 = new CostoOperativo("Jornales y comisiones", "Jornales y comisiones de comercialización", 11000.0, umUnidad);
+        CostoOperativo co2 = new CostoOperativo("Gastos de publicidad", null, 1000.0, umUnidad);
+        CostoOperativo co3 = new CostoOperativo("Panfletos", null, 1000.0, umUnidad);
+        CostoOperativo co4 = new CostoOperativo("Distribución", null, 1000.0, umUnidad);
+        CostoOperativo co5 = new CostoOperativo("Encuestas", null, 1000.0, umUnidad);
+        CostoOperativo co6 = new CostoOperativo("Documentos comerciales", null, 1000.0, umUnidad);
+        CostoOperativo co7 = new CostoOperativo("Diseño e impresión de logos", null, 1000.0, umUnidad);
+        CostoOperativo co8 = new CostoOperativo("Mano de obra", null, 11000.0, umHora);
+        CostoOperativo co9 = new CostoOperativo("Alquiler de local", null, 1000.0, umHora);
+        CostoOperativo co10 = new CostoOperativo("Alquiler de maquinarias", null, 1000.0, umHora);
+        CostoOperativo co11 = new CostoOperativo("Energía eléctrica", null, 1000.0, umHora);
+        CostoOperativo co12 = new CostoOperativo("Servicio telefónico", null, 1000.0, umHora);
+        CostoOperativo co13 = new CostoOperativo("Servicio de agua", null, 1000.0, umHora);
+        CostoOperativo co14 = new CostoOperativo("Servicio de gas", null, 1000.0, umHora);
+        CostoOperativo co15 = new CostoOperativo("Servicio de internet", null, 1000.0, umHora);
         CostoOperativoService costoOperativoService = new CostoOperativoServImpl();
         costoOperativoService.insertarCostoOperativo(co1);
         costoOperativoService.insertarCostoOperativo(co2);

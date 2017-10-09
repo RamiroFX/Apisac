@@ -36,18 +36,17 @@ public class CostoOperativo implements Serializable {
     private Double precio;
     @ManyToOne
     private UnidadMedida unidadMedida;
-    @Column(name = "dias_laborales", nullable = false, length = 10)
-    private int diasLaborales;
+    /*@Column(name = "dias_laborales", nullable = false, length = 10)
+    private int diasLaborales;*/
 
     public CostoOperativo() {
     }
 
-    public CostoOperativo(String nombre, String descripcion, Double precio, UnidadMedida unidadMedida, int diasLaborales) {
+    public CostoOperativo(String nombre, String descripcion, Double precio, UnidadMedida unidadMedida) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.unidadMedida = unidadMedida;
-        this.diasLaborales = diasLaborales;
     }
 
     public Long getId() {
@@ -88,14 +87,6 @@ public class CostoOperativo implements Serializable {
 
     public UnidadMedida getUnidadMedida() {
         return unidadMedida;
-    }
-
-    public int getDiasLaborales() {
-        return diasLaborales;
-    }
-
-    public void setDiasLaborales(int diasLaborales) {
-        this.diasLaborales = diasLaborales;
     }
 
     @Override
