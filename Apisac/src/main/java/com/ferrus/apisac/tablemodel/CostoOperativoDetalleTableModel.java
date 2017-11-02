@@ -55,7 +55,7 @@ public class CostoOperativoDetalleTableModel extends AbstractTableModel {
                 return costoOperativo.getCostoOperativo().getNombre();
             }
             case 2: {
-                return costoOperativo.getCostoOperativo().getUnidadMedida();
+                return costoOperativo.getUnidadMedida();
             }
             case 3: {
                 return costoOperativo.getPrecioCostoOperativo();

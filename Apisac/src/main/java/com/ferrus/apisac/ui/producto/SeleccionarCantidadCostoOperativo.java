@@ -46,8 +46,8 @@ public class SeleccionarCantidadCostoOperativo extends JDialog implements Action
     private JComboBox<UnidadMedida> jcbUnidadMBoxM;
     private CrearProductoCallback crearProductoCallback;
     private UnidadMedidaService unidadMedidaService;
-    private CostoOperativo mp;
-    private CostoOperativoDetalle mpd;
+    private CostoOperativo co;
+    private CostoOperativoDetalle cod;
     private int formType;
 
     public SeleccionarCantidadCostoOperativo(JDialog jDialog, CostoOperativo mp, int formType) {
@@ -134,31 +134,31 @@ public class SeleccionarCantidadCostoOperativo extends JDialog implements Action
         jtfCantidad.requestFocusInWindow();
     }
 
-    private void loadData(CostoOperativo mp) {
-        this.mp = mp;
-        this.jtfNombre.setText(this.mp.getNombre());
-        this.jtfPrecio.setText(this.mp.getPrecio() + "");
-        List<UnidadMedida> unidadMedidas = unidadMedidaService.obtenerUnidadMedidasPorCategoria(this.mp.getUnidadMedida().getMedidaCategoria());
+    private void loadData(CostoOperativo co) {
+        this.co = co;
+        this.jtfNombre.setText(this.co.getNombre());
+        this.jtfPrecio.setText(this.co.getPrecio() + "");
+        List<UnidadMedida> unidadMedidas = unidadMedidaService.obtenerUnidadMedidasPorCategoria(this.co.getUnidadMedida().getMedidaCategoria());
         jcbUnidadMBoxM.removeAllItems();
         for (UnidadMedida unidadMedida : unidadMedidas) {
             jcbUnidadMBoxM.addItem(unidadMedida);
         }
-        jcbUnidadMBoxM.setSelectedItem(mp.getUnidadMedida());
+        jcbUnidadMBoxM.setSelectedItem(co.getUnidadMedida());
     }
 
-    private void loadData(CostoOperativoDetalle mpd) {
-        this.mpd = mpd;
-        this.jtfNombre.setText(this.mpd.getCostoOperativo().getNombre());
-        this.jtfPrecio.setText(this.mpd.getCostoOperativo().getPrecio() + "");
-        List<UnidadMedida> unidadMedidas = unidadMedidaService.obtenerUnidadMedidasPorCategoria(this.mpd.getUnidadMedida().getMedidaCategoria());
+    private void loadData(CostoOperativoDetalle cod) {
+        this.cod = cod;
+        this.jtfNombre.setText(this.cod.getCostoOperativo().getNombre());
+        this.jtfPrecio.setText(this.cod.getCostoOperativo().getPrecio() + "");
+        List<UnidadMedida> unidadMedidas = unidadMedidaService.obtenerUnidadMedidasPorCategoria(this.cod.getUnidadMedida().getMedidaCategoria());
         jcbUnidadMBoxM.removeAllItems();
         for (UnidadMedida unidadMedida : unidadMedidas) {
             jcbUnidadMBoxM.addItem(unidadMedida);
         }
-        jcbUnidadMBoxM.setSelectedItem(mpd.getUnidadMedida());
-        jtfCantidad.setText("" + this.mpd.getCantidad());
-        jtfPrecio.setText("" + this.mpd.getPrecioCostoOperativo());
-        jtfTotal.setText("" + (this.mpd.getCantidad() * this.mpd.getPrecioCostoOperativo()));
+        jcbUnidadMBoxM.setSelectedItem(cod.getUnidadMedida());
+        jtfCantidad.setText("" + this.cod.getCantidad());
+        jtfPrecio.setText("" + this.cod.getPrecioCostoOperativo());
+        jtfTotal.setText("" + (this.cod.getCantidad() * this.cod.getPrecioCostoOperativo()));
     }
 
     public void setCrearProductoCallback(CrearProductoCallback crearProductoCallback) {
@@ -186,30 +186,30 @@ public class SeleccionarCantidadCostoOperativo extends JDialog implements Action
         }
         switch (formType) {
             case SELECCIONAR: {
-                CostoOperativo unaMatPrima = new CostoOperativo();
-                unaMatPrima.setDescripcion(mp.getDescripcion());
-                unaMatPrima.setId(mp.getId());
-                unaMatPrima.setNombre(mp.getNombre());
-                unaMatPrima.setPrecio(mp.getPrecio());
-                CostoOperativoDetalle unaMpd = new CostoOperativoDetalle();
-                unaMpd.setCantidad(cantidad);
-                unaMpd.setCostoOperativo(unaMatPrima);
-                unaMpd.setPrecioCostoOperativo(precio);
-                unaMpd.setUnidadMedida((UnidadMedida) jcbUnidadMBoxM.getSelectedItem());
-                this.crearProductoCallback.recibirCostoOperativoDetalle(unaMpd);
+                CostoOperativo unCostoOperativo = new CostoOperativo();
+                unCostoOperativo.setDescripcion(co.getDescripcion());
+                unCostoOperativo.setId(co.getId());
+                unCostoOperativo.setNombre(co.getNombre());
+                unCostoOperativo.setPrecio(co.getPrecio());
+                CostoOperativoDetalle unCOD = new CostoOperativoDetalle();
+                unCOD.setCantidad(cantidad);
+                unCOD.setCostoOperativo(unCostoOperativo);
+                unCOD.setPrecioCostoOperativo(precio);
+                unCOD.setUnidadMedida((UnidadMedida) jcbUnidadMBoxM.getSelectedItem());
+                this.crearProductoCallback.recibirCostoOperativoDetalle(unCOD);
                 break;
             }
             case MODIFICAR: {
-                CostoOperativo unaMatPrima = new CostoOperativo();
-                unaMatPrima.setId(mpd.getCostoOperativo().getId());
-                unaMatPrima.setNombre(mpd.getCostoOperativo().getNombre());
-                unaMatPrima.setPrecio(mpd.getCostoOperativo().getPrecio());
-                CostoOperativoDetalle unaMpd = new CostoOperativoDetalle();
-                unaMpd.setCantidad(cantidad);
-                unaMpd.setCostoOperativo(unaMatPrima);
-                unaMpd.setPrecioCostoOperativo(precio);
-                unaMpd.setUnidadMedida((UnidadMedida) jcbUnidadMBoxM.getSelectedItem());
-                this.crearProductoCallback.modificarCostoOperativoDetalle(mpd);
+                CostoOperativo unCostoOperativo = new CostoOperativo();
+                unCostoOperativo.setId(cod.getCostoOperativo().getId());
+                unCostoOperativo.setNombre(cod.getCostoOperativo().getNombre());
+                unCostoOperativo.setPrecio(cod.getCostoOperativo().getPrecio());
+                CostoOperativoDetalle unCOD = new CostoOperativoDetalle();
+                unCOD.setCantidad(cantidad);
+                unCOD.setCostoOperativo(unCostoOperativo);
+                unCOD.setPrecioCostoOperativo(precio);
+                unCOD.setUnidadMedida((UnidadMedida) jcbUnidadMBoxM.getSelectedItem());
+                this.crearProductoCallback.modificarCostoOperativoDetalle(unCOD);
                 break;
             }
         }
@@ -274,13 +274,13 @@ public class SeleccionarCantidadCostoOperativo extends JDialog implements Action
                 Double valorActual = null;
                 switch (formType) {
                     case SELECCIONAR: {
-                        precio = mp.getPrecio();
-                        valorActual = mp.getUnidadMedida().getValor();
+                        precio = co.getPrecio();
+                        valorActual = co.getUnidadMedida().getValor();
                         break;
                     }
                     case MODIFICAR: {
-                        precio = mpd.getCostoOperativo().getPrecio();
-                        valorActual = mpd.getCostoOperativo().getUnidadMedida().getValor();
+                        precio = cod.getCostoOperativo().getPrecio();
+                        valorActual = cod.getUnidadMedida().getValor();
                         break;
                     }
                 }

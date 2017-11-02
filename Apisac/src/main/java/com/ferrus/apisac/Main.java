@@ -6,30 +6,20 @@
 package com.ferrus.apisac;
 
 import com.ferrus.apisac.model.CostoOperativo;
-import com.ferrus.apisac.model.CostoOperativoDetalle;
 import com.ferrus.apisac.model.Impuesto;
 import com.ferrus.apisac.model.Marca;
 import com.ferrus.apisac.model.MateriaPrima;
-import com.ferrus.apisac.model.MateriaPrimaDetalle;
-import com.ferrus.apisac.model.Precio;
-import com.ferrus.apisac.model.Producto;
 import com.ferrus.apisac.model.ProductoCategoria;
 import com.ferrus.apisac.model.ProductoSubCategoria;
 import com.ferrus.apisac.model.UnidadMedida;
 import com.ferrus.apisac.model.UnidadMedidaCategoria;
-import com.ferrus.apisac.model.service.CostoOperativoDetalleService;
 import com.ferrus.apisac.model.service.CostoOperativoService;
-import com.ferrus.apisac.model.service.MateriaPrimaDetalleService;
 import com.ferrus.apisac.model.service.MateriaPrimaService;
-import com.ferrus.apisac.model.service.PrecioService;
 import com.ferrus.apisac.model.service.PreferenciaService;
 import com.ferrus.apisac.model.service.ProductoParametrosService;
 import com.ferrus.apisac.model.service.UnidadMedidaService;
-import com.ferrus.apisac.model.serviceImp.CostoOperativoDetalleServImpl;
 import com.ferrus.apisac.model.serviceImp.CostoOperativoServImpl;
-import com.ferrus.apisac.model.serviceImp.MateriaPrimaDetalleServImpl;
 import com.ferrus.apisac.model.serviceImp.MateriaPrimaServImpl;
-import com.ferrus.apisac.model.serviceImp.PrecioServImpl;
 import com.ferrus.apisac.model.serviceImp.PreferenciaServImpl;
 import com.ferrus.apisac.model.serviceImp.ProductoParametrosServImpl;
 import com.ferrus.apisac.model.serviceImp.UnidadMedidaServImpl;
@@ -132,13 +122,13 @@ public class Main {
         medidaService.insertarUnidadMedida(umMl);
         medidaService.insertarUnidadMedida(umL);
 
-        MateriaPrima mpHarina = new MateriaPrima("Harina 000", null, 2500.0, umKG);
-        MateriaPrima mpAgua = new MateriaPrima("Agua", null, 2000.0, umL);
-        MateriaPrima mpAzucar = new MateriaPrima("Azucar", null, 5500.0, umKG);
-        MateriaPrima mpSal = new MateriaPrima("Sal", null, 2050.0, umKG);
-        MateriaPrima mpPolvoHornear = new MateriaPrima("Polvo de hornear", null, 2000.0, umKG);
-        MateriaPrima mpLevadura = new MateriaPrima("Levadura en pan", null, 9000.0, umKG);
-        MateriaPrima mpHuevo = new MateriaPrima("Huevo", null, 500.0, umUnidad);
+        MateriaPrima mpHarina = new MateriaPrima("Harina 000", null, 1.0, umKG);
+        MateriaPrima mpAgua = new MateriaPrima("Agua", null, 1.0, umL);
+        MateriaPrima mpAzucar = new MateriaPrima("Azucar", null, 1.0, umKG);
+        MateriaPrima mpSal = new MateriaPrima("Sal", null, 1.0, umKG);
+        MateriaPrima mpPolvoHornear = new MateriaPrima("Polvo de hornear", null, 1.0, umKG);
+        MateriaPrima mpLevadura = new MateriaPrima("Levadura en pan", null, 1.0, umKG);
+        MateriaPrima mpHuevo = new MateriaPrima("Huevo", null, 1.0, umUnidad);
         MateriaPrimaService materiaPrimaService = new MateriaPrimaServImpl();
         materiaPrimaService.insertarMateriaPrima(mpHarina);
         materiaPrimaService.insertarMateriaPrima(mpAgua);
@@ -148,21 +138,21 @@ public class Main {
         materiaPrimaService.insertarMateriaPrima(mpLevadura);
         materiaPrimaService.insertarMateriaPrima(mpHuevo);
 
-        CostoOperativo co1 = new CostoOperativo("Jornales y comisiones", "Jornales y comisiones de comercialización", 11000.0, umUnidad);
-        CostoOperativo co2 = new CostoOperativo("Gastos de publicidad", null, 1000.0, umUnidad);
-        CostoOperativo co3 = new CostoOperativo("Panfletos", null, 1000.0, umUnidad);
-        CostoOperativo co4 = new CostoOperativo("Distribución", null, 1000.0, umUnidad);
-        CostoOperativo co5 = new CostoOperativo("Encuestas", null, 1000.0, umUnidad);
-        CostoOperativo co6 = new CostoOperativo("Documentos comerciales", null, 1000.0, umUnidad);
-        CostoOperativo co7 = new CostoOperativo("Diseño e impresión de logos", null, 1000.0, umUnidad);
-        CostoOperativo co8 = new CostoOperativo("Mano de obra", null, 11000.0, umHora);
-        CostoOperativo co9 = new CostoOperativo("Alquiler de local", null, 1000.0, umHora);
-        CostoOperativo co10 = new CostoOperativo("Alquiler de maquinarias", null, 1000.0, umHora);
-        CostoOperativo co11 = new CostoOperativo("Energía eléctrica", null, 1000.0, umHora);
-        CostoOperativo co12 = new CostoOperativo("Servicio telefónico", null, 1000.0, umHora);
-        CostoOperativo co13 = new CostoOperativo("Servicio de agua", null, 1000.0, umHora);
-        CostoOperativo co14 = new CostoOperativo("Servicio de gas", null, 1000.0, umHora);
-        CostoOperativo co15 = new CostoOperativo("Servicio de internet", null, 1000.0, umHora);
+        CostoOperativo co1 = new CostoOperativo("Jornales y comisiones", "Jornales y comisiones de comercialización", 1.0, umHora);
+        CostoOperativo co2 = new CostoOperativo("Gastos de publicidad", null, 1.0, umUnidad);
+        CostoOperativo co3 = new CostoOperativo("Panfletos", null, 1.0, umUnidad);
+        CostoOperativo co4 = new CostoOperativo("Distribución", null, 1.0, umUnidad);
+        CostoOperativo co5 = new CostoOperativo("Encuestas", null, 1.0, umUnidad);
+        CostoOperativo co6 = new CostoOperativo("Documentos comerciales", null, 1.0, umUnidad);
+        CostoOperativo co7 = new CostoOperativo("Diseño e impresión de logos", null, 1.0, umUnidad);
+        CostoOperativo co8 = new CostoOperativo("Mano de obra", null, 1.0, umHora);
+        CostoOperativo co9 = new CostoOperativo("Alquiler de local", null, 1.0, umHora);
+        CostoOperativo co10 = new CostoOperativo("Alquiler de maquinarias", null, 1.0, umHora);
+        CostoOperativo co11 = new CostoOperativo("Energía eléctrica", null, 1.0, umHora);
+        CostoOperativo co12 = new CostoOperativo("Servicio telefónico", null, 1.0, umHora);
+        CostoOperativo co13 = new CostoOperativo("Servicio de agua", null, 1.0, umHora);
+        CostoOperativo co14 = new CostoOperativo("Servicio de gas", null, 1.0, umHora);
+        CostoOperativo co15 = new CostoOperativo("Servicio de internet", null, 1.0, umHora);
         CostoOperativoService costoOperativoService = new CostoOperativoServImpl();
         costoOperativoService.insertarCostoOperativo(co1);
         costoOperativoService.insertarCostoOperativo(co2);
@@ -233,6 +223,7 @@ public class Main {
         parametrosService.insertarImpuesto(impuesto3);
 
         //PRUEBA
+        /*
         List<MateriaPrimaDetalle> materiPrimaDetalles = new ArrayList<>();
         MateriaPrimaDetalle mpd = new MateriaPrimaDetalle();
         mpd.setCantidad(1.0);
@@ -273,22 +264,6 @@ public class Main {
         producto.setProductoCategoria(categoria1);
         producto.setProductoSubCategoria(productoSubCategoria1);
         producto.setUnidadMedida(umUnidad);
-        parametrosService.insertarProducto(producto);
-        //parametrosService.eliminarProducto(producto.getId());
-        /*
-        eliminar materia prima detalle      
-        precio.getMateriaPrimaDetalles().remove(mpd);
-        materiaPrimaDetalleService.eliminarMateriaPrimaDetalle(mpd.getId());  
-         */
- /*
-        modificar
-        MateriaPrimaDetalle mpdTest = new MateriaPrimaDetalle();
-        mpdTest.setId(mpd.getId());
-        mpdTest.setCantidad(2.0);
-        mpdTest.setMateriaPrima(mpHarina);
-        mpdTest.setPrecioMateriaPrima(14500.0);
-        mpdTest.setPrecioProducto(precio);
-        materiaPrimaDetalleService.modificarMateriaPrimaDetalle(mpdTest);
-         */
+        parametrosService.insertarProducto(producto);*/
     }
 }

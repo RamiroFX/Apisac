@@ -49,7 +49,7 @@ public class MateriaPrimaDetalleTableModel extends AbstractTableModel {
                 return materiaPrima.getMateriaPrima().getNombre();
             }
             case 2: {
-                return materiaPrima.getMateriaPrima().getUnidadMedida();
+                return materiaPrima.getUnidadMedida();
             }
             case 3: {
                 return materiaPrima.getPrecioMateriaPrima();

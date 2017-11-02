@@ -150,7 +150,7 @@ public class SeleccionarCantidadMateriaPrima extends JDialog implements ActionLi
         this.mpd = mpd;
         this.jtfNombre.setText(this.mpd.getMateriaPrima().getNombre());
         this.jtfPrecio.setText(this.mpd.getMateriaPrima().getPrecio() + "");
-        List<UnidadMedida> unidadMedidas = unidadMedidaService.obtenerUnidadMedidasPorCategoria(this.mpd.getMateriaPrima().getUnidadMedida().getMedidaCategoria());
+        List<UnidadMedida> unidadMedidas = unidadMedidaService.obtenerUnidadMedidasPorCategoria(this.mpd.getUnidadMedida().getMedidaCategoria());
         jcbUnidadMBoxM.removeAllItems();
         for (UnidadMedida unidadMedida : unidadMedidas) {
             jcbUnidadMBoxM.addItem(unidadMedida);
@@ -279,8 +279,8 @@ public class SeleccionarCantidadMateriaPrima extends JDialog implements ActionLi
                         break;
                     }
                     case MODIFICAR: {
-                        precio = mpd.getMateriaPrima().getPrecio();
-                        valorActual = mpd.getMateriaPrima().getUnidadMedida().getValor();
+                        precio = mpd.getPrecioMateriaPrima();
+                        valorActual = mpd.getUnidadMedida().getValor();
                         break;
                     }
                 }

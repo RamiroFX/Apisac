@@ -441,13 +441,13 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
     }
 
     private void modificarCostoOperativo(CostoOperativoDetalle cod) {
-        Long idNuevo = cod.getId();
+        Long idNuevo = cod.getCostoOperativo().getId();
         for (CostoOperativoDetalle costoOperativoDetalle : costoOperativoDetalleTableModel.getCostoOperativoDetalleList()) {
-            if (Objects.equals(idNuevo, costoOperativoDetalle.getId())) {
+            if (Objects.equals(idNuevo, costoOperativoDetalle.getCostoOperativo().getId())) {
                 if (formType == CREATE_PRODUCT) {
                     costoOperativoDetalle.setCantidad(cod.getCantidad());
                     costoOperativoDetalle.setPrecioCostoOperativo(cod.getPrecioCostoOperativo());
-                    costoOperativoDetalle.getCostoOperativo().setUnidadMedida(cod.getCostoOperativo().getUnidadMedida());
+                    costoOperativoDetalle.setUnidadMedida(cod.getUnidadMedida());
                 } else if (formType == UPDATE_PRODUCT) {
                     costoOperativoDetalle.setCantidad(cod.getCantidad());
                     costoOperativoDetalle.setPrecioCostoOperativo(cod.getPrecioCostoOperativo());
@@ -621,11 +621,11 @@ public class CrearProducto extends JDialog implements ActionListener, KeyListene
             mp.setId(idMp);
             mp.setNombre(nombre);
             mp.setPrecio(precio);
-            mp.setUnidadMedida(um);
             MateriaPrimaDetalle mpd = new MateriaPrimaDetalle();
             mpd.setCantidad(cantidad);
             mpd.setMateriaPrima(mp);
             mpd.setPrecioMateriaPrima(precio);
+            mpd.setUnidadMedida(um);
             SeleccionarCantidadMateriaPrima sc = new SeleccionarCantidadMateriaPrima(this, mpd, SeleccionarCantidadMateriaPrima.MODIFICAR);
             sc.setCrearProductoCallback(this);
             sc.setVisible(true);
